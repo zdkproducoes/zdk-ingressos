@@ -1,0 +1,170 @@
+=====================================================================
+ MANUAL DOS LOTES — SACODE INGRESSOS
+ Como parametrizar os lotes ao criar um novo evento
+ (atualizado em 07/07/2026, após a correção da virada automática)
+=====================================================================
+
+
+---------------------------------------------------------------------
+ 1. COMO O SISTEMA DECIDE QUAL LOTE ESTÁ À VENDA
+---------------------------------------------------------------------
+
+Os lotes de um evento formam uma FILA, na ordem do campo "Ordem"
+(sort_order). O sistema vende SEMPRE UM LOTE POR VEZ: o "lote atual"
+é o PRIMEIRO da fila que atende a TODAS estas condições:
+
+  1. Está VISÍVEL (is_visible = sim)
+  2. Não foi desativado manualmente (status não é "paused" nem "ended")
+  3. Está dentro da janela de datas (entre "Início das vendas" e
+     "Fim das vendas", quando preenchidos)
+  4. Tem estoque REAL: ingressos vendidos + ingressos RESERVADOS por
+     compradores que estão pagando agora < quantidade do lote
+
+Quando o lote atual sai de cena por QUALQUER um destes 3 motivos, o
+próximo da fila assume NA MESMA HORA, automaticamente:
+
+  a) Você desativou manualmente (mudou o status para pausado/encerrado)
+  b) O estoque esgotou (contando as reservas em andamento)
+  c) Chegou a data/hora de "Fim das vendas" do lote
+
+A virada é instantânea e vale ao mesmo tempo para: a página do evento,
+a página de checkout e a compra em si. Não precisa de robô, não precisa
+mexer em nada na hora — é calculada em tempo real a cada acesso.
+
+IMPORTANTE: o lote seguinte NUNCA fura a fila. Enquanto o 1º lote não
+abrir (data de início no futuro), NINGUÉM está à venda — a página mostra
+"EM BREVE". Não é preciso agendar data de início nos lotes seguintes.
+
+
+---------------------------------------------------------------------
+ 2. RECEITA: COMO CRIAR OS LOTES DE UM EVENTO NOVO
+---------------------------------------------------------------------
+
+Para um evento com 4 lotes (exemplo da 16ª edição):
+
+  LOTE 1 (o que abre as vendas):
+    - Nome ............... "Ingresso Único - 1º Lote"
+    - Preço .............. o mais barato (ex.: R$ 20)
+    - Quantidade ......... ex.: 150
+    - Ordem (sort_order) . 0
+    - Status ............. active
+    - Visível ............ SIM
+    - Início das vendas .. DATA E HORA DA ABERTURA (ex.: 08/07 18:00)
+    - Fim das vendas ..... data/hora limite geral (ex.: dia do evento 12:00)
+
+  LOTES 2, 3 e 4 (os seguintes):
+    - Nome ............... "... - 2º Lote", "... - 3º Lote", etc.
+    - Preço .............. crescente (ex.: 25, 30, 35)
+    - Quantidade ......... conforme o plano
+    - Ordem .............. 1, 2, 3 (sequencial, sem repetir)
+    - Status ............. active (ou scheduled — os dois funcionam)
+    - Visível ............ SIM
+    - Início das vendas .. VAZIO (deixe em branco!)
+    - Fim das vendas ..... mesma data limite geral
+
+É só isso. O lote 1 abre sozinho na hora marcada; quando ele esgotar
+(ou você pausar, ou vencer o prazo), o 2 assume sozinho; e assim por
+diante até o último.
+
+
+---------------------------------------------------------------------
+ 3. REGRAS DE OURO (o que garante que nada trava)
+---------------------------------------------------------------------
+
+  ✔ ORDEM sequencial e única (0, 1, 2, 3...). É ela que define a fila —
+    não é o preço, não é a data de criação.
+
+  ✔ "Início das vendas" SÓ NO PRIMEIRO LOTE. Se você colocar data de
+    início nos lotes seguintes, eles vão respeitá-la mesmo que o
+    anterior esgote antes — e a fila fica parada esperando a data
+    ("esgotado" na página até o horário chegar). Deixe em branco que a
+    virada acontece na hora certa sozinha.
+
+  ✔ "Fim das vendas" em TODOS os lotes = quando as vendas online devem
+    encerrar de vez (normalmente o horário de início do evento).
+    Atenção ao fuso: o horário é salvo em UTC no banco — confira no
+    admin se está exibindo o horário que você quer em horário de
+    Brasília (UTC-3). Ex.: 02/08 12:00 em Brasília = 15:00 UTC.
+
+  ✔ TODOS os lotes VISÍVEIS desde o início. Lote invisível não vende e
+    também NÃO segura a fila (é ignorado por completo) — use invisível
+    só para rascunho/teste.
+
+  ✔ Status "active" em todos (ou "scheduled" nos futuros, se preferir
+    a semântica — funciona igual: ele vira sozinho quando chega a vez).
+    "paused" e "ended" significam DESATIVADO NA MÃO: o lote sai da fila
+    e o seguinte assume.
+
+  ✔ Quantidade: depois de aberto, dá pra aumentar; só não dá pra
+    reduzir abaixo do que já foi vendido (o admin bloqueia).
+
+
+---------------------------------------------------------------------
+ 4. O QUE ACONTECE DURANTE A VENDA (bom saber)
+---------------------------------------------------------------------
+
+  • RESERVAS: quando alguém clica em comprar, os ingressos ficam
+    RESERVADOS para ela enquanto paga (o pagamento no Mercado Pago
+    expira em 30 min). Reserva conta como estoque ocupado — por isso a
+    virada acontece no momento certo, sem vender ingresso a mais.
+
+  • CARRINHO ABANDONADO: se a pessoa não pagar, a reserva é devolvida
+    automaticamente (em até ~40 min, ou na hora se outro comprador
+    precisar da vaga). Se isso devolver vaga ao lote anterior (mais
+    barato), ele volta a ser o lote à venda até esgotar de verdade —
+    é o comportamento esperado e honesto com o público.
+
+  • VIRADA NO MEIO DA COMPRA: se o lote virar enquanto alguém está com
+    a página aberta, a compra é recusada com a mensagem "O lote X não
+    está mais à venda. O lote atual é Y (R$ Z) — atualize a página".
+    Ninguém compra pelo preço antigo depois da virada.
+
+  • PAUSAR NA MÃO: mudar o status do lote atual para pausado faz o
+    próximo assumir na hora. Despausar faz ele voltar a ser o atual
+    (ele é o primeiro da fila de novo). Se quiser SEGURAR as vendas
+    inteiras (nenhum lote à venda), pause TODOS os lotes.
+
+
+---------------------------------------------------------------------
+ 5. ERROS QUE JÁ CAUSARAM PROBLEMA (não repetir)
+---------------------------------------------------------------------
+
+  ✘ Data de "Início das vendas" preenchida nos lotes 2, 3, 4...
+    → a fila trava esperando a data em vez de virar quando o anterior
+      esgota. SÓ o primeiro lote leva data de início.
+
+  ✘ Esquecer lotes com Visível = NÃO
+    → o lote nem aparece nem vende, e a fila pula ele. Confira a
+      visibilidade de todos antes da abertura.
+
+  ✘ Dois lotes com a mesma Ordem
+    → o desempate é pelo preço, mas a fila fica confusa. Use ordem
+      sequencial única.
+
+  ✘ Horário de fim/início sem conferir o fuso
+    → risco de abrir/fechar 3 horas antes ou depois do planejado.
+      Sempre confira como aparece no admin após salvar.
+
+
+---------------------------------------------------------------------
+ 6. CHECKLIST ANTES DE ABRIR AS VENDAS
+---------------------------------------------------------------------
+
+  [ ] Evento com status "active" (publicado)
+  [ ] Todos os lotes criados, com Ordem 0, 1, 2, 3...
+  [ ] Preços crescentes conforme o plano
+  [ ] "Início das vendas" SÓ no lote 1, com data/hora certas
+  [ ] "Início das vendas" VAZIO nos demais
+  [ ] "Fim das vendas" igual em todos (início do evento)
+  [ ] Todos com Visível = SIM
+  [ ] Todos com status active (ou scheduled nos futuros)
+  [ ] Abrir a página do evento e conferir: deve mostrar "EM BREVE"
+      com a data de abertura até o horário do lote 1 chegar
+  [ ] No horário da abertura: recarregar a página e conferir que o
+      lote 1 apareceu com o preço certo
+
+=====================================================================
+ Dúvidas ou comportamento estranho: a regra da fila mora em
+ src/lib/lotes.ts (resolveLoteAtual) — página, checkout e API usam
+ exatamente a mesma função.
+=====================================================================

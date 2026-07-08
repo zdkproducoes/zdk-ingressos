@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Paleta SACODE — variáveis CSS pra uso fora do Tailwind (e-mails, SVG inline, etc.) */
+  --sacode-wine-600: #45183F;
+  --sacode-wine-700: #321131;
+  --sacode-wine-800: #2D0F2A;
+  --sacode-wine-900: #1F0A1D;
+
+  --sacode-mauve-600: #694060;
+  --sacode-mauve-700: #52314B;
+
+  --sacode-amber-400: #E4A03F;
+  --sacode-amber-500: #D08F30;
+  --sacode-amber-300: #EFB560;
+
+  --sacode-cream-200: #EADBC4;
+  --sacode-cream-300: #D9C2A0;
+  --sacode-cream-400: #BFA279;
+
+  /* Aliases semânticos (defaults do projeto) */
+  --background: var(--sacode-wine-800);
+  --background-elevated: var(--sacode-wine-600);
+  --foreground: var(--sacode-cream-200);
+  --foreground-muted: var(--sacode-cream-300);
+  --foreground-subtle: var(--sacode-cream-400);
+  --border-default: var(--sacode-mauve-600);
+  --accent: var(--sacode-amber-400);
+  --accent-hover: var(--sacode-amber-500);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-sacode-400 to-amber-sacode-300;
+  }
+
+  .glass {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(45, 15, 42, 0.7);
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--sacode-wine-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sacode-mauve-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sacode-mauve-600);
+}
+
+::selection {
+  background: var(--sacode-amber-400);
+  color: var(--sacode-wine-800);
+}
+
+input, select, textarea {
+  @apply outline-none;
+}
+
+input:focus, select:focus, textarea:focus {
+  @apply ring-2 ring-amber-sacode-400/50;
+}

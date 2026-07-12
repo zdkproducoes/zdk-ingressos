@@ -145,7 +145,10 @@ supabase db dump --db-url "postgresql://postgres:[SENHA]@db.nsbyylbgnmzlgfwzgasl
 3. A Vercel mostra os registros DNS a criar (CNAME/A). Crie-os no Cloudflare
    (ou onde estiver o DNS) e aguarde o ✅ verde na Vercel.
 
-> 💡 O código (PARTE 10) vai reconhecer o `painel.` e servir só o admin nele.
+> 💡 O código já reconhece o `painel.`: configure `NEXT_PUBLIC_PANEL_HOST=painel.zdkingressos.com.br`
+> na Vercel e o middleware passa a servir o admin/check-in só nesse host
+> (no domínio público, /admin redireciona pro painel). Sem essa env,
+> tudo funciona por path — é o modo dev/preview.
 
 ---
 

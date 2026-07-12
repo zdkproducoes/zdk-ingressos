@@ -204,10 +204,11 @@ CREATE POLICY "venues_select_public" ON public.venues
   USING (true);
 
 -- Usuário enxerga os próprios vínculos (para o painel saber suas orgs)
+-- (select auth.uid()) evita re-avaliação por linha — advisor auth_rls_initplan
 DROP POLICY IF EXISTS "org_members_select_self" ON public.organization_members;
 CREATE POLICY "org_members_select_self" ON public.organization_members
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = (SELECT auth.uid()));
 
 -- Owner da organização pode ver os repasses da sua org
 DROP POLICY IF EXISTS "payouts_select_owner" ON public.payouts;
@@ -217,7 +218,7 @@ CREATE POLICY "payouts_select_owner" ON public.payouts
     EXISTS (
       SELECT 1 FROM public.organization_members m
       WHERE m.organization_id = payouts.organization_id
-        AND m.user_id = auth.uid()
+        AND m.user_id = (SELECT auth.uid())
         AND m.role = 'owner'
     )
   );

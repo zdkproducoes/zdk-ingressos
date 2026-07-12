@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
-const tabs = [
+const baseTabs = [
   { label: 'Eventos',     href: '/admin/eventos' },
   { label: 'Resumo',      href: '/admin/resumo' },
   { label: 'Pedidos',     href: '/admin/pedidos' },
@@ -15,16 +15,30 @@ const tabs = [
   { label: 'Afiliados',   href: '/admin/afiliados' },
 ];
 
-export function AdminTabs() {
+export function AdminTabs({
+  showFinanceiro = false,
+  showPlataforma = false,
+}: {
+  /** Aba Financeiro: owner da organização ou superadmin */
+  showFinanceiro?: boolean;
+  /** Aba Plataforma: só superadmin */
+  showPlataforma?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
+
+  const tabs = [
+    ...baseTabs,
+    ...(showFinanceiro ? [{ label: 'Financeiro', href: '/admin/financeiro' }] : []),
+    ...(showPlataforma ? [{ label: 'Plataforma', href: '/admin/plataforma' }] : []),
+  ];
 
   const activeHref = tabs.find(t => pathname.startsWith(t.href))?.href ?? tabs[0].href;
 
   return (
     <>
       {/* Desktop: abas horizontais */}
-      <div className="hidden md:flex border-b border-muted-700 gap-1 mb-6">
+      <div className="hidden md:flex border-b border-muted-700 gap-1 mb-6 flex-wrap">
         {tabs.map(tab => {
           const isActive = activeHref === tab.href;
           return (

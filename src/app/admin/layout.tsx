@@ -30,7 +30,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           </p>
         )}
-        <AdminTabs />
+        <AdminTabs
+          showFinanceiro={ctx.isSuperadmin || ctx.memberships.some((m) => m.role === 'owner')}
+          showPlataforma={ctx.isSuperadmin}
+        />
         {children}
       </div>
     </div>

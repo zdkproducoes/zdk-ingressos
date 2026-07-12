@@ -1,0 +1,132 @@
+quero montar a estrutura para escalar o produto, ele nao vendera mais ingressos só do sacode, vendera ingressos de outros produtores e outras casas de shows tambem, como podemos fazer, para usar a estrutura ja pronta, mas em outro servidor, outro dominio e com a estrutura preparada pra ser multieventos e multi produtores?
+
+Boa, esse é um passo grande. Antes de te dar um plano, deixa eu mapear a estrutura atual do projeto para ver o que já está pronto e o que está "amarrado" ao Sacode (hardcodes, schema, domínio).
+
+  Searched for 6 patterns, read 1 file, listed 3 directories
+
+Mapeei o projeto. A boa notícia: o banco já é multi-evento — existe tabela events com slug, tudo (pedidos, ingressos, lotes, cupons, afiliados, metas) é ligado por event_id, e o admin já tem seletor de evento. O que falta para virar plataforma são três coisas: a camada de produtor/organização, o desacoplamento da marca (achei 291 ocorrências de "SACODE/cantorcaiolacerda" hardcoded em 60 arquivos) e o pagamento por produtor (hoje há um único MP_ACCESS_TOKEN global — todo dinheiro cai na mesma conta).
+
+Aqui está como eu estruturaria:
+
+1. Separação: fork, não migração
+
+Crie um repositório novo (ex.: zdk-ingressos ou o nome da plataforma) a partir deste, com projeto Supabase novo, projeto Vercel novo e domínio novo. O Sacode continua rodando intocado no ambiente atual — vocês têm a 16ª edição em 02/08 e não vale o risco de mexer em produção. Depois que a plataforma estiver madura, o Sacode pode ser migrado para dentro dela como "produtor nº 1" (ou até manter o domínio próprio apontando pra plataforma — ver item 4).
+
+2. Camada multi-produtor no banco
+
+O modelo muda pouco, porque quase tudo já pende de events:
+
+- organizations — o produtor: nome, slug, CNPJ/CPF, logo, cores, e-mail remetente, taxa da plataforma (%), credenciais de pagamento.
+- organization_members — quem administra o quê: user_id + organization_id + role (owner, admin, staff, checkin). Substitui o conceito atual de admin único.
+- venues (casas de show) — opcional mas recomendado: nome, endereço, lat/lng, capacidade. events.venue_id referencia. Uma casa de show pode inclusive ser uma organization que cria os próprios eventos.
+- events.organization_id — a única FK nova realmente obrigatória. Orders, tickets, lotes etc. já chegam na organização via evento, então não precisa espalhar org_id em todas as tabelas.
+- RLS: as policies passam a validar via organization_members — produtor só enxerga dados dos eventos da organização dele. O painel admin ganha um nível acima do seletor de evento: seletor de organização (para o superadmin da plataforma) e escopo automático (para o produtor).
+
+3. Pagamentos — a decisão mais importante
+
+Essa é a única decisão de negócio que muda a arquitetura de verdade. Duas rotas no Mercado Pago:
+
+- Marketplace / split (recomendado): cada produtor conecta a própria conta MP via OAuth; a venda cai direto na conta dele e a sua taxa (application_fee) cai na sua automaticamente. Sem risco fiscal de o dinheiro dos outros passar pela sua conta, sem repasse manual. O custo é implementar o fluxo OAuth e guardar o token por organização (criptografado no banco, nunca em env var).
+- Conta única da plataforma + repasse manual: mais simples de codar (é o que já existe), mas você vira intermediador financeiro — todo o faturamento dos produtores transita no seu CNPJ, e o repasse é operação manual. Aceitável só para os primeiros 1–2 produtores parceiros de confiança.
+
+O webhook também muda: hoje ele valida com um secret global; passa a rotear o pagamento para a organização certa (via external_reference do pedido).
+
+4. Domínio e marca (white-label)
+
+- Todas as 291 referências a SACODE (nome, cores no globals.css, textos de e-mail, termos, footer, sitemap) viram configuração da organização/evento lida do banco — um objeto "tenant theme" (logo, paleta, remetente, links legais).
+- Roteamento em fases:
+  - Fase 1: domínio único — plataforma.com.br/evento/slug (o app já funciona assim, custo quase zero).
+  - Fase 2: subdomínio por produtor — produtor.plataforma.com.br via middleware do Next.js lendo o header Host e resolvendo a organização.
+  - Fase 3: domínio próprio do produtor (ex.: o Sacode mantém sacode.cantorcaiolacerda.com.br) apontado pra plataforma via API de domínios da Vercel — é assim que Shopify/Framer fazem.
+- E-mails: comece enviando tudo de um domínio da plataforma (ingressos@plataforma.com.br com nome do produtor no display name); domínio de e-mail próprio por produtor fica pra depois (exige verificação de domínio no Resend por produtor).
+
+5. Ordem de execução que eu sugiro
+
+1. Fork do repo + Supabase/Vercel/domínio novos, replicando o schema atual.
+2. Migration: organizations, organization_members, venues, events.organization_id + reescrita das RLS policies.
+3. Refatorar os hardcodes de marca para config por tenant (é o trabalho mais braçal — 60 arquivos).
+4. Admin: papéis por organização + tela de superadmin da plataforma (criar produtor, definir taxa).
+5. OAuth Mercado Pago por produtor + webhook multi-conta.
+6. Home da plataforma: vitrine de eventos de todos os produtores (hoje a home é o evento único).
+7. Subdomínios/domínios custom (fase 2/3 — só quando tiver produtor pedindo).
+
+Os itens 1–4 dão uma plataforma funcional cobrando taxa; o 5 é o que destrava escala sem risco fiscal.
+
+Duas perguntas definem o desenho antes de eu começar a executar: qual rota de pagamento (split MP ou conta única com repasse no início?) e qual o nome/domínio da plataforma (define nomes de repo, projeto e remetentes). Se quiser, já começo pelo passo 1–2: desenho o SQL completo da camada de organizações compatível com o schema atual.
+
+✻ Cogitated for 1m 54s
+
+> o auth do mercado pago sera o mesmo, eu estava pensando em um site parecido com a blacktag.com.br , na pagina inicial deles, tem todos os eventos, que o cliente passa a ver todos e entra na pagina de venda do evento e faz a compra.. nos paineis administrativos, seria um subdominio desse site , que cada produtor consegue ver apenas os seus eventos e ganhos e publico do seu evento
+
+Perfeito, isso simplifica bastante — modelo "Blacktag": vitrine única, checkout na conta MP da plataforma, e painel por produtor em subdomínio. Antes de desenhar o SQL da camada de organizações, deixa eu ver como o admin autentica hoje e o que a tabela events já tem:
+
+  Searched for 1 pattern, read 1 file
+
+● Write(sql\plataforma\00_camada_organizacoes.sql)
+Wrote 248 lines to sql\plataforma\00_camada_organizacoes.sql
+-- =====================================================================
+-- PLATAFORMA MULTI-PRODUTOR — Camada de organizações (RASCUNHO / BLUEPRINT)
+-- =====================================================================
+-- ONDE RODAR: no projeto Supabase NOVO da plataforma, DEPOIS de replicar
+--             o schema base do Sacode (events, orders, tickets, batches,
+--             coupons, affiliates, profiles, etc.).
+-- NÃO RODAR no Supabase do Sacode em produção.
+--
+-- Modelo (estilo Blacktag):
+--   - Home = vitrine com todos os eventos publicados de todos os produtores
+… +238 lines
+
+  Read 1 file, recalled 1 memory, wrote 3 memories
+
+Fechado — esse modelo (vitrine única + conta MP única + painel em subdomínio) é o caminho mais rápido, e deixei o desenho do banco pronto para revisão.
+
+O que criei: sql/plataforma/00_camada_organizacoes.sql — um blueprint para rodar no Supabase novo da plataforma (não no do Sacode). Ele contém:
+
+- organizations — o produtor, com platform_fee_percent (sua taxa por contrato), brand (logo/cores da página dele) e payout_info (dados de repasse).
+- organization_members — vincula usuários às organizações com papéis owner/admin/staff/checkin. É isso que faz cada produtor ver só o que é dele no painel.
+- venues — casas de show reutilizáveis entre eventos.
+- events.organization_id — a única coluna nova obrigatória; pedidos, ingressos, lotes e afiliados já herdam a organização através do evento.
+- payouts — como o dinheiro cai todo na sua conta MP, essa tabela registra cada repasse ao produtor (bruto, sua taxa, tarifas MP, líquido, comprovante). O produtor vê os repasses dele no painel; você controla os pendentes.
+- RLS completa + seed comentado para cadastrar o Sacode como produtor nº 1.
+
+Duas descobertas importantes no código atual:
+
+1. O profiles.role já tem o valor 'producer' (src/middleware.ts:52) — a base do gate do painel já existe, só falta ligá-lo à tabela de membros.
+2. Todas as rotas /api/admin usam service_role, que ignora RLS. Ou seja, o isolamento por produtor não pode depender só do banco: cada rota do painel vai precisar resolver a organização do usuário logado e filtrar por ela. Esse é o ponto mais sensível da refatoração — um filtro esquecido significa um produtor vendo vendas do outro.
+
+Sobre o subdomínio do painel: não precisa de servidor separado. Você aponta painel.seudominio.com.br para o mesmo projeto Vercel e o middleware, ao ver esse Host, serve as rotas /admin (e bloqueia o resto). Site público e painel continuam sendo um codebase só.
+
+Um aviso de negócio (já que a conta MP será a mesma): todo o faturamento dos outros produtores vai transitar pelo CNPJ da ZDK — vale alinhar com contador como emitir isso (intermediação/agenciamento) antes de assinar com o primeiro produtor externo.
+
+Próximos passos na ordem: definir nome/domínio da plataforma → criar Supabase/Vercel novos e replicar o schema atual (dá pra exportar via dashboard do Supabase) → rodar esse SQL → refatorar o gate do painel para organization_members → home vitrine → desacoplar os 291 hardcodes de marca. Quando tiver o nome do domínio, posso começar pelo passo da replicação do schema e pela home vitrine.
+
+✻ Crunched for 3m 7s
+
+> cria um arquivo com o passo a passo para o que devo fazer por aqui
+
+● Write(docs\plataforma-passo-a-passo.md)
+Wrote 247 lines to docs\plataforma-passo-a-passo.md
+ 🚀 Plataforma Multi-Produtor — Passo a passo de criação
+
+ Guia para tirar a plataforma do papel usando a estrutura pronta do Sacode.
+ Modelo: estilo **Blacktag** — home com todos os eventos, checkout na conta
+ Mercado Pago única da plataforma, painel do produtor em subdomínio.
+
+ **Regra de ouro: NADA aqui mexe no Sacode em produção.** Tudo é criado
+ novo (repo, Supabase, Vercel, domínio). O Sacode segue intocado até a
+ 16ª edição (02/08).
+… +238 lines
+
+Criei o guia em docs/plataforma-passo-a-passo.md, no mesmo estilo tutorial do README do Sacode.
+
+Ele está organizado em 12 partes (0 a 11), com uma tabela de visão geral no topo dizendo quem faz cada etapa (você nos dashboards, eu no código) e um checklist no final. O fluxo:
+
+1. Partes 0–2: nome/domínio, repo novo no GitHub (com os comandos git prontos para o fork limpo) e projeto novo no Supabase.
+2. Partes 3–4: exportar o schema do Sacode (estrutura, sem dados de clientes) para o projeto novo e rodar o 00_camada_organizacoes.sql que criei antes — deixei marcado que o passo 3 fazemos juntos com o Supabase CLI.
+3. Partes 5–9: Vercel com a tabela completa de variáveis de ambiente (indicando quais são novas e quais reaproveitam do Sacode), domínio + subdomínio painel. no mesmo projeto, Turnstile, Resend e uma aplicação nova no Mercado Pago dentro da mesma conta — assim os relatórios da plataforma ficam separados dos do Sacode, mas o dinheiro cai no mesmo lugar.
+4. Parte 10: a lista do trabalho de código que é meu (gate por organização, escopo nas rotas admin, home vitrine, subdomínio, remoção dos hardcodes, financeiro/repasses, tela do superadmin).
+5. Parte 11: cadastro da primeira organização e teste de compra ponta a ponta, incluindo verificar que um produtor não enxerga dados do outro.
+
+Também mantive o aviso fiscal na parte do Mercado Pago (faturamento de terceiros transitando no CNPJ da ZDK — alinhar com o contador antes do primeiro produtor externo).
+
+O primeiro passo prático é a Parte 0: decidir o nome da plataforma e comprar o domínio — tudo depois herda esse nome. Quando tiver o repo novo criado (Parte 1), me chama que eu começo a Parte 10

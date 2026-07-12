@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 88">
+  <!-- ZDK Ingressos — símbolo monocromático sobre ouro (etiquetas, pulseiras) -->
+  <path fill="none" stroke="#17130A" stroke-width="4" d="M18 6 H114 Q126 6 126 18 V33 A11 11 0 0 0 126 55 V70 Q126 82 114 82 H18 Q6 82 6 70 V55 A11 11 0 0 0 6 33 V18 Q6 6 18 6 Z"/>
+  <rect x="35" y="36" width="6" height="16" rx="3" fill="#17130A"/>
+  <rect x="47" y="30" width="6" height="28" rx="3" fill="#17130A"/>
+  <rect x="59" y="24" width="6" height="40" rx="3" fill="#17130A"/>
+  <rect x="71" y="18" width="6" height="52" rx="3" fill="#17130A"/>
+  <rect x="83" y="27" width="6" height="34" rx="3" fill="#17130A"/>
+  <rect x="95" y="35" width="6" height="18" rx="3" fill="#17130A"/>
+</svg>

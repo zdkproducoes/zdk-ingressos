@@ -13,6 +13,20 @@ A identidade da plataforma (nome, URLs, e-mail, pixel, CNPJ) vem de
 `src/lib/config.ts` (objeto `platform`), alimentado por env vars — nunca
 hardcodear marca no código.
 
+## Identidade visual (manual da marca v1.0, aprovado em 12/07/2026)
+
+- Conceito: "cada batida vira entrada" — símbolo = ingresso com picote +
+  barras de equalizador (herda a ZDK Produções). Componentes em
+  `src/components/brand/Logo.tsx`; arquivos em `public/brand/`.
+- Paleta: Preto Palco/Grafite (`surface`), Ouro ZDK `#D9A63F` (`accent`),
+  Prata/Gelo (`cream`/`muted`). Tokens em `tailwind.config.ts` +
+  `globals.css` (--brand-*); organizações sobrescrevem via
+  `organizations.brand` (BrandTheme).
+- Tipografia: Archivo Expanded (display, next/font com eixo wdth +
+  font-stretch 125% via .font-display/.font-display-bold) + Inter (corpo).
+- O manual completo está publicado como artifact (Claude) — pedir o link
+  ao Fernando se precisar.
+
 ## Decisões de arquitetura (fechadas com o Fernando)
 
 - **Modelo estilo blacktag.com.br**: home = vitrine com todos os eventos de todos

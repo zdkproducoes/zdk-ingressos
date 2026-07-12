@@ -1,9 +1,12 @@
-// Home = vitrine: todos os eventos ativos de todos os produtores
-// (modelo Blacktag). Usa o client anon — as policies events_select_active
-// e orgs_select_public controlam o que é público.
+// Home = vitrine: todos os eventos ativos de todos os produtores, com
+// destaque para o próximo, busca e filtro por cidade (modelo dos grandes
+// players adaptado ao Grande ABC). Usa o client anon — as policies
+// events_select_active/orgs_select_public/ticket_batches_select_visible
+// controlam o que é público.
 import { supabase } from '@/lib/supabase'
 import { platform } from '@/lib/config'
-import { EventCard, type VitrineEvent } from '@/components/vitrine/EventCard'
+import { VitrineClient } from '@/components/vitrine/VitrineClient'
+import type { VitrineEvent } from '@/components/vitrine/EventCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +20,24 @@ export default async function Home() {
     .gte('event_date', today)
     .order('event_date', { ascending: true })
 
-  const events: VitrineEvent[] = ((data ?? []) as any[]).map((e) => ({
+  const rows = (data ?? []) as any[]
+
+  // Preço "a partir de": menor lote visível/comprável de cada evento
+  const priceByEvent = new Map<string, number>()
+  if (rows.length > 0) {
+    const { data: batches } = await supabase
+      .from('ticket_batches')
+      .select('event_id, price, status')
+      .in('event_id', rows.map((e) => e.id))
+      .in('status', ['active', 'scheduled'])
+    for (const b of (batches ?? []) as { event_id: string; price: number }[]) {
+      const current = priceByEvent.get(b.event_id)
+      const price = Number(b.price)
+      if (current === undefined || price < current) priceByEvent.set(b.event_id, price)
+    }
+  }
+
+  const events: VitrineEvent[] = rows.map((e) => ({
     id: e.id,
     title: e.title,
     slug: e.slug,
@@ -29,36 +49,22 @@ export default async function Home() {
     venue_state: e.venue_state,
     organization_name:
       (Array.isArray(e.organizations) ? e.organizations[0]?.name : e.organizations?.name) ?? null,
+    price_from: priceByEvent.get(e.id) ?? null,
   }))
 
   return (
     <main className="min-h-screen bg-surface-800">
-      <section className="max-w-6xl mx-auto px-4 pt-12 pb-16">
-        <div className="text-center mb-10">
-          <p className="font-display text-accent-400 tracking-[0.2em] text-sm mb-2">
-            {platform.name.toUpperCase()}
+      <section className="max-w-6xl mx-auto px-4 pt-10 pb-16">
+        <div className="text-center mb-8">
+          <p className="font-display text-accent-400 tracking-[0.24em] text-xs uppercase mb-2">
+            {platform.name} · Grande ABC
           </p>
-          <h1 className="font-display-bold text-[clamp(2rem,5vw,3rem)] text-cream-200 leading-tight">
-            Próximos eventos
+          <h1 className="font-display-bold text-[clamp(1.9rem,5vw,3rem)] text-cream-200 leading-tight uppercase">
+            O rolê começa aqui
           </h1>
         </div>
 
-        {events.length === 0 ? (
-          <div className="max-w-md mx-auto bg-surface-700 border border-muted-700 rounded-2xl p-10 text-center">
-            <h2 className="font-display-bold text-2xl text-cream-200 mb-3">
-              Nenhum evento à venda
-            </h2>
-            <p className="text-sm text-cream-400">
-              Não há eventos com vendas abertas no momento. Volte em breve!
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        )}
+        <VitrineClient events={events} />
       </section>
     </main>
   )

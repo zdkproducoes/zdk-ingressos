@@ -13,6 +13,7 @@ import { resolveLoteAtual } from '@/lib/lotes'
 import { platform } from '@/lib/config'
 import { buildEventJsonLd } from '@/lib/seo/event-jsonld'
 import { BrandTheme } from '@/components/theme/BrandTheme'
+import { StickyBuyBar } from '@/components/evento/StickyBuyBar'
 import { orgPublicName, type OrgBrand } from '@/lib/brand'
 
 type Props = { params: { slug: string } }
@@ -150,6 +151,7 @@ export default async function EventPage({ params }: Props) {
             Organizado por <span className="text-cream-300">{orgPublicName(org)}</span>
           </p>
         )}
+        {loteAtivo && <StickyBuyBar price={Number(loteAtivo.price)} />}
         {loteAtivo ? (
           <LoteAtivoWrapper
             lote={loteAtivo}

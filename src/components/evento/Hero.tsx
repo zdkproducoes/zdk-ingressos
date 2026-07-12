@@ -86,11 +86,11 @@ export function Hero({
                        rounded-[10px] font-display-bold text-xl
                        tracking-wider uppercase no-underline
                        transition-all duration-200
-                       shadow-[0_4px_0_#A06D26]
+                       shadow-[0_4px_0_#7C5A16]
                        hover:bg-accent-300 hover:-translate-y-0.5
-                       hover:shadow-[0_6px_0_#A06D26]
+                       hover:shadow-[0_6px_0_#7C5A16]
                        active:translate-y-0.5
-                       active:shadow-[0_2px_0_#A06D26]
+                       active:shadow-[0_2px_0_#7C5A16]
                        animate-pulse-glow"
           >
             {vendasAbertas ? 'Garantir meu ingresso' : 'Ver ingressos'}

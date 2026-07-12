@@ -5,24 +5,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Tema padrão da plataforma — variáveis CSS pra uso fora do Tailwind
-     (e-mails, SVG inline, etc.). Organizações podem sobrescrever as
-     --brand-* na página do evento (tema por tenant). */
-  --brand-surface-600: #45183F;
-  --brand-surface-700: #321131;
-  --brand-surface-800: #2D0F2A;
-  --brand-surface-900: #1F0A1D;
+  /* Tema padrão da plataforma — ZDK Ingressos (manual da marca v1.0).
+     Variáveis CSS pra uso fora do Tailwind (e-mails, SVG inline, etc.).
+     Organizações podem sobrescrever as --brand-* na página do evento
+     (tema por tenant via BrandTheme). */
+  --brand-surface-600: #1D2029;
+  --brand-surface-700: #16181F;
+  --brand-surface-800: #0D0E12;
+  --brand-surface-900: #08090C;
 
-  --brand-muted-600: #694060;
-  --brand-muted-700: #52314B;
+  --brand-muted-600: #2A2F3B;
+  --brand-muted-700: #20242E;
 
-  --brand-accent-400: #E4A03F;
-  --brand-accent-500: #D08F30;
-  --brand-accent-300: #EFB560;
+  --brand-accent-400: #D9A63F;
+  --brand-accent-500: #C08F2B;
+  --brand-accent-300: #F0C25E;
 
-  --brand-cream-200: #EADBC4;
-  --brand-cream-300: #D9C2A0;
-  --brand-cream-400: #BFA279;
+  --brand-cream-200: #F4F4F2;
+  --brand-cream-300: #C9CBCE;
+  --brand-cream-400: #A6A8AB;
 
   /* Aliases semânticos (defaults do projeto) */
   --background: var(--brand-surface-800);
@@ -43,6 +44,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Archivo Expanded: o next/font entrega a família; o eixo de largura (wdth)
+   e os pesos de display são aplicados aqui, junto das classes utilitárias. */
+.font-display {
+  font-stretch: 125%;
+  font-weight: 700;
+}
+.font-display-bold {
+  font-stretch: 125%;
+  font-weight: 900;
+}
+
 @layer utilities {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-400 to-accent-300;
@@ -51,7 +63,7 @@ body {
   .glass {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    background: rgba(45, 15, 42, 0.7);
+    background: rgba(13, 14, 18, 0.72);
   }
 
   .animate-pulse-slow {

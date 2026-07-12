@@ -1,7 +1,7 @@
 // Constantes e helpers compartilhados da aba Público (server e client).
 import { platform } from '@/lib/config';
 
-// Paleta de séries validada (skill dataviz) sobre a superfície surface-700 #321131:
+// Paleta de séries validada (skill dataviz) sobre a superfície surface-700 #16181F:
 // passa faixa de luminosidade, croma, separação CVD e contraste >= 3:1.
 export const SERIES = {
   homem:  { label: 'Homens',   color: '#4485C4' },

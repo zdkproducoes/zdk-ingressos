@@ -143,11 +143,11 @@ export function LoteAtivoCard({ lote, isUrgent, onBuy }: LoteAtivoProps) {
                      py-4 rounded-[10px]
                      font-display-bold text-xl tracking-wider uppercase
                      cursor-pointer transition-all duration-200
-                     shadow-[0_4px_0_#A06D26]
+                     shadow-[0_4px_0_#7C5A16]
                      hover:bg-accent-300 hover:-translate-y-0.5
-                     hover:shadow-[0_6px_0_#A06D26]
+                     hover:shadow-[0_6px_0_#7C5A16]
                      active:translate-y-0.5
-                     active:shadow-[0_2px_0_#A06D26]"
+                     active:shadow-[0_2px_0_#7C5A16]"
         >
           Comprar agora
         </button>

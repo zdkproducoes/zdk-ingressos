@@ -1,24 +1,20 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Script from 'next/script'
-import { Bebas_Neue, Anton } from "next/font/google"
+import { Archivo } from "next/font/google"
 import { Toaster } from 'react-hot-toast'
 import { Navbar, type UserProfile } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { platform } from '@/lib/config'
 
-const bebasNeue = Bebas_Neue({
-  weight: "400",
+// Tipografia display da marca: Archivo variável com o eixo de largura (wdth).
+// O font-stretch 125% (Expanded) é aplicado pelas classes .font-display /
+// .font-display-bold no globals.css.
+const archivo = Archivo({
   subsets: ["latin"],
+  axes: ["wdth"],
   variable: "--font-display",
-  display: "swap",
-})
-
-const anton = Anton({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-display-bold",
   display: "swap",
 })
 
@@ -58,7 +54,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="pt-BR" className={`${bebasNeue.variable} ${anton.variable}`}>
+    <html lang="pt-BR" className={archivo.variable}>
       <body className="bg-surface-800 min-h-screen text-cream-200 pt-14">
         {/* Meta Pixel (base) — dispara PageView em todas as paginas, uma unica vez no layout raiz.
             O Purchase e enviado server-side via CAPI (lib/meta/capi.ts), mesmo pixel ID.

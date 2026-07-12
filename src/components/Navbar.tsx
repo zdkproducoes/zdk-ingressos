@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { LogOut } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { LogoHorizontal } from '@/components/brand/Logo';
 
 export type UserProfile = {
   first_name: string;
@@ -59,10 +60,8 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-surface-600 border-b border-muted-600 h-14">
       <div className="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
 
-        <Link href="/" aria-label="ZDK Ingressos — Início" className="flex items-baseline gap-1">
-          {/* Wordmark provisório até a identidade visual da plataforma existir */}
-          <span className="font-display text-2xl tracking-wide text-cream-200">ZDK</span>
-          <span className="font-display text-2xl tracking-wide text-accent-400">Ingressos</span>
+        <Link href="/" aria-label="ZDK Ingressos — Início">
+          <LogoHorizontal symbolHeight={30} />
         </Link>
 
         <div className="flex items-center gap-3">

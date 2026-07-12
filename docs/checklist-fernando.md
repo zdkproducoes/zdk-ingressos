@@ -7,7 +7,13 @@
 
 ---
 
-## PARTE A — Testar localmente (30–45 min, não gasta dinheiro)
+## PARTE A — Testar localmente ✅ CONCLUÍDA em 12/07/2026
+> A1–A4 feitos (A2–A4 automatizados pelo Claude: contas de teste confirmadas
+> via script, seed aplicado e suíte E2E `scripts/e2e-run.mjs` com **26/26
+> testes passando** — isolamento entre organizações validado).
+> Senha das contas de teste: `TesteE2E!12345` (produtor.a@teste.com,
+> produtor.b@teste.com, comprador@teste.com). A5 (compra MP) fica para o
+> deploy na Vercel (B7), onde o webhook funciona.
 
 ### A1. Colar a chave service_role no .env.local
 - [ ] Abra https://supabase.com/dashboard → projeto **zdk-ingressos** (⚠️ não o sacode-mvp!)

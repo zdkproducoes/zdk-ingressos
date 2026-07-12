@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { RedefinirSenhaForm } from '@/components/auth/RedefinirSenhaForm';
 
-export const metadata = { title: 'Redefinir senha — SACODE' };
+export const metadata = { title: 'Redefinir senha' };
 
 export default function Page() {
   return (

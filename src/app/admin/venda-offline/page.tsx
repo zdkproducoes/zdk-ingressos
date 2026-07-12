@@ -8,7 +8,7 @@ import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { VendaOfflineClient } from '@/components/admin/VendaOfflineClient';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Venda offline — Admin SACODE' };
+export const metadata = { title: 'Venda offline — Painel' };
 
 export type OfflineBatch = {
   id: string;

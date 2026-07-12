@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { SignupForm } from '@/components/auth/SignupForm';
 
-export const metadata = { title: 'Criar conta — SACODE' };
+export const metadata = { title: 'Criar conta' };
 
 export default function Page() {
   return (

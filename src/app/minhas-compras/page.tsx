@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Minhas compras — SACODE' };
+export const metadata = { title: 'Minhas compras' };
 
 export default async function MyPurchasesPage() {
   const supabase = await createSupabaseServerClient();

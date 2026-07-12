@@ -6,7 +6,7 @@ import { AfiliadosListClient } from '@/components/admin/AfiliadosListClient';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Afiliados — Admin SACODE' };
+export const metadata = { title: 'Afiliados — Painel' };
 
 export type AfiliadoListItem = {
   id: string;

@@ -12,20 +12,23 @@ import { calcularUrgencia } from '@/lib/lote-helpers'
 import { resolveLoteAtual } from '@/lib/lotes'
 import { platform } from '@/lib/config'
 import { buildEventJsonLd } from '@/lib/seo/event-jsonld'
+import { BrandTheme } from '@/components/theme/BrandTheme'
+import { orgPublicName, type OrgBrand } from '@/lib/brand'
 
 type Props = { params: { slug: string } }
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
+type OrgRow = { name: string; slug: string; brand: OrgBrand | null }
 type EventWithOrg = Event & {
-  organizations: { name: string; slug: string } | { name: string; slug: string }[] | null
+  organizations: OrgRow | OrgRow[] | null
 }
 
-async function fetchEvent(slug: string): Promise<{ event: Event; org: { name: string; slug: string } | null } | null> {
+async function fetchEvent(slug: string): Promise<{ event: Event; org: OrgRow | null } | null> {
   const { data, error } = await supabase
     .from('events')
-    .select('*, organizations(name, slug)')
+    .select('*, organizations(name, slug, brand)')
     .eq('slug', slug)
     .eq('status', 'active')
     .single()
@@ -128,6 +131,7 @@ export default async function EventPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <BrandTheme brand={org?.brand} />
       <main>
         <AffiliateTracker eventId={event.id} />
         <Hero
@@ -143,7 +147,7 @@ export default async function EventPage({ params }: Props) {
         <MapaSection event={event} />
         {org && (
           <p className="text-center text-sm text-cream-400 pb-4">
-            Organizado por <span className="text-cream-300">{org.name}</span>
+            Organizado por <span className="text-cream-300">{orgPublicName(org)}</span>
           </p>
         )}
         {loteAtivo ? (

@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: EMAIL_FROM,
       to: profile.email!,
-      subject: 'Confirme seu cadastro — SACODE',
+      subject: 'Confirme seu cadastro',
       html: renderConfirmationEmail({ firstName: profile.first_name || 'Cliente', confirmUrl }),
     });
   } catch (err) {

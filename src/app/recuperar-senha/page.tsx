@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { RecuperarSenhaForm } from '@/components/auth/RecuperarSenhaForm';
 
-export const metadata = { title: 'Recuperar senha — SACODE' };
+export const metadata = { title: 'Recuperar senha' };
 
 export default function Page() {
   return (

@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
   const { data: profile } = await supabaseAdmin.from('profiles')
     .select('first_name, last_name, email, phone, cpf').eq('id', user.id).single();
 
-  // Le cookie sacode_ref e valida que o afiliado existe, esta ativo e pertence a este evento.
+  // Le cookie ref_code e valida que o afiliado existe, esta ativo e pertence a este evento.
   // Se invalido, ignora silenciosamente (pedido segue sem afiliado, sem quebrar checkout).
   let affiliateCode: string | null = null;
   const cookieRef = readAffiliateCodeFromHeader(req.headers.get('cookie'));

@@ -212,7 +212,7 @@ export default async function CampanhasPage({
         <ol className="text-cream-300 text-sm space-y-2 list-decimal list-inside mb-4">
           <li>Acesse o <strong>Business Manager → Configurações do negócio → Usuários → Usuários do sistema</strong></li>
           <li>Crie (ou selecione) um usuário do sistema e clique em <strong>Gerar token</strong></li>
-          <li>Marque a permissão <strong>ads_read</strong> e selecione a conta de anúncios do Sacode</li>
+          <li>Marque a permissão <strong>ads_read</strong> e selecione a conta de anúncios da organização</li>
           <li>Adicione <code className="text-accent-300">META_ADS_TOKEN=&lt;token&gt;</code> nas variáveis de ambiente (local e Vercel)</li>
         </ol>
         <p className="text-cream-400 text-xs">

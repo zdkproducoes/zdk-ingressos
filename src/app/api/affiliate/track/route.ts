@@ -7,7 +7,7 @@ import { checkRateLimit, getClientIp } from '@/lib/turnstile/ratelimit';
 // Body: { code: string, event_id: string }
 //
 // Valida via RPC track_affiliate_visit (atomico: insere visita + incrementa contador).
-// Se valido, seta cookie sacode_ref (30 dias, last-click wins).
+// Se valido, seta cookie ref_code (30 dias, last-click wins).
 // Se invalido, NAO seta cookie e retorna 404 sem erro (silencioso pro client).
 export async function POST(request: NextRequest) {
   // Protege o contador de visitas (exibido no painel do embaixador)

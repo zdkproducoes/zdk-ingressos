@@ -105,7 +105,7 @@ async function sendConfirmation(userId: string, email: string, firstName: string
     await resend.emails.send({
       from: EMAIL_FROM,
       to: email,
-      subject: 'Confirme seu cadastro — SACODE',
+      subject: 'Confirme seu cadastro',
       html: renderConfirmationEmail({ firstName, confirmUrl }),
     });
   } catch (err) { console.error('resend', err); }

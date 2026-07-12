@@ -5,7 +5,7 @@ import { CortesiasClient } from '@/components/admin/CortesiasClient';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Cortesias — Admin SACODE' };
+export const metadata = { title: 'Cortesias — Painel' };
 
 export default async function CortesiasPage() {
   const ctx = await requirePanelContext();

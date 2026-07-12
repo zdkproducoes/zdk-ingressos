@@ -5,7 +5,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AfiliadoNovoClient } from '@/components/admin/AfiliadoNovoClient';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Novo afiliado — Admin SACODE' };
+export const metadata = { title: 'Novo afiliado — Painel' };
 
 export default async function AfiliadoNovoPage() {
   const { data: events } = await supabaseAdmin

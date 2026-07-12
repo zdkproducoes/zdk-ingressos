@@ -6,9 +6,10 @@ import QRCode from 'qrcode';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { requirePanelApi } from '@/lib/auth/panel';
 import { assertEventInScope, getScopedEventIds } from '@/lib/auth/scope';
-import { resend, EMAIL_FROM } from '@/lib/email/resend';
+import { resend } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
 import { platform } from '@/lib/config';
+import { orgPublicName, emailFromFor, type OrgForBrand } from '@/lib/brand';
 
 export const runtime = 'nodejs';
 
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
   }
   const { data: event } = await supabaseAdmin
     .from('events')
-    .select('id, title, slug, event_date, event_time, venue_name, venue_address, status')
+    .select('id, title, slug, event_date, event_time, venue_name, venue_address, status, organizations ( name, brand )')
     .eq('id', eventId)
     .single();
   if (!event) return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
@@ -226,8 +227,9 @@ export async function POST(req: NextRequest) {
       weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
     });
     const subjectSuffix = qty === 1 ? 'uma cortesia' : `${qty} cortesias`;
+    const org = (Array.isArray(event.organizations) ? event.organizations[0] : event.organizations) as OrgForBrand;
     await resend.emails.send({
-      from: EMAIL_FROM,
+      from: emailFromFor(org),
       to: guest.email,
       subject: `🎁 Você recebeu ${subjectSuffix} para ${event.title}`,
       html: renderTicketEmail({
@@ -239,6 +241,7 @@ export async function POST(req: NextRequest) {
         venueAddress: event.venue_address,
         orderNumber: order.order_number,
         tickets: ticketsForEmail,
+        organizerName: orgPublicName(org),
       }),
     });
   } catch (err) {

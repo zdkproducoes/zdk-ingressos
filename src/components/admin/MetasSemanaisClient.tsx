@@ -388,7 +388,7 @@ export function MetasSemanaisClient({
             type="text"
             value={form.reward}
             onChange={(e) => setField('reward', e.target.value)}
-            placeholder='opcional — ex.: "Camisa exclusiva do SACODE" (aparece no painel do embaixador)'
+            placeholder='opcional — ex.: "Camisa exclusiva do evento" (aparece no painel do embaixador)'
             className={inputClass}
           />
         </div>

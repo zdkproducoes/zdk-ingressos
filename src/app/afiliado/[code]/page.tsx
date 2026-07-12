@@ -10,7 +10,7 @@ import { AlertCircle } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
-  title: 'Painel do Embaixador — SACODE',
+  title: 'Painel do Embaixador',
   robots: { index: false, follow: false },
 };
 

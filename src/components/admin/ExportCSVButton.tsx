@@ -34,7 +34,7 @@ export function ExportCSVButton({ buyers }: { buyers: BuyerData[] }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `compradores-sacode-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `compradores-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   }

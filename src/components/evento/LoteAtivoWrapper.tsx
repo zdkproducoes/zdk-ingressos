@@ -31,7 +31,7 @@ export function LoteAtivoWrapper({
         }])
       )
       localStorage.setItem("event_id", eventId)
-      // affiliate_code vive no cookie sacode_ref (lido server-side no checkout)
+      // affiliate_code vive no cookie ref_code (lido server-side no checkout)
     } catch (err) {
       console.error("[LoteAtivoWrapper] localStorage falhou:", err)
     }

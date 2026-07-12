@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { BuscarIngressoForm } from '@/components/BuscarIngressoForm';
 
 export const metadata: Metadata = {
-  title: 'Localizar Ingresso — SACODE',
+  title: 'Localizar Ingresso',
   description: 'Encontre seus ingressos informando o CPF e o número do pedido.',
 };
 

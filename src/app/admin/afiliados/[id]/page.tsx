@@ -6,7 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AfiliadoEditClient } from '@/components/admin/AfiliadoEditClient';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Afiliado — Admin SACODE' };
+export const metadata = { title: 'Afiliado — Painel' };
 
 export type AfiliadoDetail = {
   id: string;

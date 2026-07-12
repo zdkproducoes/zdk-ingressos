@@ -1,3 +1,5 @@
+import { platform } from '@/lib/config';
+
 type TermosContentProps = {
   /** Se true, usa cores claras para fundo escuro (modal). Se false, cores escuras para fundo branco (página). */
   darkBg?: boolean;
@@ -14,7 +16,7 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
       <h2>Preâmbulo</h2>
       <p>
         Este documento estabelece os Termos de Uso e Condições de Compra
-        (&ldquo;Termos&rdquo;) aplicáveis à utilização da plataforma SACODE e
+        (&ldquo;Termos&rdquo;) aplicáveis à utilização da plataforma {platform.name} e
         à aquisição de ingressos para eventos nela disponibilizados. Ao se
         cadastrar, navegar ou efetuar compras na plataforma, o usuário declara
         haver lido, compreendido e aceitado integralmente todas as cláusulas a
@@ -24,14 +26,15 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
 
       <h2>Das Partes</h2>
       <p>
-        <strong>Organizador do Evento:</strong> 44.816.216 CAIO DIEGO MARTINS,
-        inscrita no CNPJ sob o nº 44.816.216/0001-03, doravante denominada
-        &ldquo;ORGANIZADOR&rdquo;, responsável pela realização do evento, pela
-        emissão dos ingressos e pelo recebimento dos valores correspondentes
-        às vendas.
+        <strong>Organizador do Evento:</strong> a pessoa física ou jurídica
+        identificada na página de cada evento como responsável pela sua
+        realização (&ldquo;Organizado por&rdquo;), doravante denominada
+        &ldquo;ORGANIZADOR&rdquo;, responsável pela realização do evento e
+        pela emissão dos ingressos.
       </p>
       <p>
-        <strong>Plataforma Tecnológica:</strong> ZDK PRODUÇÕES, doravante
+        <strong>Plataforma Tecnológica:</strong> {platform.legal.companyName}
+        {platform.legal.document ? `, CNPJ ${platform.legal.document}` : ''}, doravante
         denominada &ldquo;PLATAFORMA&rdquo;, responsável exclusivamente pela
         operação tecnológica do website, processamento técnico de cadastros,
         emissão de QR Codes, intermediação técnica do checkout e envio de
@@ -51,8 +54,8 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
       <ul>
         <li>
           <strong>&ldquo;Plataforma&rdquo;:</strong> o ambiente digital
-          acessível em https://www.zdkingressos.com.br e demais URLs
-          operadas pela ZDK Produções para o evento referenciado.
+          acessível em {platform.baseUrl} e demais URLs operadas pela
+          {' '}{platform.legal.companyName}.
         </li>
         <li>
           <strong>&ldquo;Evento&rdquo;:</strong> o evento artístico/musical
@@ -240,8 +243,8 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
         automatizada de transferência diretamente na Plataforma, as
         solicitações de transferência deverão ser realizadas por meio do
         canal de atendimento{' '}
-        <a href="mailto:ingressos@cantorcaiolacerda.com.br">
-          ingressos@cantorcaiolacerda.com.br
+        <a href={`mailto:${platform.supportEmail || platform.legal.privacyEmail}`}>
+          {platform.supportEmail || platform.legal.privacyEmail}
         </a>
         , com antecedência mínima de 6 (seis) horas em relação ao horário de
         início do Evento, observadas as demais condições desta cláusula.
@@ -266,8 +269,8 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
       <p>
         <strong>7.2</strong> Para exercício do direito de arrependimento, o
         Comprador deverá enviar solicitação ao canal de atendimento{' '}
-        <a href="mailto:ingressos@cantorcaiolacerda.com.br">
-          ingressos@cantorcaiolacerda.com.br
+        <a href={`mailto:${platform.supportEmail || platform.legal.privacyEmail}`}>
+          {platform.supportEmail || platform.legal.privacyEmail}
         </a>
         , informando os dados do pedido, no prazo previsto na cláusula 7.1.
       </p>
@@ -462,8 +465,8 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
       <p>
         <strong>13.4</strong> Para o exercício de qualquer direito previsto
         na LGPD, o titular dos dados poderá entrar em contato pelo e-mail{' '}
-        <a href="mailto:privacidade@zdkproducoes.com.br">
-          privacidade@zdkproducoes.com.br
+        <a href={`mailto:${platform.legal.privacyEmail}`}>
+          {platform.legal.privacyEmail}
         </a>
         .
       </p>
@@ -473,7 +476,7 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
         <strong>14.1</strong> Todos os elementos da Plataforma — incluindo,
         sem limitação, código-fonte, design, marcas, logotipos, layouts,
         textos, imagens, ícones, estrutura de navegação e funcionalidades —
-        são de titularidade exclusiva da ZDK Produções e/ou do Organizador,
+        são de titularidade exclusiva da {platform.legal.companyName} e/ou do Organizador,
         conforme o caso, sendo protegidos pela legislação aplicável de
         propriedade intelectual.
       </p>

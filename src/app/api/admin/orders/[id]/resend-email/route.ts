@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { resend, EMAIL_FROM } from '@/lib/email/resend';
+import { resend } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
 import { requirePanelApi } from '@/lib/auth/panel';
+import { orgPublicName, emailFromFor, type OrgForBrand } from '@/lib/brand';
 import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
@@ -30,7 +31,7 @@ export async function POST(
     .select(`
       id, order_number, payment_status, event_id,
       profiles!orders_customer_id_fkey ( first_name, email ),
-      events ( title, event_date, event_time, venue_name, venue_address )
+      events ( title, event_date, event_time, venue_name, venue_address, organizations ( name, brand ) )
     `)
     .eq('id', orderId)
     .single();
@@ -81,8 +82,9 @@ export async function POST(
 
   let emailSuccess = false;
   try {
+    const org = (Array.isArray(ev.organizations) ? ev.organizations[0] : ev.organizations) as OrgForBrand;
     await resend.emails.send({
-      from: EMAIL_FROM,
+      from: emailFromFor(org),
       to: profile.email,
       subject: `[Reenvio] Seus ingressos para ${ev.title}`,
       html: renderTicketEmail({
@@ -94,6 +96,7 @@ export async function POST(
         venueAddress: ev.venue_address,
         orderNumber: order.order_number,
         tickets: ticketsForEmail,
+        organizerName: orgPublicName(org),
       }),
     });
     emailSuccess = true;

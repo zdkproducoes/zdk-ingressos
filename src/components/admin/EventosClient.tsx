@@ -405,7 +405,7 @@ export function EventosClient({
                   const title = e.target.value;
                   setForm((f) => ({ ...f, title, slug: slugify(title) }));
                 }}
-                placeholder="Sacode do Lacerda - 16ª Edição"
+                placeholder="Nome do Evento - 1ª Edição"
                 className={inputCls}
               />
             </div>
@@ -416,7 +416,7 @@ export function EventosClient({
                 type="text"
                 value={form.slug}
                 onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value.toLowerCase() }))}
-                placeholder="sacode-16-edicao"
+                placeholder="nome-do-evento-1-edicao"
                 className={`${inputCls} font-mono`}
               />
               <p className="text-xs text-cream-400 mt-1">

@@ -1,3 +1,5 @@
+import { platform } from '@/lib/config';
+
 type PrivacidadeContentProps = {
   /** Se true, usa cores claras para fundo escuro (modal). Se false, cores escuras para fundo branco (página). */
   darkBg?: boolean;
@@ -24,7 +26,7 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
       <h2>Introdução</h2>
       <p>
         Esta Política de Privacidade descreve como os dados pessoais dos
-        usuários da plataforma SACODE são coletados, utilizados, armazenados,
+        usuários da plataforma {platform.name} são coletados, utilizados, armazenados,
         compartilhados e protegidos, em estrita observância à Lei Geral de
         Proteção de Dados Pessoais — Lei nº 13.709/2018 (&ldquo;LGPD&rdquo;),
         ao Marco Civil da Internet (Lei nº 12.965/2014) e ao Código de Defesa
@@ -89,18 +91,19 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
             <tr>
               <td className={tableCellClass}>Controlador</td>
               <td className={tableCellClass}>
-                44.816.216 CAIO DIEGO MARTINS
-                <br />
-                CNPJ 44.816.216/0001-03
+                O Organizador do evento em que o ingresso foi adquirido
+                (identificado na página do evento como &ldquo;Organizado
+                por&rdquo;)
               </td>
               <td className={tableCellClass}>
-                Define finalidades e meios do tratamento. Responsável pelas
-                decisões sobre os dados.
+                Define finalidades e meios do tratamento dos dados dos
+                compradores dos seus eventos. Responsável pelas decisões
+                sobre os dados.
               </td>
             </tr>
             <tr>
               <td className={tableCellClass}>Operador</td>
-              <td className={tableCellClass}>ZDK Produções</td>
+              <td className={tableCellClass}>{platform.legal.companyName} ({platform.name})</td>
               <td className={tableCellClass}>
                 Realiza o tratamento técnico em nome do Controlador (operação
                 da plataforma, processamento dos dados, envio de e-mails
@@ -113,10 +116,10 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
                 Fernando Zedeque
                 <br />
                 <a
-                  href="mailto:privacidade@zdkproducoes.com.br"
+                  href={`mailto:${platform.legal.privacyEmail}`}
                   className={tableLinkClass}
                 >
-                  privacidade@zdkproducoes.com.br
+                  {platform.legal.privacyEmail}
                 </a>
               </td>
               <td className={tableCellClass}>
@@ -477,8 +480,8 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
       <p>
         <strong>6.2</strong> Para exercer qualquer destes direitos, o
         titular poderá entrar em contato pelo e-mail{' '}
-        <a href="mailto:privacidade@zdkproducoes.com.br">
-          privacidade@zdkproducoes.com.br
+        <a href={`mailto:${platform.legal.privacyEmail}`}>
+          {platform.legal.privacyEmail}
         </a>
         , com identificação clara do direito a ser exercido. As solicitações
         serão atendidas no prazo máximo de 15 (quinze) dias contados do
@@ -563,8 +566,8 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
         <strong>9.3</strong> Pais ou responsáveis legais que identificarem
         cadastro de menor sob sua tutela podem solicitar a exclusão imediata
         pelo e-mail{' '}
-        <a href="mailto:privacidade@zdkproducoes.com.br">
-          privacidade@zdkproducoes.com.br
+        <a href={`mailto:${platform.legal.privacyEmail}`}>
+          {platform.legal.privacyEmail}
         </a>
         .
       </p>
@@ -589,8 +592,8 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
       </p>
       <p>
         <strong>E-mail do Encarregado:</strong>{' '}
-        <a href="mailto:privacidade@zdkproducoes.com.br">
-          privacidade@zdkproducoes.com.br
+        <a href={`mailto:${platform.legal.privacyEmail}`}>
+          {platform.legal.privacyEmail}
         </a>
       </p>
       <p>

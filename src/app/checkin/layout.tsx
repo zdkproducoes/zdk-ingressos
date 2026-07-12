@@ -15,7 +15,7 @@ export default async function CheckinLayout({ children }: { children: React.Reac
       <header className="border-b border-surface-700 bg-surface-900">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
           <Link href="/checkin" className="text-cream-200 font-bold text-xl">
-            SACODE Check-in
+            Check-in
           </Link>
           <div className="flex items-center gap-4">
             <span className="text-cream-300 text-sm hidden sm:inline">

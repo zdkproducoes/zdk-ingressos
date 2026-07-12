@@ -7,7 +7,7 @@ import { CheckoutClient } from '@/components/checkout/CheckoutClient';
 import { resolveLoteAtual } from '@/lib/lotes';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Checkout - SACODE' };
+export const metadata = { title: 'Checkout' };
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ event?: string }> }) {
   const { event: eventSlug } = await searchParams;

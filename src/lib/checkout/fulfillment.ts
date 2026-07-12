@@ -17,10 +17,11 @@
 import { randomBytes, randomUUID } from 'crypto';
 import QRCode from 'qrcode';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { resend, EMAIL_FROM } from '@/lib/email/resend';
+import { resend } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
 import { sendPurchaseEvent } from '@/lib/meta/capi';
 import { platform } from '@/lib/config';
+import { orgPublicName, emailFromFor, emailReplyToFor, type OrgForBrand } from '@/lib/brand';
 
 type FulfillOptions = {
   incrementStock: boolean;
@@ -35,7 +36,7 @@ export async function fulfillOrder(
   opts: FulfillOptions = { incrementStock: false },
 ): Promise<FulfillResult> {
   const { data: order } = await supabaseAdmin.from('orders').select(`
-    *, events ( id, title, slug, event_date, event_time, venue_name, venue_address ),
+    *, events ( id, title, slug, event_date, event_time, venue_name, venue_address, organizations ( name, brand ) ),
     profiles!orders_customer_id_fkey ( first_name, email, phone )
   `).eq('id', orderId).single();
   if (!order) return { ok: false, reason: 'order-not-found' };
@@ -119,15 +120,20 @@ export async function fulfillOrder(
       const eventDate = new Date(ev.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
         weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
       });
+      // Marca do organizador no remetente/rodapé (domínio segue o da plataforma)
+      const org = (Array.isArray(ev.organizations) ? ev.organizations[0] : ev.organizations) as OrgForBrand;
+      const replyTo = emailReplyToFor(org);
       try {
         await resend.emails.send({
-          from: EMAIL_FROM, to: order.profiles.email,
+          from: emailFromFor(org), to: order.profiles.email,
+          ...(replyTo ? { replyTo } : {}),
           subject: `Seus ingressos para ${ev.title}`,
           html: renderTicketEmail({
             firstName: order.profiles.first_name || 'Cliente',
             eventTitle: ev.title, eventDate, eventTime: (ev.event_time || '').slice(0, 5),
             venueName: ev.venue_name, venueAddress: ev.venue_address,
             orderNumber: order.order_number, tickets: ticketsForEmail,
+            organizerName: orgPublicName(org),
           }),
         });
         await supabaseAdmin.from('orders')

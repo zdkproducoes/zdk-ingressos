@@ -9,7 +9,7 @@ import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { MetasSemanaisClient } from '@/components/admin/MetasSemanaisClient';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Metas semanais — Admin SACODE' };
+export const metadata = { title: 'Metas semanais — Painel' };
 
 export type MetaListItem = {
   id: string;

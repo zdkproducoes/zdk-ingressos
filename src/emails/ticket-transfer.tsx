@@ -1,4 +1,6 @@
 // emails/ticket-transfer.tsx
+import { platform } from '@/lib/config';
+
 // E-mail enviado para QUEM RECEBEU um ingresso por transferência.
 // Contém o QR novo (o antigo foi cancelado no ato da transferência).
 export function renderTicketTransferEmail(params: {
@@ -43,7 +45,7 @@ O QR Code abaixo é o único válido — apresente ele na entrada do evento.</p>
 </td></tr></table>
 <p style="margin:24px 0 4px;font-size:12px;color:#BFA279;text-align:center;">O ingresso também fica disponível na sua conta</p>
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 24px;"><tr><td style="background:#E4A03F;border-radius:8px;">
-<a href="https://www.zdkingressos.com.br/minhas-compras" style="display:inline-block;padding:12px 28px;font-size:14px;font-weight:600;color:#45183F;text-decoration:none;">🎟️ Ver no site</a>
+<a href="${platform.baseUrl}/minhas-compras" style="display:inline-block;padding:12px 28px;font-size:14px;font-weight:600;color:#45183F;text-decoration:none;">🎟️ Ver no site</a>
 </td></tr></table>
 <p style="margin:24px 0 0;padding:16px;background:#321131;border-radius:8px;font-size:13px;color:#BFA279;line-height:1.5;">
 ⚠️ <strong style="color:#EADBC4;">Importante:</strong> não compartilhe este QR Code — uso único na entrada.
@@ -51,7 +53,7 @@ Ingressos recebidos por transferência <strong style="color:#EADBC4;">não podem
 </p>
 </td></tr>
 <tr><td style="padding:24px 40px;background:#1F0A1D;text-align:center;border-top:1px solid #694060;">
-<p style="margin:0;font-size:12px;color:#BFA279;">© ${new Date().getFullYear()} SACODE</p>
+<p style="margin:0;font-size:12px;color:#BFA279;">© ${new Date().getFullYear()} ${esc(platform.name)}</p>
 </td></tr></table></td></tr></table></body></html>`;
 }
 

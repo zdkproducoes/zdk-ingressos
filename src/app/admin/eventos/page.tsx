@@ -30,6 +30,11 @@ export type EventListItem = {
   tickets_count: number;
   net_revenue: number;
   organization_name: string | null;
+  banner_url: string | null;
+  og_image_url: string | null;
+  venue_lat: number | null;
+  venue_lng: number | null;
+  content: import('@/lib/supabase').EventContent;
 };
 
 export default async function EventosPage() {
@@ -39,7 +44,7 @@ export default async function EventosPage() {
 
   let eventsQuery = supabaseAdmin
     .from('events')
-    .select('id, title, slug, status, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, organizations(name)')
+    .select('id, title, slug, status, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, banner_url, og_image_url, venue_lat, venue_lng, content, organizations(name)')
     .order('event_date', { ascending: false });
   if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
 
@@ -95,6 +100,11 @@ export default async function EventosPage() {
       tickets_count: ticketAgg.get(e.id) ?? 0,
       net_revenue: agg.revenue,
       organization_name: (Array.isArray(e.organizations) ? e.organizations[0]?.name : e.organizations?.name) ?? null,
+      banner_url: e.banner_url ?? null,
+      og_image_url: e.og_image_url ?? null,
+      venue_lat: e.venue_lat != null ? Number(e.venue_lat) : null,
+      venue_lng: e.venue_lng != null ? Number(e.venue_lng) : null,
+      content: e.content ?? {},
     };
   });
 

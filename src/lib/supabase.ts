@@ -5,12 +5,32 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Conteúdo flexível da página do evento (events.content jsonb)
+export type EventLineupItem = {
+  name: string
+  genre?: string
+  /** headliner = destaque | host = anfitrião | support = demais | dj = discotecagem */
+  tier?: 'headliner' | 'host' | 'support' | 'dj'
+  tagline?: string
+}
+
+export type EventContent = {
+  subtitle?: string
+  opening_notice?: string
+  about_html?: string
+  lineup?: EventLineupItem[]
+  seo_keywords?: string[]
+}
+
 export type Event = {
   id: string
   title: string
   slug: string
   description: string
   banner_url: string | null
+  og_image_url: string | null
+  content: EventContent
+  organization_id: string | null
   event_date: string
   event_time: string
   doors_open_time: string
@@ -20,8 +40,8 @@ export type Event = {
   venue_city: string
   venue_state: string
   venue_zip: string
-  venue_lat: number
-  venue_lng: number
+  venue_lat: number | null
+  venue_lng: number | null
   age_rating: string
   age_rating_notes: string
   service_fee_percent: number

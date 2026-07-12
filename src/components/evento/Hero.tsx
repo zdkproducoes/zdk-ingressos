@@ -1,15 +1,22 @@
 import Image from "next/image";
 
-// Hero da página do evento: arte oficial + tarja de CTA.
+// Hero da página do evento: banner do evento (events.banner_url) + tarja de CTA.
+// Sem banner, renderiza um hero tipográfico com o título.
 // A tarja muda conforme o estado das vendas:
 //   - com lote ativo: "Vendas ABERTAS | A partir de R$ X"
 //   - sem lote ativo: aviso de abertura (vendas ainda não começaram)
 export function Hero({
+  title,
+  subtitle,
+  bannerUrl,
   precoMinimo,
   avisoAbertura,
 }: {
+  title: string;
+  subtitle: string | null;
+  bannerUrl: string | null;
   precoMinimo: number | null;
-  avisoAbertura: string; // ex.: "08/07 às 18h"
+  avisoAbertura: string | null; // ex.: "08/07 às 18h"; null = sem data anunciada
 }) {
   const vendasAbertas = precoMinimo !== null;
   const precoFmt =
@@ -21,17 +28,30 @@ export function Hero({
 
   return (
     <>
-      {/* Hero com a arte oficial em tela cheia */}
+      {/* Hero com o banner do evento em tela cheia */}
       <section className="relative w-full overflow-hidden bg-surface-900">
-        <Image
-          src="/hero-sacode-16.png"
-          alt="Sacode do Lacerda — Super Edição (16ª) com Caio Lacerda e Milthinho — 02 de Agosto, a partir das 12h — Villa Jardim Bar, São Bernardo do Campo"
-          width={2160}
-          height={1080}
-          priority
-          className="w-full h-auto block"
-        />
-        {/* Fade pro vinho do site embaixo */}
+        {bannerUrl ? (
+          <Image
+            src={bannerUrl}
+            alt={title}
+            width={2160}
+            height={1080}
+            priority
+            className="w-full h-auto block"
+          />
+        ) : (
+          <div className="w-full py-24 px-5 bg-gradient-to-br from-surface-600 to-muted-600 text-center">
+            <h1 className="font-display-bold text-[clamp(2.5rem,8vw,5rem)] text-cream-100 leading-none tracking-wide">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="font-display text-xl text-accent-300 tracking-[0.1em] mt-4">
+                {subtitle}
+              </p>
+            )}
+          </div>
+        )}
+        {/* Fade pro fundo do site embaixo */}
         <div className="absolute bottom-0 left-0 right-0 h-[30%] bg-gradient-to-b from-transparent to-surface-800 pointer-events-none" />
       </section>
 
@@ -53,7 +73,11 @@ export function Hero({
             </div>
           ) : (
             <div className="font-display text-xl tracking-[0.08em] text-cream-100">
-              Abertura das Vendas <strong className="text-accent-300">dia {avisoAbertura}</strong>
+              {avisoAbertura ? (
+                <>Abertura das Vendas <strong className="text-accent-300">dia {avisoAbertura}</strong></>
+              ) : (
+                <>Vendas <strong className="text-accent-300">em breve</strong></>
+              )}
             </div>
           )}
           <a

@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 import { requirePanelApi } from '@/lib/auth/panel';
+import { parseContentFields } from '@/lib/admin/event-content';
 
 const SLUG_REGEX = /^[a-z0-9-]+$/;
 
@@ -96,6 +97,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Máximo por CPF deve estar entre 1 e 100.' }, { status: 400 });
   }
 
+  // Conteúdo da página do evento (banner, OG, coordenadas, lineup, textos)
+  const parsedContent = parseContentFields(body);
+  if (!parsedContent.ok) {
+    return NextResponse.json({ error: parsedContent.error }, { status: 400 });
+  }
+
   // Slug duplicado
   const { data: existing } = await supabaseAdmin
     .from('events')
@@ -127,6 +134,7 @@ export async function POST(request: Request) {
       service_fee_percent: serviceFee,
       max_tickets_per_cpf: maxPerCpf,
       status: 'draft',
+      ...parsedContent.columns,
     })
     .select('id')
     .single();

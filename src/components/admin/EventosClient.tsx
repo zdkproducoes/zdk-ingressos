@@ -37,7 +37,16 @@ type FormState = {
   description: string;
   service_fee_percent: string;
   max_tickets_per_cpf: string;
+  banner_url: string;
+  og_image_url: string;
+  venue_lat: string;
+  venue_lng: string;
+  subtitle: string;
+  opening_notice: string;
+  lineup_text: string;
 };
+
+import { lineupToText } from '@/lib/admin/event-content';
 
 function slugify(text: string): string {
   return text
@@ -80,8 +89,64 @@ export function EventosClient({
     description: '',
     service_fee_percent: String(last?.service_fee_percent ?? 10),
     max_tickets_per_cpf: String(last?.max_tickets_per_cpf ?? 5),
+    banner_url: '',
+    og_image_url: '',
+    venue_lat: '',
+    venue_lng: '',
+    subtitle: '',
+    opening_notice: '',
+    lineup_text: '',
   };
   const [form, setForm] = useState<FormState>(emptyForm);
+  // Modal "Editar página": null = fechado; senão, o evento em edição
+  const [contentTarget, setContentTarget] = useState<EventListItem | null>(null);
+  const [contentForm, setContentForm] = useState({
+    banner_url: '', og_image_url: '', venue_lat: '', venue_lng: '',
+    subtitle: '', opening_notice: '', lineup_text: '',
+  });
+  const setC = (field: keyof typeof contentForm) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setContentForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const openContentModal = (item: EventListItem) => {
+    setFormError(null);
+    setContentForm({
+      banner_url: item.banner_url ?? '',
+      og_image_url: item.og_image_url ?? '',
+      venue_lat: item.venue_lat != null ? String(item.venue_lat) : '',
+      venue_lng: item.venue_lng != null ? String(item.venue_lng) : '',
+      subtitle: item.content?.subtitle ?? '',
+      opening_notice: item.content?.opening_notice ?? '',
+      lineup_text: lineupToText(item.content?.lineup),
+    });
+    setContentTarget(item);
+  };
+
+  const handleSaveContent = async () => {
+    if (!contentTarget) return;
+    setFormError(null);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/eventos/${contentTarget.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_content', ...contentForm }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setFormError(json.error || 'Erro ao salvar conteúdo.');
+        setSaving(false);
+        return;
+      }
+      setContentTarget(null);
+      flash('Página do evento atualizada.');
+      router.refresh();
+    } catch {
+      setFormError('Erro de conexão.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -265,6 +330,13 @@ export function EventosClient({
                         Publicar
                       </button>
                     )}
+                    <button
+                      onClick={() => openContentModal(item)}
+                      disabled={busy}
+                      className="text-xs px-3 py-1.5 rounded-lg border border-muted-600 bg-surface-800 hover:bg-surface-900 disabled:opacity-50 text-cream-300 transition"
+                    >
+                      Editar página
+                    </button>
                     {item.status === 'active' && (
                       <button
                         onClick={() => handleSetStatus(item, 'finished')}
@@ -411,6 +483,47 @@ export function EventosClient({
               <textarea rows={3} value={form.description} onChange={set('description')} className={inputCls} />
             </div>
 
+            {/* ---- Página do evento (opcional) ---- */}
+            <div className="border-t border-muted-700 pt-4">
+              <p className="text-sm font-semibold text-cream-200 mb-1">Página do evento (opcional)</p>
+              <p className="text-xs text-cream-400 mb-3">
+                Tudo aqui pode ser preenchido depois pelo botão &quot;Editar página&quot;.
+              </p>
+              <div className="space-y-3">
+                <div>
+                  <label className={labelCls}>URL do banner (arte principal)</label>
+                  <input type="url" value={form.banner_url} onChange={set('banner_url')} placeholder="https://..." className={inputCls} />
+                </div>
+                <div>
+                  <label className={labelCls}>URL da imagem de compartilhamento (OG)</label>
+                  <input type="url" value={form.og_image_url} onChange={set('og_image_url')} placeholder="https://... (1200x600)" className={inputCls} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className={labelCls}>Latitude</label>
+                    <input type="text" value={form.venue_lat} onChange={set('venue_lat')} placeholder="-23.6500" className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Longitude</label>
+                    <input type="text" value={form.venue_lng} onChange={set('venue_lng')} placeholder="-46.5833" className={inputCls} />
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Subtítulo (aparece sob o título)</label>
+                  <input type="text" value={form.subtitle} onChange={set('subtitle')} placeholder="Super Edição" className={inputCls} />
+                </div>
+                <div>
+                  <label className={labelCls}>Aviso de abertura das vendas</label>
+                  <input type="text" value={form.opening_notice} onChange={set('opening_notice')} placeholder="08/07 às 18h" className={inputCls} />
+                </div>
+                <div>
+                  <label className={labelCls}>Lineup (1 artista por linha: Nome | gênero | tipo)</label>
+                  <textarea rows={4} value={form.lineup_text} onChange={set('lineup_text')} placeholder="Artista Principal | Pagode | principal" className={`${inputCls} font-mono text-xs`} />
+                  <p className="text-xs text-cream-400 mt-1">tipo: principal · anfitriao · dj · (vazio = normal)</p>
+                </div>
+              </div>
+            </div>
+
             <div className="flex gap-2 justify-end pt-2">
               <button
                 onClick={() => setModalOpen(false)}
@@ -424,6 +537,79 @@ export function EventosClient({
                 className="px-5 py-2 rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-900 font-semibold text-sm transition"
               >
                 {saving ? 'Criando…' : 'Criar evento'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal "Editar página" (conteúdo público do evento) */}
+      {contentTarget && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 overflow-y-auto py-8 px-4">
+          <div className="bg-surface-700 border border-muted-700 rounded-xl w-full max-w-lg p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-cream-200">Página: {contentTarget.title}</h3>
+              <button
+                onClick={() => setContentTarget(null)}
+                className="text-cream-400 hover:text-cream-200 transition"
+                aria-label="Fechar"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {formError && (
+              <div className="flex items-start gap-2 bg-red-900/30 border border-red-700/50 text-red-200 text-sm rounded-lg px-3 py-2">
+                <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+                <span>{formError}</span>
+              </div>
+            )}
+
+            <div>
+              <label className={labelCls}>URL do banner (arte principal)</label>
+              <input type="url" value={contentForm.banner_url} onChange={setC('banner_url')} placeholder="https://..." className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>URL da imagem de compartilhamento (OG)</label>
+              <input type="url" value={contentForm.og_image_url} onChange={setC('og_image_url')} placeholder="https://... (1200x600)" className={inputCls} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Latitude</label>
+                <input type="text" value={contentForm.venue_lat} onChange={setC('venue_lat')} placeholder="-23.6500" className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>Longitude</label>
+                <input type="text" value={contentForm.venue_lng} onChange={setC('venue_lng')} placeholder="-46.5833" className={inputCls} />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Subtítulo</label>
+              <input type="text" value={contentForm.subtitle} onChange={setC('subtitle')} placeholder="Super Edição" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Aviso de abertura das vendas</label>
+              <input type="text" value={contentForm.opening_notice} onChange={setC('opening_notice')} placeholder="08/07 às 18h" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Lineup (1 artista por linha: Nome | gênero | tipo)</label>
+              <textarea rows={5} value={contentForm.lineup_text} onChange={setC('lineup_text')} className={`${inputCls} font-mono text-xs`} />
+              <p className="text-xs text-cream-400 mt-1">tipo: principal · anfitriao · dj · (vazio = normal)</p>
+            </div>
+
+            <div className="flex gap-2 justify-end pt-2">
+              <button
+                onClick={() => setContentTarget(null)}
+                className="px-4 py-2 rounded-lg border border-muted-600 text-cream-300 hover:bg-surface-800 text-sm transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSaveContent}
+                disabled={saving}
+                className="px-5 py-2 rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-900 font-semibold text-sm transition"
+              >
+                {saving ? 'Salvando…' : 'Salvar página'}
               </button>
             </div>
           </div>

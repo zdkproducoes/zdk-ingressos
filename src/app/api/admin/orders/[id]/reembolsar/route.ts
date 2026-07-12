@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { mpPaymentRefund } from '@/lib/mercadopago/client';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
@@ -11,22 +12,12 @@ export async function POST(
 ) {
   const orderId = params.id;
 
-  // 1. Autenticacao (somente admin/producer podem reembolsar)
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ ok: false, message: 'Nao autenticado' }, { status: 401 });
+  // 1. Auth central do painel (reembolso exige admin da organização)
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, message: auth.error }, { status: auth.status });
   }
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return NextResponse.json({ ok: false, message: 'Sem permissao' }, { status: 403 });
-  }
+  const user = auth.ctx.user;
 
   // 2. Motivo obrigatorio
   let body: { reason?: string };
@@ -46,11 +37,12 @@ export async function POST(
   // 3. Busca o pedido
   const { data: order, error: orderErr } = await supabaseAdmin
     .from('orders')
-    .select('id, order_number, payment_status, payment_method, payment_gateway, payment_gateway_data, is_courtesy')
+    .select('id, order_number, payment_status, payment_method, payment_gateway, payment_gateway_data, is_courtesy, event_id')
     .eq('id', orderId)
     .maybeSingle();
 
-  if (orderErr || !order) {
+  // Escopo: o pedido precisa ser de um evento das organizações do usuário
+  if (orderErr || !order || !(await assertEventInScope(auth.ctx, order.event_id))) {
     return NextResponse.json({ ok: false, message: 'Pedido nao encontrado' }, { status: 404 });
   }
 

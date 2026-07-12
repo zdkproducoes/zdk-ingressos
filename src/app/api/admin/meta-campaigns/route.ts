@@ -3,34 +3,20 @@
 // GET  -> lista todas as campanhas da conta + marca quais estao vinculadas ao evento
 // POST -> alterna um vinculo { campaignId, linked }
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { listAllCampaigns } from '@/lib/meta/insights';
+import { requirePanelApi } from '@/lib/auth/panel';
 
 export const runtime = 'nodejs';
 
-async function requireAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'Não autenticado', status: 401 as const };
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return { error: 'Sem permissão', status: 403 as const };
-  }
-  return { user };
-}
-
 // GET → { eventTitle, campaigns: [{ id, name, effectiveStatus, linked }] }
 export async function GET() {
-  const auth = await requireAdmin();
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-  const selectedEvent = await getSelectedEvent();
+  // getSelectedEvent(ctx) já garante que o evento está no escopo do usuário
+  const selectedEvent = await getSelectedEvent(auth.ctx);
   if (!selectedEvent) {
     return NextResponse.json({ error: 'Nenhum evento selecionado' }, { status: 400 });
   }
@@ -57,10 +43,11 @@ export async function GET() {
 
 // POST → { campaignId: string, linked: boolean }
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin();
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-  const selectedEvent = await getSelectedEvent();
+  // getSelectedEvent(ctx) já garante que o evento está no escopo do usuário
+  const selectedEvent = await getSelectedEvent(auth.ctx);
   if (!selectedEvent) {
     return NextResponse.json({ error: 'Nenhum evento selecionado' }, { status: 400 });
   }

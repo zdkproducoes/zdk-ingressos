@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { LotesAdminClient } from '@/components/admin/LotesAdminClient';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 
@@ -34,18 +33,9 @@ export type SelectedEventOption = {
 };
 
 export default async function LotesPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/admin');
+  const ctx = await requirePanelContext();
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') redirect('/');
-
-  const selectedEvent = await getSelectedEvent();
+  const selectedEvent = await getSelectedEvent(ctx);
   if (!selectedEvent) {
     return (
       <p className="text-cream-400 text-center py-16">

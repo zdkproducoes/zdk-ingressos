@@ -1,25 +1,15 @@
 // app/api/admin/cortesias/buscar/route.ts
 // Busca convidado por CPF ou e-mail para emissão de cortesia
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
 
 export const runtime = 'nodejs';
 
 export async function GET(req: NextRequest) {
-  // Auth: só admin/producer pode buscar
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return NextResponse.json({ error: 'Sem permissão' }, { status: 403 });
-  }
+  // Auth central do painel (emissão de cortesia é operação de staff)
+  const auth = await requirePanelApi({ minOrgRole: 'staff' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const url = new URL(req.url);
   const q = (url.searchParams.get('q') || '').trim();

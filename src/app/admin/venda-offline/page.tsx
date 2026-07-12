@@ -3,6 +3,7 @@
 // A venda entra nos painéis como pedido aprovado normal; aqui fica o
 // relatório detalhado (quem vendeu, valor, data e horário).
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { VendaOfflineClient } from '@/components/admin/VendaOfflineClient';
 
@@ -30,7 +31,8 @@ export type OfflineSale = {
 };
 
 export default async function VendaOfflinePage() {
-  const event = await getSelectedEvent();
+  const ctx = await requirePanelContext();
+  const event = await getSelectedEvent(ctx);
   if (!event) {
     return (
       <p className="text-cream-400 text-center py-16">

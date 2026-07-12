@@ -1,27 +1,19 @@
 // app/api/admin/eventos/create/route.ts
 // Cria um novo evento. Nasce como 'draft' (invisível ao público) — os dados
 // de pedidos/lotes/compradores dele nascem separados por event_id.
+// O evento SEMPRE nasce vinculado a uma organização (dona dos dados).
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
+import { requirePanelApi } from '@/lib/auth/panel';
 
 const SLUG_REGEX = /^[a-z0-9-]+$/;
 
 export async function POST(request: Request) {
-  // Auth — só admin/producer
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 });
-  }
+  // Criar evento exige papel de admin na organização (ou superadmin)
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const { ctx } = auth;
 
   let body: Record<string, unknown>;
   try {
@@ -32,6 +24,31 @@ export async function POST(request: Request) {
 
   const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
   const strOrNull = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null);
+
+  // Resolve a organização dona do evento
+  const requestedOrgId = strOrNull(body.organization_id);
+  let organizationId: string | null = null;
+  if (ctx.isSuperadmin) {
+    organizationId = requestedOrgId;
+    if (!organizationId) {
+      return NextResponse.json(
+        { error: 'organization_id é obrigatório para o superadmin.' },
+        { status: 400 },
+      );
+    }
+  } else if (requestedOrgId) {
+    if (!(ctx.orgIds ?? []).includes(requestedOrgId)) {
+      return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 404 });
+    }
+    organizationId = requestedOrgId;
+  } else if ((ctx.orgIds ?? []).length === 1) {
+    organizationId = ctx.orgIds![0];
+  } else {
+    return NextResponse.json(
+      { error: 'Informe organization_id (você participa de mais de uma organização).' },
+      { status: 400 },
+    );
+  }
 
   const title = str(body.title);
   const slug = str(body.slug).toLowerCase();
@@ -95,6 +112,7 @@ export async function POST(request: Request) {
   const { data: created, error: insertError } = await supabaseAdmin
     .from('events')
     .insert({
+      organization_id: organizationId,
       title,
       slug,
       event_date: eventDate,

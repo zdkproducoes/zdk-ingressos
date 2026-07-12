@@ -1,29 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export async function POST(req: NextRequest) {
-  // Auth
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Nao autenticado' }, { status: 401 });
-  }
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  const allowed = profile?.role === 'admin' || profile?.role === 'producer';
-  if (!allowed) {
-    return NextResponse.json({ error: 'Sem permissao' }, { status: 403 });
-  }
+  // Auth central do painel (admin da organização ou superadmin)
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const user = auth.ctx.user;
 
   // Payload
   let body: any;
@@ -49,14 +38,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Meta de ingressos invalida (minimo 1)' }, { status: 400 });
   }
 
-  // Confirma que o evento existe
-  const { data: eventExists } = await supabaseAdmin
-    .from('events')
-    .select('id')
-    .eq('id', event_id)
-    .maybeSingle();
-  if (!eventExists) {
-    return NextResponse.json({ error: 'Evento nao encontrado' }, { status: 400 });
+  // Escopo: o evento precisa pertencer a uma organização do usuário
+  const eventInScope = await assertEventInScope(auth.ctx, event_id);
+  if (!eventInScope) {
+    return NextResponse.json({ error: 'Evento nao encontrado' }, { status: 404 });
   }
 
   // Semanas nao podem se sobrepor: o progresso e a "meta da semana atual"

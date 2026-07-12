@@ -1,43 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
-async function requireAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return { user: null, response: NextResponse.json({ error: 'Nao autenticado' }, { status: 401 }) };
-  }
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  const allowed = profile?.role === 'admin' || profile?.role === 'producer';
-  if (!allowed) {
-    return { user: null, response: NextResponse.json({ error: 'Sem permissao' }, { status: 403 }) };
-  }
-  return { user, response: null };
-}
-
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const { user, response } = await requireAdmin();
-  if (!user) return response!;
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const user = auth.ctx.user;
 
-  // Verifica que a meta existe
+  // Verifica que a meta existe E está no escopo do usuário
   const { data: goal } = await supabaseAdmin
     .from('affiliate_weekly_goals')
     .select('id, event_id')
     .eq('id', id)
     .maybeSingle();
-  if (!goal) {
+  if (!goal || !(await assertEventInScope(auth.ctx, goal.event_id))) {
     return NextResponse.json({ error: 'Meta nao encontrada' }, { status: 404 });
   }
 
@@ -103,15 +87,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const { user, response } = await requireAdmin();
-  if (!user) return response!;
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const user = auth.ctx.user;
 
   const { data: goal } = await supabaseAdmin
     .from('affiliate_weekly_goals')
     .select('id, event_id, week_start, week_end')
     .eq('id', id)
     .maybeSingle();
-  if (!goal) {
+  if (!goal || !(await assertEventInScope(auth.ctx, goal.event_id))) {
     return NextResponse.json({ error: 'Meta nao encontrada' }, { status: 404 });
   }
 

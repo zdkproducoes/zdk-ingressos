@@ -1,17 +1,24 @@
 import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
+import { getScopedEventIds } from '@/lib/auth/scope';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CheckinHomePage() {
+  const ctx = await requirePanelContext({ allowCheckinRole: true, redirectTo: '/checkin' });
   // Data de hoje em SP (formato YYYY-MM-DD)
   const today = new Date().toISOString().slice(0, 10);
 
-  const { data: events } = await supabaseAdmin
+  // Escopo: operador só vê eventos das organizações dele
+  const scopedIds = await getScopedEventIds(ctx);
+  let eventsQuery = supabaseAdmin
     .from('events')
     .select('id, title, slug, event_date, event_time, venue_name')
     .gte('event_date', today)
     .order('event_date', { ascending: true });
+  if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
+  const { data: events } = await eventsQuery;
 
   const list = events || [];
 

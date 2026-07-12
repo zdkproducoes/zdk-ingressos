@@ -2,6 +2,7 @@
 // Metas semanais dos embaixadores (gamificação). A meta é por evento e vale
 // para todos os embaixadores; cada um acompanha o próprio progresso no painel.
 import Link from 'next/link';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { ArrowLeft } from 'lucide-react';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
@@ -39,7 +40,8 @@ const spDateFmt = new Intl.DateTimeFormat('en-CA', {
 const toSaoPauloDate = (iso: string) => spDateFmt.format(new Date(iso));
 
 export default async function MetasSemanaisPage() {
-  const selectedEvent = await getSelectedEvent();
+  const ctx = await requirePanelContext();
+  const selectedEvent = await getSelectedEvent(ctx);
   if (!selectedEvent) {
     return (
       <p className="text-cream-400 text-center py-16">

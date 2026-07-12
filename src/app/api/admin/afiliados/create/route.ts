@@ -1,26 +1,16 @@
 // app/api/admin/afiliados/create/route.ts
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 const CODE_REGEX = /^[a-z0-9-]+$/;
 
 export async function POST(request: Request) {
-  // 1) Auth — só admin/producer
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 });
-  }
+  // 1) Auth central do painel (admin da organização ou superadmin)
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   // 2) Body
   let body: {
@@ -60,12 +50,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Comissão deve estar entre 0 e 100.' }, { status: 400 });
   }
 
-  // 4) Confere se o evento existe
-  const { data: event } = await supabaseAdmin
-    .from('events')
-    .select('id')
-    .eq('id', eventId)
-    .maybeSingle();
+  // 4) Escopo: o evento precisa pertencer a uma organização do usuário
+  const event = await assertEventInScope(auth.ctx, eventId);
   if (!event) return NextResponse.json({ error: 'Evento não encontrado.' }, { status: 404 });
 
   // 5) Confere code duplicado neste evento (mensagem clara antes de bater na constraint)

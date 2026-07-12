@@ -1,5 +1,6 @@
 // app/admin/afiliados/page.tsx
 import Link from 'next/link';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AfiliadosListClient } from '@/components/admin/AfiliadosListClient';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
@@ -25,7 +26,8 @@ export type AfiliadoListItem = {
 };
 
 export default async function AfiliadosPage() {
-  const selectedEvent = await getSelectedEvent();
+  const ctx = await requirePanelContext();
+  const selectedEvent = await getSelectedEvent(ctx);
   if (!selectedEvent) {
     return (
       <p className="text-cream-400 text-center py-16">

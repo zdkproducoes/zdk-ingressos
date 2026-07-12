@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
@@ -10,30 +11,19 @@ const VALID_STATUSES = ['active', 'paused', 'scheduled', 'ended', 'sold_out'];
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Auth
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Nao autenticado' }, { status: 401 });
-  }
+  // Auth central do painel (admin da organização ou superadmin)
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const { ctx } = auth;
+  const user = ctx.user;
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  const allowed = profile?.role === 'admin' || profile?.role === 'producer';
-  if (!allowed) {
-    return NextResponse.json({ error: 'Sem permissao' }, { status: 403 });
-  }
-
-  // Verifica que o lote existe
+  // Verifica que o lote existe E pertence a um evento no escopo do usuário
   const { data: batch } = await supabaseAdmin
     .from('ticket_batches')
-    .select('id, name, status')
+    .select('id, name, status, event_id')
     .eq('id', id)
     .maybeSingle();
-  if (!batch) {
+  if (!batch || !(await assertEventInScope(ctx, batch.event_id))) {
     return NextResponse.json({ error: 'Lote nao encontrado' }, { status: 404 });
   }
 

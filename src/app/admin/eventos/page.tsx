@@ -5,9 +5,11 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { EventosClient } from '@/components/admin/EventosClient';
+import { requirePanelContext } from '@/lib/auth/panel';
+import { getScopedEventIds } from '@/lib/auth/scope';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Eventos — Admin SACODE' };
+export const metadata = { title: 'Eventos — Painel' };
 
 export type EventListItem = {
   id: string;
@@ -27,14 +29,22 @@ export type EventListItem = {
   orders_count: number;
   tickets_count: number;
   net_revenue: number;
+  organization_name: string | null;
 };
 
 export default async function EventosPage() {
+  const ctx = await requirePanelContext();
+  // Escopo: produtor vê só os eventos das organizações dele; superadmin vê tudo
+  const scopedIds = await getScopedEventIds(ctx);
+
+  let eventsQuery = supabaseAdmin
+    .from('events')
+    .select('id, title, slug, status, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, organizations(name)')
+    .order('event_date', { ascending: false });
+  if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
+
   const [eventsRes, ordersRes, itemsRes] = await Promise.all([
-    supabaseAdmin
-      .from('events')
-      .select('id, title, slug, status, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf')
-      .order('event_date', { ascending: false }),
+    eventsQuery,
     supabaseAdmin
       .from('orders')
       .select('id, event_id, total, service_fee')
@@ -64,7 +74,7 @@ export default async function EventosPage() {
     ticketAgg.set(rel.event_id, (ticketAgg.get(rel.event_id) ?? 0) + 1);
   }
 
-  const items: EventListItem[] = (eventsRes.data ?? []).map((e) => {
+  const items: EventListItem[] = ((eventsRes.data ?? []) as any[]).map((e) => {
     const agg = orderAgg.get(e.id) ?? { count: 0, revenue: 0 };
     return {
       id: e.id,
@@ -84,10 +94,11 @@ export default async function EventosPage() {
       orders_count: agg.count,
       tickets_count: ticketAgg.get(e.id) ?? 0,
       net_revenue: agg.revenue,
+      organization_name: (Array.isArray(e.organizations) ? e.organizations[0]?.name : e.organizations?.name) ?? null,
     };
   });
 
-  const selected = await getSelectedEvent();
+  const selected = await getSelectedEvent(ctx);
 
   return <EventosClient items={items} selectedId={selected?.id ?? null} />;
 }

@@ -1,27 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
  
 export const runtime = 'nodejs';
  
 export async function POST(req: NextRequest) {
-  // 1. Autenticacao
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ kind: 'error', message: 'Nao autenticado' }, { status: 401 });
+  // 1. Autenticacao central (aceita papel de check-in)
+  const auth = await requirePanelApi({ allowCheckinRole: true });
+  if (!auth.ok) {
+    return NextResponse.json({ kind: 'error', message: auth.error }, { status: auth.status });
   }
- 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role, full_name')
-    .eq('id', user.id)
-    .single();
- 
-  const allowed = profile?.role === 'admin' || profile?.role === 'producer' || profile?.role === 'checkin';
-  if (!allowed) {
-    return NextResponse.json({ kind: 'error', message: 'Sem permissao' }, { status: 403 });
-  }
+  const user = auth.ctx.user;
  
   // 2. Validacao do payload
   let body: { qr_code_token?: string; event_id?: string };
@@ -36,6 +26,11 @@ export async function POST(req: NextRequest) {
  
   if (!token || !eventId) {
     return NextResponse.json({ kind: 'error', message: 'Token ou evento ausente' }, { status: 400 });
+  }
+
+  // Escopo: o operador só valida ingressos de eventos da sua organização
+  if (!(await assertEventInScope(auth.ctx, eventId))) {
+    return NextResponse.json({ kind: 'error', message: 'Evento nao encontrado' }, { status: 404 });
   }
  
   // 3. Busca o ingresso (com join no pedido para validar evento + status do pagamento)

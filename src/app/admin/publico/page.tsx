@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { AniversariosClient } from '@/components/admin/AniversariosClient';
@@ -179,11 +179,12 @@ export default async function PublicoPage({
 }: {
   searchParams: { mes?: string; origem?: string };
 }) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/admin');
-  const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') redirect('/');
+  const ctx = await requirePanelContext();
+  // A aba Público agrega a base COMPLETA de perfis da plataforma +
+  // base offline — dados cross-organização. Só o superadmin pode ver;
+  // a versão por organização (só compradores dos eventos da org) fica
+  // para uma fase futura.
+  if (!ctx.isSuperadmin) redirect('/admin');
 
   const today = todaySP();
   const mesParsed = parseInt(searchParams?.mes ?? '', 10);
@@ -205,7 +206,7 @@ export default async function PublicoPage({
   const [rawOnline, rawOffline, selectedEvent] = await Promise.all([
     origem === 'offline' ? Promise.resolve([] as PersonRow[]) : fetchAllPeople('profiles'),
     origem === 'online' ? Promise.resolve([] as PersonRow[]) : fetchAllPeople('offline_audience'),
-    getSelectedEvent(),
+    getSelectedEvent(ctx),
   ]);
 
   // -------- deduplicação entre bases (visão "Todos") --------

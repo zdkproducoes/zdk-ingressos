@@ -3,8 +3,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes, randomUUID } from 'crypto';
 import QRCode from 'qrcode';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope, getScopedEventIds } from '@/lib/auth/scope';
 import { resend, EMAIL_FROM } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
 import { platform } from '@/lib/config';
@@ -14,28 +15,19 @@ export const runtime = 'nodejs';
 const COURTESY_BATCH_NAME = 'Cortesia';
 const MAX_PER_REQUEST = 10;
 
-async function requireAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'Não autenticado', status: 401 as const };
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('id, role, first_name, last_name')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return { error: 'Sem permissão', status: 403 as const };
-  }
-  return { user, profile };
-}
-
 // GET → lista cortesias já emitidas
 export async function GET(req: NextRequest) {
-  const auth = await requireAdmin();
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const auth = await requirePanelApi({ minOrgRole: 'staff' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const url = new URL(req.url);
   const eventId = url.searchParams.get('eventId');
+
+  // Escopo: sem eventId, filtra pela lista de eventos das orgs do usuário
+  const scopedIds = await getScopedEventIds(auth.ctx);
+  if (eventId && !(await assertEventInScope(auth.ctx, eventId))) {
+    return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
+  }
 
   let query = supabaseAdmin
     .from('orders')
@@ -51,6 +43,7 @@ export async function GET(req: NextRequest) {
     .limit(100);
 
   if (eventId) query = query.eq('event_id', eventId);
+  else if (scopedIds !== null) query = query.in('event_id', scopedIds);
 
   const { data, error } = await query;
   if (error) {
@@ -63,8 +56,8 @@ export async function GET(req: NextRequest) {
 
 // POST → emite uma cortesia (com 1 ou mais ingressos)
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin();
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const auth = await requirePanelApi({ minOrgRole: 'staff' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const body = await req.json().catch(() => ({}));
   const { eventId, guestProfileId, attendeeName, quantity } = body as {
@@ -87,7 +80,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 1. Validar evento
+  // 1. Validar evento (existência + escopo da organização)
+  if (!(await assertEventInScope(auth.ctx, eventId))) {
+    return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
+  }
   const { data: event } = await supabaseAdmin
     .from('events')
     .select('id, title, slug, event_date, event_time, venue_name, venue_address, status')
@@ -136,7 +132,7 @@ export async function POST(req: NextRequest) {
       payment_gateway: 'courtesy',
       paid_at: new Date().toISOString(),
       is_courtesy: true,
-      courtesy_issued_by: auth.user.id,
+      courtesy_issued_by: auth.ctx.user.id,
     })
     .select()
     .single();

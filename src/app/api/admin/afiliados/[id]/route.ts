@@ -1,37 +1,19 @@
 // app/api/admin/afiliados/[id]/route.ts
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
  
 const CODE_REGEX = /^[a-z0-9-]+$/;
- 
-async function requireAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'Não autenticado.', status: 401 as const };
- 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
- 
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return { error: 'Sem permissão.', status: 403 as const };
-  }
-  return { ok: true as const };
-}
  
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdmin();
-  if ('error' in auth) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
+  const auth = await requirePanelApi({ minOrgRole: 'admin' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
  
   const { id } = await params;
  
@@ -50,7 +32,7 @@ export async function PATCH(
     .select('id, event_id, code')
     .eq('id', id)
     .maybeSingle();
-  if (!existing) {
+  if (!existing || !(await assertEventInScope(auth.ctx, existing.event_id))) {
     return NextResponse.json({ error: 'Afiliado não encontrado.' }, { status: 404 });
   }
  

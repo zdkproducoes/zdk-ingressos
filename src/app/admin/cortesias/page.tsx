@@ -1,5 +1,6 @@
 // app/admin/cortesias/page.tsx
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { CortesiasClient } from '@/components/admin/CortesiasClient';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 
@@ -7,6 +8,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Cortesias — Admin SACODE' };
 
 export default async function CortesiasPage() {
+  const ctx = await requirePanelContext();
   // Dropdown com eventos que ainda podem receber cortesia (rascunho/ativo),
   // com o evento selecionado no painel em primeiro (vira o default do client)
   const { data: rawEvents } = await supabaseAdmin
@@ -15,7 +17,7 @@ export default async function CortesiasPage() {
     .in('status', ['draft', 'active'])
     .order('event_date', { ascending: false });
 
-  const selectedEvent = await getSelectedEvent();
+  const selectedEvent = await getSelectedEvent(ctx);
   const events = [...(rawEvents ?? [])].sort((a, b) => {
     if (a.id === selectedEvent?.id) return -1;
     if (b.id === selectedEvent?.id) return 1;

@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { CheckinScannerClient } from '@/components/checkin/CheckinScannerClient';
+import { requirePanelContext } from '@/lib/auth/panel';
+import { assertEventSlugInScope } from '@/lib/auth/scope';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +13,12 @@ interface PageProps {
 
 export default async function CheckinEventPage({ params }: PageProps) {
   const { event_slug } = await params;
+
+  const ctx = await requirePanelContext({ allowCheckinRole: true, redirectTo: '/checkin' });
+
+  // Escopo: 404 se o evento não pertencer a uma organização do operador
+  const scoped = await assertEventSlugInScope(ctx, event_slug);
+  if (!scoped) notFound();
 
   const { data: event } = await supabaseAdmin
     .from('events')

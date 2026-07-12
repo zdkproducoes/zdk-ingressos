@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { resend, EMAIL_FROM } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
@@ -18,22 +19,16 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 });
-
-  const { data: adminProfile } = await supabaseAdmin
-    .from('profiles').select('role').eq('id', user.id).single();
-  if (adminProfile?.role !== 'admin' && adminProfile?.role !== 'producer') {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 403 });
-  }
+  const auth = await requirePanelApi({ minOrgRole: 'staff' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const user = auth.ctx.user;
 
   const orderId = params.id;
 
   const { data: rawOrder } = await supabaseAdmin
     .from('orders')
     .select(`
-      id, order_number, payment_status,
+      id, order_number, payment_status, event_id,
       profiles!orders_customer_id_fkey ( first_name, email ),
       events ( title, event_date, event_time, venue_name, venue_address )
     `)
@@ -41,7 +36,10 @@ export async function POST(
     .single();
 
   const order = rawOrder as any;
-  if (!order) return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 400 });
+  // Escopo: o pedido precisa ser de um evento das organizações do usuário
+  if (!order || !(await assertEventInScope(auth.ctx, order.event_id))) {
+    return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 404 });
+  }
   if (order.payment_status !== 'approved') {
     return NextResponse.json({ error: 'Pedido não está aprovado' }, { status: 400 });
   }

@@ -1,23 +1,13 @@
 // app/api/admin/eventos/select/route.ts
 // Define qual evento o painel admin esta gerenciando (cookie).
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ADMIN_EVENT_COOKIE } from '@/lib/admin/selected-event';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export async function POST(request: Request) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 });
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 });
-  }
+  const auth = await requirePanelApi();
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   let body: { event_id?: unknown };
   try {
@@ -29,11 +19,8 @@ export async function POST(request: Request) {
   const eventId = typeof body.event_id === 'string' ? body.event_id : '';
   if (!eventId) return NextResponse.json({ error: 'event_id é obrigatório.' }, { status: 400 });
 
-  const { data: event } = await supabaseAdmin
-    .from('events')
-    .select('id, title')
-    .eq('id', eventId)
-    .maybeSingle();
+  // Escopo: só permite selecionar evento da própria organização
+  const event = await assertEventInScope(auth.ctx, eventId);
   if (!event) return NextResponse.json({ error: 'Evento não encontrado.' }, { status: 404 });
 
   const response = NextResponse.json({ ok: true, title: event.title });

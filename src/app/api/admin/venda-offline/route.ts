@@ -8,37 +8,28 @@
 // A entrega (QR + e-mail) reusa fulfillOrder — com sendCapi: false para nao
 // sujar a atribuicao dos anuncios do Meta.
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { fulfillOrder } from '@/lib/checkout/fulfillment';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
 const MAX_PER_SALE = 10;
 
-async function requireAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'Não autenticado', status: 401 as const };
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('id, role, first_name, last_name, email')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') {
-    return { error: 'Sem permissão', status: 403 as const };
-  }
-  return { user, profile };
-}
-
 // GET ?eventId= → lista as vendas offline do evento (relatório detalhado)
 export async function GET(req: NextRequest) {
-  const auth = await requireAdmin();
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const auth = await requirePanelApi({ minOrgRole: 'staff' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const url = new URL(req.url);
   const eventId = url.searchParams.get('eventId');
   if (!eventId) return NextResponse.json({ error: 'eventId é obrigatório' }, { status: 400 });
+
+  // Escopo: o evento precisa pertencer a uma organização do usuário
+  if (!(await assertEventInScope(auth.ctx, eventId))) {
+    return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
+  }
 
   const { data, error } = await supabaseAdmin
     .from('orders')
@@ -85,8 +76,8 @@ export async function GET(req: NextRequest) {
 
 // POST → registra a venda offline
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin();
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const auth = await requirePanelApi({ minOrgRole: 'staff' });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const body = await req.json().catch(() => ({}));
   const { eventId, customerProfileId, batchId, quantity } = body as {
@@ -109,11 +100,8 @@ export async function POST(req: NextRequest) {
   }
 
   // 1. Evento (venda offline vale pra rascunho e ativo; arquivado não)
-  const { data: event } = await supabaseAdmin
-    .from('events')
-    .select('id, title, status')
-    .eq('id', eventId)
-    .single();
+  //    + escopo: precisa pertencer a uma organização do usuário
+  const event = await assertEventInScope(auth.ctx, eventId);
   if (!event) return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
   if (event.status === 'finished') {
     return NextResponse.json({ error: 'Evento arquivado não aceita novas vendas.' }, { status: 400 });
@@ -145,7 +133,7 @@ export async function POST(req: NextRequest) {
 
   const unitPrice = Number(batch.price);
   const total = Number((unitPrice * qty).toFixed(2));
-  const sellerName = `${auth.profile.first_name ?? ''} ${auth.profile.last_name ?? ''}`.trim();
+  const sellerName = `${auth.ctx.profile.first_name ?? ''} ${auth.ctx.profile.last_name ?? ''}`.trim();
 
   // 4. Cria o pedido já aprovado (dinheiro entrou via PIX na hora)
   const { data: order, error: orderErr } = await supabaseAdmin
@@ -163,9 +151,9 @@ export async function POST(req: NextRequest) {
       paid_at: new Date().toISOString(),
       payment_gateway_data: {
         offline: true,
-        sold_by: auth.user.id,
+        sold_by: auth.ctx.user.id,
         sold_by_name: sellerName,
-        sold_by_email: auth.profile.email ?? null,
+        sold_by_email: auth.ctx.profile.email ?? null,
         batch_name: batch.name,
       },
     })
@@ -196,7 +184,7 @@ export async function POST(req: NextRequest) {
   // 6. Auditoria — quem vendeu, pra quem, quanto, quando
   const { error: auditErr } = await supabaseAdmin.from('audit_logs').insert({
     action: 'offline_sale',
-    actor_id: auth.user.id,
+    actor_id: auth.ctx.user.id,
     target_resource_type: 'order',
     target_resource_id: order.id,
     metadata: {

@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 
 export const dynamic = 'force-dynamic';
@@ -16,8 +17,9 @@ type CheckinRow = {
 const BUCKET_MINUTES = 30;
 
 export default async function AdminCheckinPage() {
+  const ctx = await requirePanelContext();
   // Usa o evento selecionado no painel (cookie; fallback = ativo mais recente)
-  const event = await getSelectedEvent();
+  const event = await getSelectedEvent(ctx);
 
   if (!event) {
     return (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelApi } from '@/lib/auth/panel';
+import { assertEventInScope } from '@/lib/auth/scope';
 
 export const runtime = 'nodejs';
 
@@ -21,23 +22,9 @@ const SELECT_FIELDS = `
 `;
 
 export async function POST(req: NextRequest) {
-  // 1. Autenticação
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  const allowed = profile?.role === 'admin' || profile?.role === 'producer' || profile?.role === 'checkin';
-  if (!allowed) {
-    return NextResponse.json({ error: 'Sem permissão' }, { status: 403 });
-  }
+  // 1. Autenticação central (aceita papel de check-in)
+  const auth = await requirePanelApi({ allowCheckinRole: true });
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   // 2. Payload
   let body: { query?: string; event_id?: string };
@@ -51,6 +38,11 @@ export async function POST(req: NextRequest) {
   const eventId = String(body.event_id ?? '').trim();
 
   if (raw.length < 3 || !eventId) {
+    return NextResponse.json({ results: [] });
+  }
+
+  // Escopo: só busca em eventos das organizações do operador
+  if (!(await assertEventInScope(auth.ctx, eventId))) {
     return NextResponse.json({ results: [] });
   }
 

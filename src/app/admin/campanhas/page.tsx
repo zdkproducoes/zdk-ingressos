@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext, type PanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { GerenciarCampanhasButton } from '@/components/admin/GerenciarCampanhasButton';
@@ -89,8 +88,8 @@ type SiteSales = {
   orderRows: SiteOrder[];
 } | null;
 
-async function getSiteSales(periodKey: string): Promise<SiteSales> {
-  const selectedEvent = await getSelectedEvent();
+async function getSiteSales(ctx: PanelContext, periodKey: string): Promise<SiteSales> {
+  const selectedEvent = await getSelectedEvent(ctx);
   if (!selectedEvent) return null;
 
   const { data: adsAffiliates } = await supabaseAdmin
@@ -161,11 +160,7 @@ export default async function CampanhasPage({
 }: {
   searchParams: { periodo?: string };
 }) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/admin');
-  const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') redirect('/');
+  const ctx = await requirePanelContext();
 
   const periodo = searchParams?.periodo && PERIOD_PRESETS[searchParams.periodo]
     ? searchParams.periodo
@@ -173,7 +168,7 @@ export default async function CampanhasPage({
 
   // Campanhas do Meta vinculadas ao evento selecionado (aba mostra so essas).
   // Sem vinculo cadastrado = mostra todas as campanhas da conta (fallback antigo).
-  const selectedEvent = await getSelectedEvent();
+  const selectedEvent = await getSelectedEvent(ctx);
   let linkedCampaignIds: string[] = [];
   if (selectedEvent) {
     const { data: links } = await supabaseAdmin
@@ -186,7 +181,7 @@ export default async function CampanhasPage({
 
   const [result, siteSales] = await Promise.all([
     getCampaignInsights(periodo, linkedCampaignIds),
-    getSiteSales(periodo),
+    getSiteSales(ctx, periodo),
   ]);
 
   const fmtCurrency = (v: number) =>

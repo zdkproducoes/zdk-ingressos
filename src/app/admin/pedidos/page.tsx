@@ -1,8 +1,7 @@
 import { platform } from '@/lib/config';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { ResendEmailButton } from '@/components/admin/ResendEmailButton';
 import { ReembolsarButton } from '@/components/admin/ReembolsarButton';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
@@ -100,11 +99,7 @@ export default async function PedidosPage({
 }: {
   searchParams: { page?: string; perPage?: string; status?: string };
 }) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/admin');
-  const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') redirect('/');
+  const ctx = await requirePanelContext();
 
   // Filtro de status (?status=)
   const statusParam = searchParams?.status ?? 'all';
@@ -120,7 +115,7 @@ export default async function PedidosPage({
   const from = (page - 1) * perPage;
   const to = from + perPage - 1;
 
-  const selectedEvent = await getSelectedEvent();
+  const selectedEvent = await getSelectedEvent(ctx);
   if (!selectedEvent) {
     return (
       <p className="text-cream-400 text-center py-16">

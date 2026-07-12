@@ -93,7 +93,8 @@
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY` | do Turnstile novo (B4) |
 | `NEXT_PUBLIC_LEGAL_NAME` | razão social da ZDK |
 | `NEXT_PUBLIC_LEGAL_DOCUMENT` | CNPJ da ZDK (aparece nos Termos) |
-| `NEXT_PUBLIC_SUPPORT_EMAIL` | e-mail de atendimento ao comprador |
+| `NEXT_PUBLIC_SUPPORT_EMAIL` | e-mail de atendimento (aparece em /anuncie e /sobre) |
+| `NEXT_PUBLIC_PLATFORM_WHATSAPP` | WhatsApp comercial com DDI (ex.: 5511999990000) — botão em /anuncie |
 | `CRON_SECRET` | o mesmo gerado no `.env.local` |
 
 ### B3. Domínios na Vercel (mesmo projeto, DOIS domínios)

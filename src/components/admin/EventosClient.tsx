@@ -35,6 +35,7 @@ type FormState = {
   venue_state: string;
   venue_zip: string;
   description: string;
+  category: string;
   service_fee_percent: string;
   max_tickets_per_cpf: string;
   banner_url: string;
@@ -47,6 +48,7 @@ type FormState = {
 };
 
 import { lineupToText } from '@/lib/admin/event-content';
+import { EVENT_CATEGORIES } from '@/lib/categories';
 
 function slugify(text: string): string {
   return text
@@ -87,6 +89,7 @@ export function EventosClient({
     venue_state: last?.venue_state ?? 'SP',
     venue_zip: last?.venue_zip ?? '',
     description: '',
+    category: '',
     service_fee_percent: String(last?.service_fee_percent ?? 10),
     max_tickets_per_cpf: String(last?.max_tickets_per_cpf ?? 5),
     banner_url: '',
@@ -102,7 +105,7 @@ export function EventosClient({
   const [contentTarget, setContentTarget] = useState<EventListItem | null>(null);
   const [contentForm, setContentForm] = useState({
     banner_url: '', og_image_url: '', venue_lat: '', venue_lng: '',
-    subtitle: '', opening_notice: '', lineup_text: '',
+    subtitle: '', opening_notice: '', lineup_text: '', category: '',
   });
   const setC = (field: keyof typeof contentForm) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -118,6 +121,7 @@ export function EventosClient({
       subtitle: item.content?.subtitle ?? '',
       opening_notice: item.content?.opening_notice ?? '',
       lineup_text: lineupToText(item.content?.lineup),
+      category: item.category ?? '',
     });
     setContentTarget(item);
   };
@@ -483,6 +487,17 @@ export function EventosClient({
               <textarea rows={3} value={form.description} onChange={set('description')} className={inputCls} />
             </div>
 
+            <div>
+              <label className={labelCls}>Tipo de evento</label>
+              <select value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))} className={inputCls}>
+                <option value="">— Selecionar —</option>
+                {EVENT_CATEGORIES.map((c) => (
+                  <option key={c.slug} value={c.slug}>{c.emoji} {c.label}</option>
+                ))}
+              </select>
+              <p className="text-xs text-cream-400 mt-1">Usado nos filtros da página inicial.</p>
+            </div>
+
             {/* ---- Página do evento (opcional) ---- */}
             <div className="border-t border-muted-700 pt-4">
               <p className="text-sm font-semibold text-cream-200 mb-1">Página do evento (opcional)</p>
@@ -582,6 +597,15 @@ export function EventosClient({
                 <label className={labelCls}>Longitude</label>
                 <input type="text" value={contentForm.venue_lng} onChange={setC('venue_lng')} placeholder="-46.5833" className={inputCls} />
               </div>
+            </div>
+            <div>
+              <label className={labelCls}>Tipo de evento</label>
+              <select value={contentForm.category} onChange={(e) => setContentForm((f) => ({ ...f, category: e.target.value }))} className={inputCls}>
+                <option value="">— Selecionar —</option>
+                {EVENT_CATEGORIES.map((c) => (
+                  <option key={c.slug} value={c.slug}>{c.emoji} {c.label}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className={labelCls}>Subtítulo</label>

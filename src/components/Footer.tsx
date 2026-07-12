@@ -13,6 +13,12 @@ export function Footer() {
           <Link href="/buscar-ingresso" className="hover:text-accent-400 transition">
             Localizar meu ingresso
           </Link>
+          <Link href="/sobre" className="hover:text-accent-400 transition">
+            Sobre nós
+          </Link>
+          <Link href="/anuncie" className="hover:text-accent-400 transition">
+            Anuncie seu evento
+          </Link>
           <Link href="/termos" className="hover:text-accent-400 transition">
             Termos
           </Link>

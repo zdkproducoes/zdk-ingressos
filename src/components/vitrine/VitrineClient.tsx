@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, MapPin, Calendar, ShieldCheck, QrCode, Headset } from 'lucide-react';
 import { EventCard, type VitrineEvent } from '@/components/vitrine/EventCard';
+import { EVENT_CATEGORIES, categoryLabel } from '@/lib/categories';
 
 function fmtPrice(v: number) {
   return v % 1 === 0 ? String(v) : v.toFixed(2).replace('.', ',');
@@ -15,16 +16,22 @@ function fmtPrice(v: number) {
 export function VitrineClient({ events }: { events: VitrineEvent[] }) {
   const [query, setQuery] = useState('');
   const [city, setCity] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
 
   const cities = useMemo(
     () => Array.from(new Set(events.map((e) => e.venue_city))).sort(),
     [events],
   );
+  const categories = useMemo(() => {
+    const present = new Set(events.map((e) => e.category).filter(Boolean));
+    return EVENT_CATEGORIES.filter((c) => present.has(c.slug));
+  }, [events]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return events.filter((e) => {
       if (city && e.venue_city !== city) return false;
+      if (category && e.category !== category) return false;
       if (!q) return true;
       return (
         e.title.toLowerCase().includes(q) ||
@@ -33,7 +40,7 @@ export function VitrineClient({ events }: { events: VitrineEvent[] }) {
         (e.organization_name ?? '').toLowerCase().includes(q)
       );
     });
-  }, [events, query, city]);
+  }, [events, query, city, category]);
 
   const [hero, ...rest] = filtered;
 
@@ -52,6 +59,23 @@ export function VitrineClient({ events }: { events: VitrineEvent[] }) {
             className="w-full bg-surface-700 border border-muted-600 rounded-full pl-11 pr-5 py-3 text-sm text-cream-200 placeholder:text-cream-500"
           />
         </label>
+        {categories.length > 1 && (
+          <div className="flex flex-wrap justify-center gap-2 mb-3">
+            {categories.map((c) => (
+              <button
+                key={c.slug}
+                onClick={() => setCategory(c.slug === category ? null : c.slug)}
+                className={`px-3.5 py-1.5 rounded-full text-[13px] border transition ${
+                  category === c.slug
+                    ? 'bg-accent-400 border-accent-400 text-surface-900 font-bold'
+                    : 'bg-surface-700 border-muted-600 text-cream-300 hover:border-cream-400'
+                }`}
+              >
+                {c.emoji} {c.label}
+              </button>
+            ))}
+          </div>
+        )}
         {cities.length > 1 && (
           <div className="flex flex-wrap justify-center gap-2">
             <button
@@ -116,7 +140,7 @@ export function VitrineClient({ events }: { events: VitrineEvent[] }) {
                 <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-9 flex flex-wrap items-end justify-between gap-4">
                   <div>
                     <p className="font-display text-accent-300 text-xs tracking-[0.28em] uppercase mb-2">
-                      Em destaque
+                      Em destaque{categoryLabel(hero.category) ? ` · ${categoryLabel(hero.category)}` : ''}
                     </p>
                     <h2 className="font-display-bold text-[clamp(1.6rem,4.5vw,3rem)] leading-none text-cream-100 uppercase mb-3">
                       {hero.title}

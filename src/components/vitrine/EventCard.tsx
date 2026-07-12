@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin } from 'lucide-react'
+import { categoryLabel } from '@/lib/categories'
 
 export type VitrineEvent = {
   id: string
@@ -15,6 +16,7 @@ export type VitrineEvent = {
   organization_name: string | null
   /** menor preço de lote comprável; null = vendas ainda não abertas */
   price_from: number | null
+  category: string | null
 }
 
 const MONTHS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
@@ -60,6 +62,11 @@ export function EventCard({ event }: { event: VitrineEvent }) {
       </div>
 
       <div className="px-5 pt-8 pb-4">
+        {categoryLabel(event.category) && (
+          <p className="text-[10.5px] uppercase tracking-[0.14em] text-accent-300/90 mb-1">
+            {categoryLabel(event.category)}
+          </p>
+        )}
         <h2 className="font-display-bold text-lg text-cream-200 leading-tight uppercase mb-1.5 group-hover:text-accent-300 transition">
           {event.title}
         </h2>

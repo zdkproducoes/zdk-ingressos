@@ -7,6 +7,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 import { requirePanelApi } from '@/lib/auth/panel';
 import { parseContentFields } from '@/lib/admin/event-content';
+import { CATEGORY_SLUGS } from '@/lib/categories';
 
 const SLUG_REGEX = /^[a-z0-9-]+$/;
 
@@ -62,6 +63,7 @@ export async function POST(request: Request) {
   const venueState = str(body.venue_state).toUpperCase();
   const venueZip = strOrNull(body.venue_zip);
   const description = strOrNull(body.description);
+  const category = strOrNull(body.category);
   const serviceFee = body.service_fee_percent === undefined || body.service_fee_percent === ''
     ? 10
     : Number(body.service_fee_percent);
@@ -95,6 +97,10 @@ export async function POST(request: Request) {
   }
   if (Number.isNaN(maxPerCpf) || maxPerCpf < 1 || maxPerCpf > 100) {
     return NextResponse.json({ error: 'Máximo por CPF deve estar entre 1 e 100.' }, { status: 400 });
+  }
+
+  if (category && !CATEGORY_SLUGS.includes(category)) {
+    return NextResponse.json({ error: 'Categoria inválida.' }, { status: 400 });
   }
 
   // Conteúdo da página do evento (banner, OG, coordenadas, lineup, textos)
@@ -131,6 +137,7 @@ export async function POST(request: Request) {
       venue_state: venueState,
       venue_zip: venueZip,
       description,
+      category,
       service_fee_percent: serviceFee,
       max_tickets_per_cpf: maxPerCpf,
       status: 'draft',

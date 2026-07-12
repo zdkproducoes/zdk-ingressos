@@ -5,6 +5,7 @@
 // controlam o que é público.
 import { supabase } from '@/lib/supabase'
 import { platform } from '@/lib/config'
+import Link from 'next/link'
 import { VitrineClient } from '@/components/vitrine/VitrineClient'
 import type { VitrineEvent } from '@/components/vitrine/EventCard'
 
@@ -15,7 +16,7 @@ export default async function Home() {
 
   const { data } = await supabase
     .from('events')
-    .select('id, title, slug, banner_url, event_date, event_time, venue_name, venue_city, venue_state, organizations(name)')
+    .select('id, title, slug, banner_url, event_date, event_time, venue_name, venue_city, venue_state, category, organizations(name)')
     .eq('status', 'active')
     .gte('event_date', today)
     .order('event_date', { ascending: true })
@@ -50,6 +51,7 @@ export default async function Home() {
     organization_name:
       (Array.isArray(e.organizations) ? e.organizations[0]?.name : e.organizations?.name) ?? null,
     price_from: priceByEvent.get(e.id) ?? null,
+    category: e.category ?? null,
   }))
 
   return (
@@ -65,6 +67,26 @@ export default async function Home() {
         </div>
 
         <VitrineClient events={events} />
+
+        {/* CTA para produtores */}
+        <div className="mt-14 rounded-3xl border border-accent-400/40 bg-gradient-to-br from-surface-700 to-surface-600 px-8 py-10 text-center">
+          <p className="font-display text-accent-300 text-xs tracking-[0.28em] uppercase mb-2">
+            Para produtores
+          </p>
+          <h2 className="font-display-bold text-[clamp(1.4rem,3.5vw,2rem)] text-cream-200 uppercase leading-tight mb-3">
+            Produz evento no ABC? Venda seus ingressos aqui.
+          </h2>
+          <p className="text-sm text-cream-400 max-w-xl mx-auto mb-6">
+            Página do evento, pagamento pelo Mercado Pago, QR Code na hora, check-in pelo celular
+            e painel de vendas em tempo real — com taxa combinada em contrato.
+          </p>
+          <Link
+            href="/anuncie"
+            className="inline-block bg-accent-400 hover:bg-accent-300 text-surface-900 font-display-bold uppercase tracking-wide px-8 py-3.5 rounded-xl shadow-[0_4px_0_#7C5A16] transition"
+          >
+            Quero vender na ZDK
+          </Link>
+        </div>
       </section>
     </main>
   )

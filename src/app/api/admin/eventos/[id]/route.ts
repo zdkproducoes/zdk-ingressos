@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { requirePanelApi } from '@/lib/auth/panel';
 import { assertEventInScope } from '@/lib/auth/scope';
 import { parseContentFields, type ContentFormFields } from '@/lib/admin/event-content';
+import { CATEGORY_SLUGS } from '@/lib/categories';
 
 const ALLOWED_STATUS = ['draft', 'active', 'finished'] as const;
 
@@ -20,7 +21,7 @@ export async function PATCH(
 
   const { id } = await params;
 
-  let body: { action?: unknown; status?: unknown } & ContentFormFields;
+  let body: { action?: unknown; status?: unknown; category?: unknown } & ContentFormFields;
   try {
     body = await request.json();
   } catch {
@@ -65,9 +66,15 @@ export async function PATCH(
       return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
 
+    const rawCategory = body.category;
+    const category = typeof rawCategory === 'string' && rawCategory.trim() ? rawCategory.trim() : null;
+    if (category && !CATEGORY_SLUGS.includes(category)) {
+      return NextResponse.json({ error: 'Categoria inválida.' }, { status: 400 });
+    }
+
     const { error: updateError } = await supabaseAdmin
       .from('events')
-      .update({ ...parsed.columns, updated_at: new Date().toISOString() })
+      .update({ ...parsed.columns, category, updated_at: new Date().toISOString() })
       .eq('id', id);
 
     if (updateError) {

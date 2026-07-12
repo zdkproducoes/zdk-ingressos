@@ -1,24 +1,14 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { signOutAction } from './actions';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CheckinLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/checkin');
-
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role, full_name, email')
-    .eq('id', user.id)
-    .single();
-
-  const allowed = profile?.role === 'admin' || profile?.role === 'producer' || profile?.role === 'checkin';
-  if (!allowed) redirect('/');
+  const { profile } = await requirePanelContext({
+    allowCheckinRole: true,
+    redirectTo: '/checkin',
+  });
 
   return (
     <div className="min-h-screen bg-surface-800">

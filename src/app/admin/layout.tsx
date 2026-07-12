@@ -1,8 +1,6 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AdminTabs } from '@/components/admin/AdminTabs';
+import { requirePanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -12,18 +10,9 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/admin');
+  const ctx = await requirePanelContext({ redirectTo: '/admin' });
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin' && profile?.role !== 'producer') redirect('/');
-
-  const selectedEvent = await getSelectedEvent();
+  const selectedEvent = await getSelectedEvent(ctx);
 
   return (
     <div className="min-h-screen bg-surface-800">

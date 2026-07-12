@@ -5,18 +5,18 @@ type PrivacidadeContentProps = {
 
 export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) {
   const proseClasses = darkBg
-    ? 'prose prose-invert max-w-none prose-headings:font-semibold prose-headings:text-cream-200 prose-h2:mt-8 prose-h2:text-lg prose-h2:border-b prose-h2:border-mauve-700 prose-h2:pb-2 prose-p:text-cream-300 prose-p:leading-relaxed prose-li:text-cream-300 prose-strong:text-cream-100 prose-a:text-amber-sacode-400 hover:prose-a:text-amber-sacode-300'
+    ? 'prose prose-invert max-w-none prose-headings:font-semibold prose-headings:text-cream-200 prose-h2:mt-8 prose-h2:text-lg prose-h2:border-b prose-h2:border-muted-700 prose-h2:pb-2 prose-p:text-cream-300 prose-p:leading-relaxed prose-li:text-cream-300 prose-strong:text-cream-100 prose-a:text-accent-400 hover:prose-a:text-accent-300'
     : 'prose prose-zinc max-w-none prose-headings:font-semibold prose-headings:text-zinc-900 prose-h2:mt-10 prose-h2:text-xl prose-h2:border-b prose-h2:border-zinc-200 prose-h2:pb-2 prose-p:text-zinc-700 prose-p:leading-relaxed prose-li:text-zinc-700 prose-strong:text-zinc-900 prose-a:text-red-700 hover:prose-a:text-red-800';
 
   // Classes de tabela: bordas e cabeçalho em cores diferentes pra fundo escuro/claro
   const tableHeadClass = darkBg
-    ? 'bg-wine-800 border border-mauve-700 px-3 py-2 text-left font-semibold text-cream-200'
+    ? 'bg-surface-800 border border-muted-700 px-3 py-2 text-left font-semibold text-cream-200'
     : 'bg-zinc-100 border border-zinc-300 px-3 py-2 text-left font-semibold text-zinc-900';
   const tableCellClass = darkBg
-    ? 'border border-mauve-700 px-3 py-2 align-top text-cream-300'
+    ? 'border border-muted-700 px-3 py-2 align-top text-cream-300'
     : 'border border-zinc-300 px-3 py-2 align-top text-zinc-700';
   const tableLinkClass = darkBg
-    ? 'text-amber-sacode-400 hover:text-amber-sacode-300'
+    ? 'text-accent-400 hover:text-accent-300'
     : 'text-red-700 hover:text-red-800';
 
   return (
@@ -573,7 +573,7 @@ export function PrivacidadeContent({ darkBg = false }: PrivacidadeContentProps) 
       <p>
         <strong>10.1</strong> Esta Política de Privacidade poderá ser
         atualizada periodicamente, sendo a versão vigente sempre acessível
-        em https://sacode.cantorcaiolacerda.com.br/privacidade, com indicação
+        em https://www.zdkingressos.com.br/privacidade, com indicação
         clara da data da última atualização.
       </p>
       <p>

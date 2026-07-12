@@ -34,16 +34,16 @@ export default async function MuralPage({ params }: { params: Promise<{ slug: st
   // Bloqueia só se NÃO for admin E NÃO tiver ingresso
   if (!isAdmin && !hasTicket) {
     return (
-      <main className="min-h-screen bg-wine-800 flex items-center justify-center px-4">
-        <div className="max-w-md w-full rounded-xl bg-wine-700 border border-amber-sacode-700/40 p-8 text-center">
+      <main className="min-h-screen bg-surface-800 flex items-center justify-center px-4">
+        <div className="max-w-md w-full rounded-xl bg-surface-700 border border-accent-700/40 p-8 text-center">
           <div className="text-5xl mb-4">🔒</div>
-          <h1 className="text-2xl font-bold text-amber-sacode-200 mb-2">Mural exclusivo</h1>
+          <h1 className="text-2xl font-bold text-accent-200 mb-2">Mural exclusivo</h1>
           <p className="text-cream-300 text-sm leading-relaxed mb-6">
             Apenas quem comprou ingresso para <strong className="text-cream-200">{event.title}</strong> pode acessar o mural.
           </p>
           <div className="flex flex-col gap-2">
             <Link href={`/checkout?event=${event.slug}`}
-              className="rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 px-6 transition">
+              className="rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 px-6 transition">
               Comprar ingresso
             </Link>
             <Link href="/minhas-compras" className="text-sm text-cream-400 hover:text-cream-200 transition mt-2">
@@ -58,9 +58,9 @@ export default async function MuralPage({ params }: { params: Promise<{ slug: st
     weekday: 'short', day: '2-digit', month: 'short',
   });
   return (
-    <main className="min-h-screen bg-wine-800">
+    <main className="min-h-screen bg-surface-800">
       {/* Header sticky com info do evento */}
-      <header className="sticky top-0 z-10 bg-wine-800/95 backdrop-blur border-b border-mauve-700">
+      <header className="sticky top-0 z-10 bg-surface-800/95 backdrop-blur border-b border-muted-700">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <Link href={`/minhas-compras/${event.slug}`}
@@ -76,7 +76,7 @@ export default async function MuralPage({ params }: { params: Promise<{ slug: st
         </div>
       </header>
       <div className="max-w-2xl mx-auto px-4 py-6">
-        <div className="mb-6 rounded-xl bg-gradient-to-r from-wine-700/50 to-mauve-700/50 border border-mauve-600/30 p-4">
+        <div className="mb-6 rounded-xl bg-gradient-to-r from-surface-700/50 to-muted-700/50 border border-muted-600/30 p-4">
           <p className="text-sm text-cream-200">
             💬 <strong>Bem-vindo ao mural!</strong>
           </p>

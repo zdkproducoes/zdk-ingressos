@@ -65,7 +65,7 @@ export default function TermosPage() {
           <ul>
             <li>
               <strong>&ldquo;Plataforma&rdquo;:</strong> o ambiente digital
-              acessível em https://sacode.cantorcaiolacerda.com.br e demais
+              acessível em https://www.zdkingressos.com.br e demais
               URLs operadas pela ZDK Produções para o evento referenciado.
             </li>
             <li>
@@ -521,7 +521,7 @@ export default function TermosPage() {
           </p>
           <p>
             <strong>15.2</strong> A versão vigente dos Termos estará sempre
-            disponível em https://sacode.cantorcaiolacerda.com.br/termos, com
+            disponível em https://www.zdkingressos.com.br/termos, com
             indicação clara da data da última atualização.
           </p>
           <p>

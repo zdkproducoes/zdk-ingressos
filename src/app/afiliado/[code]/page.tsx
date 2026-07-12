@@ -38,9 +38,9 @@ function maskBuyerName(fullName: string | null): string {
 
 function InvalidLink() {
   return (
-    <main className="min-h-screen bg-wine-800 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-wine-700 border border-mauve-700 rounded-xl p-8 text-center">
-        <AlertCircle size={40} className="mx-auto text-amber-sacode-400 mb-4" />
+    <main className="min-h-screen bg-surface-800 flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-surface-700 border border-muted-700 rounded-xl p-8 text-center">
+        <AlertCircle size={40} className="mx-auto text-accent-400 mb-4" />
         <h1 className="text-xl font-bold text-cream-200 mb-2">Link inválido ou expirado</h1>
         <p className="text-sm text-cream-400">
           Este link do painel não é válido. Se você é embaixador(a) do evento,
@@ -234,7 +234,7 @@ export default async function AfiliadoPanelPage({
   const commission = netRevenue * (commissionPercent / 100);
   const visits = aff.visits ?? 0;
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
   const shareUrl = `${baseUrl}/evento/${eventRel?.slug ?? ''}?ref=${aff.code}`;
 
   const data: PanelData = {

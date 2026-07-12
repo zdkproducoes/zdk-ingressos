@@ -1,12 +1,17 @@
-# Plataforma de Ingressos Multi-Produtor
+# ZDK Ingressos — Plataforma Multi-Produtor
 
 ## O que é este projeto
 
-Plataforma de venda de ingressos multi-produtor/multi-evento, criada em julho/2026
-como fork do projeto `sacode-ingressos` (que fica em
-`..\banco_de_dados\sacode-ingressos` e segue em produção — **nunca mexer lá a
-partir daqui**). O código ainda é uma cópia 1:1 do Sacode e precisa ser adaptado
-(ver "Trabalho pendente").
+**ZDK Ingressos** (`www.zdkingressos.com.br`, domínio ainda não comprado;
+painel em `painel.zdkingressos.com.br`): plataforma de venda de ingressos
+multi-produtor/multi-evento, criada em julho/2026 como fork do projeto
+`sacode-ingressos` (que fica em `..\banco_de_dados\sacode-ingressos` e segue
+em produção — **nunca mexer lá a partir daqui**). O Sacode será migrado para
+dentro da plataforma como uma organização depois que ela estiver estável.
+
+A identidade da plataforma (nome, URLs, e-mail, pixel, CNPJ) vem de
+`src/lib/config.ts` (objeto `platform`), alimentado por env vars — nunca
+hardcodear marca no código.
 
 ## Decisões de arquitetura (fechadas com o Fernando)
 
@@ -18,9 +23,12 @@ partir daqui**). O código ainda é uma cópia 1:1 do Sacode e precisa ser adapt
 - **Painel em subdomínio** (`painel.DOMINIO`): mesmo projeto Vercel/codebase; o
   middleware reconhece o Host e serve só as rotas admin. Cada produtor enxerga
   apenas os dados da sua organização.
-- **Infra própria**: Supabase novo, Vercel novo, domínio novo, Turnstile novo,
-  domínio verificado no Resend. Guia completo em `docs/plataforma-passo-a-passo.md`.
-- Nome/domínio da plataforma: **ainda não definidos** (pasta com nome provisório).
+- **Infra própria**: Supabase novo **já criado** (projeto `zdk-ingressos`,
+  ref `wohcypmrxwtjbqoxhqzp`, região São Paulo) com schema aplicado
+  (`sql/plataforma/000_schema_base.sql` + `00_camada_organizacoes.sql` +
+  `01_conteudo_e_seed.sql`) e buckets `wall-images`/`qr-codes`/`event-assets`.
+  Faltam: Vercel, domínio, Turnstile, Resend. Guia em
+  `docs/plataforma-passo-a-passo.md`.
 
 ## Banco de dados
 

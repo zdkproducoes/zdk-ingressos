@@ -27,13 +27,13 @@ export default async function ConfirmPage({ searchParams }: { searchParams: Prom
 function Status({ type, title, message, showLogin }: { type: 'ok'|'error'; title: string; message: string; showLogin?: boolean }) {
   const colors = type === 'ok' ? 'bg-emerald-950 border-emerald-800 text-emerald-100' : 'bg-red-950 border-red-800 text-red-100';
   return (
-    <main className="min-h-screen bg-wine-800 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-surface-800 flex items-center justify-center px-4">
       <div className={`max-w-md w-full rounded-xl border p-8 text-center ${colors}`}>
         <div className="text-5xl mb-4">{type === 'ok' ? '✅' : '⚠️'}</div>
         <h1 className="text-2xl font-bold mb-2">{title}</h1>
         <p className="text-sm opacity-90">{message}</p>
         {showLogin && (
-          <Link href="/login" className="inline-block mt-6 rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 px-6 transition">
+          <Link href="/login" className="inline-block mt-6 rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 px-6 transition">
             Ir para o login
           </Link>
         )}

@@ -50,9 +50,9 @@ export function LegalModal({ open, title, onClose, children }: LegalModalProps) 
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-3xl max-h-[90vh] flex flex-col rounded-xl bg-wine-700 border border-mauve-600 shadow-2xl">
+      <div className="relative w-full max-w-3xl max-h-[90vh] flex flex-col rounded-xl bg-surface-700 border border-muted-600 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-mauve-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-muted-700">
           <h2
             id="legal-modal-title"
             className="text-lg md:text-xl font-bold text-cream-200"
@@ -64,7 +64,7 @@ export function LegalModal({ open, title, onClose, children }: LegalModalProps) 
             type="button"
             onClick={onClose}
             aria-label="Fechar"
-            className="rounded-lg p-2 text-cream-300 hover:bg-wine-600 hover:text-cream-100 focus:outline-none focus:ring-2 focus:ring-amber-sacode-400 transition"
+            className="rounded-lg p-2 text-cream-300 hover:bg-surface-600 hover:text-cream-100 focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -88,11 +88,11 @@ export function LegalModal({ open, title, onClose, children }: LegalModalProps) 
         <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-mauve-700 flex justify-end">
+        <div className="px-6 py-4 border-t border-muted-700 flex justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2 px-5 transition"
+            className="rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2 px-5 transition"
           >
             Fechar
           </button>

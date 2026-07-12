@@ -3,8 +3,9 @@
 // as páginas por aqui (apontado também no robots.txt).
 import type { MetadataRoute } from 'next';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { platform } from '@/lib/config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+const BASE_URL = platform.baseUrl;
 
 export const dynamic = 'force-dynamic';
 

@@ -2,8 +2,9 @@
 // Servido em /robots.txt — libera as páginas públicas pro Google e
 // bloqueia áreas privadas/transacionais (admin, checkout, painéis).
 import type { MetadataRoute } from 'next';
+import { platform } from '@/lib/config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+const BASE_URL = platform.baseUrl;
 
 export default function robots(): MetadataRoute.Robots {
   return {

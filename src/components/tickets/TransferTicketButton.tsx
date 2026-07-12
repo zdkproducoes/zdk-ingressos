@@ -70,7 +70,7 @@ export function TransferTicketButton({ orderItemId, batchName }: { orderItemId: 
       {step !== 'closed' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70" onClick={close}>
           <div
-            className="w-full max-w-md rounded-xl bg-wine-700 border border-mauve-600 p-6"
+            className="w-full max-w-md rounded-xl bg-surface-700 border border-muted-600 p-6"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-4">
@@ -94,12 +94,12 @@ export function TransferTicketButton({ orderItemId, batchName }: { orderItemId: 
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="email@exemplo.com"
-                  className="w-full rounded-lg bg-wine-800 border border-mauve-600 text-cream-200 placeholder-cream-400/50 px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-amber-sacode-400"
+                  className="w-full rounded-lg bg-surface-800 border border-muted-600 text-cream-200 placeholder-cream-400/50 px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-accent-400"
                 />
                 {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
                 <button
                   onClick={toConfirm}
-                  className="w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 transition"
+                  className="w-full rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 transition"
                 >
                   Continuar
                 </button>
@@ -111,7 +111,7 @@ export function TransferTicketButton({ orderItemId, batchName }: { orderItemId: 
                 <p className="text-sm text-cream-300 mb-3">
                   Transferir este ingresso para <strong className="text-cream-200">{email.trim().toLowerCase()}</strong>?
                 </p>
-                <ul className="text-xs text-amber-sacode-200 bg-amber-sacode-900/20 border border-amber-sacode-700/40 rounded-lg p-3 mb-4 space-y-1.5 list-disc list-inside">
+                <ul className="text-xs text-accent-200 bg-accent-900/20 border border-accent-700/40 rounded-lg p-3 mb-4 space-y-1.5 list-disc list-inside">
                   <li>O seu QR Code atual será <strong>cancelado</strong> e deixará de funcionar.</li>
                   <li>Um QR Code novo será gerado no nome de quem receber.</li>
                   <li>Cada ingresso só pode ser transferido <strong>uma única vez</strong>.</li>
@@ -121,14 +121,14 @@ export function TransferTicketButton({ orderItemId, batchName }: { orderItemId: 
                   <button
                     onClick={() => setStep('form')}
                     disabled={step === 'loading'}
-                    className="flex-1 rounded-lg border border-mauve-600 text-cream-300 hover:text-cream-200 font-semibold py-2.5 transition disabled:opacity-50"
+                    className="flex-1 rounded-lg border border-muted-600 text-cream-300 hover:text-cream-200 font-semibold py-2.5 transition disabled:opacity-50"
                   >
                     Voltar
                   </button>
                   <button
                     onClick={handleTransfer}
                     disabled={step === 'loading'}
-                    className="flex-1 rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex-1 rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 transition disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {step === 'loading' ? <><Loader2 size={15} className="animate-spin" /> Transferindo…</> : 'Confirmar transferência'}
                   </button>
@@ -146,7 +146,7 @@ export function TransferTicketButton({ orderItemId, batchName }: { orderItemId: 
                 </p>
                 <button
                   onClick={close}
-                  className="w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 transition"
+                  className="w-full rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 transition"
                 >
                   Fechar
                 </button>

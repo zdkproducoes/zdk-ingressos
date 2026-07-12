@@ -127,13 +127,13 @@ export function CheckoutClient(props: Props) {
           const sold = available <= 0 || b.status === 'sold_out';
           const cur = qty[b.id] || 0;
           return (
-            <div key={b.id} className={`rounded-xl border p-4 ${sold ? 'bg-wine-600/50 border-mauve-700 opacity-60' : 'bg-wine-600 border-mauve-600'}`}>
+            <div key={b.id} className={`rounded-xl border p-4 ${sold ? 'bg-surface-600/50 border-muted-700 opacity-60' : 'bg-surface-600 border-muted-600'}`}>
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-cream-200">{b.name}</h3>
                   <p className="text-sm text-cream-400">
                     R$ {Number(b.price).toFixed(2).replace('.', ',')}
-                    {!sold && available <= 10 && <span className="ml-2 text-amber-sacode-400">— últimas {available}!</span>}
+                    {!sold && available <= 10 && <span className="ml-2 text-accent-400">— últimas {available}!</span>}
                   </p>
                 </div>
                 {sold ? (
@@ -141,11 +141,11 @@ export function CheckoutClient(props: Props) {
                 ) : (
                   <div className="flex items-center gap-3">
                     <button type="button" onClick={() => dec(b.id)} disabled={cur === 0}
-                      className="w-9 h-9 rounded-lg bg-wine-700 hover:bg-wine-500 disabled:opacity-30 text-cream-200 font-bold">−</button>
+                      className="w-9 h-9 rounded-lg bg-surface-700 hover:bg-surface-500 disabled:opacity-30 text-cream-200 font-bold">−</button>
                     <span className="w-6 text-center text-cream-200 font-semibold">{cur}</span>
                     <button type="button" onClick={() => inc(b.id, b.max_per_order, available)}
                       disabled={cur >= Math.min(b.max_per_order, available)}
-                      className="w-9 h-9 rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-30 text-wine-800 font-bold">+</button>
+                      className="w-9 h-9 rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-30 text-surface-800 font-bold">+</button>
                   </div>
                 )}
               </div>
@@ -156,7 +156,7 @@ export function CheckoutClient(props: Props) {
 
       {/* Coluna direita: resumo */}
       <div className="lg:col-span-1">
-        <div className="rounded-xl bg-wine-600 border border-mauve-600 p-5 sticky top-4 space-y-4">
+        <div className="rounded-xl bg-surface-600 border border-muted-600 p-5 sticky top-4 space-y-4">
           <h3 className="font-semibold text-cream-200">Resumo</h3>
 
           <div className="text-sm text-cream-300">
@@ -165,7 +165,7 @@ export function CheckoutClient(props: Props) {
             <p className="text-xs text-cream-400">{props.venueName}</p>
           </div>
 
-          <div className="border-t border-mauve-700 pt-4 space-y-2 text-sm">
+          <div className="border-t border-muted-700 pt-4 space-y-2 text-sm">
             <div className="flex justify-between text-cream-300">
               <span>Subtotal ({totalQty} {totalQty === 1 ? 'ingresso' : 'ingressos'})</span>
               <span>R$ {subtotal.toFixed(2).replace('.', ',')}</span>
@@ -180,7 +180,7 @@ export function CheckoutClient(props: Props) {
               <span>Taxa de serviço</span>
               <span>R$ {serviceFee.toFixed(2).replace('.', ',')}</span>
             </div>
-            <div className="flex justify-between text-cream-200 font-bold text-lg pt-2 border-t border-mauve-700">
+            <div className="flex justify-between text-cream-200 font-bold text-lg pt-2 border-t border-muted-700">
               <span>Total</span>
               <span>R$ {total.toFixed(2).replace('.', ',')}</span>
             </div>
@@ -191,7 +191,7 @@ export function CheckoutClient(props: Props) {
           {error && <div className="rounded-lg bg-red-950 border border-red-800 p-3 text-xs text-red-200">{error}</div>}
 
           <button type="button" onClick={pay} disabled={loading || totalQty === 0}
-            className="w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 disabled:cursor-not-allowed text-wine-800 font-semibold py-3 transition">
+            className="w-full rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed text-surface-800 font-semibold py-3 transition">
             {loading ? 'Processando…' : !props.isLoggedIn ? 'Entrar para comprar' : 'Ir para pagamento'}
           </button>
 

@@ -6,6 +6,7 @@ import { mpPreference } from '@/lib/mercadopago/client';
 import { checkRateLimit, getClientIp } from '@/lib/turnstile/ratelimit';
 import { readAffiliateCodeFromHeader } from '@/lib/affiliate';
 import { resolveLoteAtual, restanteReal } from '@/lib/lotes';
+import { platform } from '@/lib/config';
 
 export const runtime = 'nodejs';
 
@@ -164,7 +165,7 @@ export async function POST(req: NextRequest) {
     }, { status: 409 });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
   const mpItems: any[] = expanded.map((it, idx) => ({
     id: `${it.batch.id}-${idx}`, title: `${event.title} — ${it.batch.name}`,
     quantity: 1, unit_price: Number(it.batch.price), currency_id: 'BRL',
@@ -177,7 +178,7 @@ export async function POST(req: NextRequest) {
       body: {
         items: mpItems,
         external_reference: order.id,
-        statement_descriptor: 'SACODE',
+        statement_descriptor: platform.mpStatementDescriptor,
         payer: profile ? {
           name: profile.first_name, surname: profile.last_name,
           email: profile.email || user.email,

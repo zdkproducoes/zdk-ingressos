@@ -174,7 +174,7 @@ export function AfiliadoEditClient({
           className={`text-xs px-3 py-1.5 rounded-full border transition ${
             isActive
               ? 'bg-emerald-900/40 text-emerald-300 border-emerald-700/50 hover:bg-emerald-900/60'
-              : 'bg-mauve-800/60 text-cream-400 border-mauve-600 hover:bg-mauve-700'
+              : 'bg-muted-800/60 text-cream-400 border-muted-600 hover:bg-muted-700'
           }`}
         >
           {isActive ? '● Ativo (clique para desativar)' : '○ Inativo (clique para reativar)'}
@@ -196,7 +196,7 @@ export function AfiliadoEditClient({
       )}
 
       {/* Links */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-lg p-5 space-y-4">
+      <div className="bg-surface-700 border border-muted-700 rounded-lg p-5 space-y-4">
         <h3 className="text-sm font-semibold text-cream-200 uppercase tracking-wider">Links</h3>
 
         <div>
@@ -206,11 +206,11 @@ export function AfiliadoEditClient({
               type="text"
               readOnly
               value={shareUrl}
-              className="flex-1 bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-xs font-mono"
+              className="flex-1 bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-xs font-mono"
             />
             <button
               onClick={() => copy(shareUrl, 'share')}
-              className="inline-flex items-center gap-1.5 bg-wine-800 hover:bg-wine-900 text-cream-200 text-xs px-3 py-2 rounded border border-mauve-600 transition"
+              className="inline-flex items-center gap-1.5 bg-surface-800 hover:bg-surface-900 text-cream-200 text-xs px-3 py-2 rounded border border-muted-600 transition"
             >
               {copied === 'share' ? <Check size={14} /> : <Copy size={14} />}
               {copied === 'share' ? 'Copiado' : 'Copiar'}
@@ -220,18 +220,18 @@ export function AfiliadoEditClient({
 
         <div>
           <label className="block text-xs text-cream-400 mb-1">
-            Link mágico do painel <span className="text-amber-sacode-400">(envie só ao afiliado)</span>
+            Link mágico do painel <span className="text-accent-400">(envie só ao afiliado)</span>
           </label>
           <div className="flex gap-2">
             <input
               type="text"
               readOnly
               value={panelUrl}
-              className="flex-1 bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-xs font-mono"
+              className="flex-1 bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-xs font-mono"
             />
             <button
               onClick={() => copy(panelUrl, 'panel')}
-              className="inline-flex items-center gap-1.5 bg-wine-800 hover:bg-wine-900 text-cream-200 text-xs px-3 py-2 rounded border border-mauve-600 transition"
+              className="inline-flex items-center gap-1.5 bg-surface-800 hover:bg-surface-900 text-cream-200 text-xs px-3 py-2 rounded border border-muted-600 transition"
             >
               {copied === 'panel' ? <Check size={14} /> : <Copy size={14} />}
               {copied === 'panel' ? 'Copiado' : 'Copiar'}
@@ -239,7 +239,7 @@ export function AfiliadoEditClient({
             <button
               onClick={handleRegenerateToken}
               title="Gerar novo token (invalida o link atual)"
-              className="inline-flex items-center gap-1.5 bg-wine-800 hover:bg-wine-900 text-cream-300 text-xs px-3 py-2 rounded border border-mauve-600 transition"
+              className="inline-flex items-center gap-1.5 bg-surface-800 hover:bg-surface-900 text-cream-300 text-xs px-3 py-2 rounded border border-muted-600 transition"
             >
               <RefreshCw size={14} /> Regenerar
             </button>
@@ -251,7 +251,7 @@ export function AfiliadoEditClient({
       </div>
 
       {/* Form de edição */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-lg p-5 space-y-4">
+      <div className="bg-surface-700 border border-muted-700 rounded-lg p-5 space-y-4">
         <h3 className="text-sm font-semibold text-cream-200 uppercase tracking-wider">Dados</h3>
 
         <div>
@@ -260,7 +260,7 @@ export function AfiliadoEditClient({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           />
         </div>
 
@@ -270,8 +270,8 @@ export function AfiliadoEditClient({
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value.toLowerCase())}
-            className={`w-full bg-wine-800 text-cream-200 border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 ${
-              codeValid ? 'border-mauve-600 focus:ring-amber-sacode-400' : 'border-red-600 focus:ring-red-500'
+            className={`w-full bg-surface-800 text-cream-200 border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 ${
+              codeValid ? 'border-muted-600 focus:ring-accent-400' : 'border-red-600 focus:ring-red-500'
             }`}
           />
           {!codeValid && (
@@ -291,7 +291,7 @@ export function AfiliadoEditClient({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+              className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
             />
           </div>
           <div>
@@ -300,7 +300,7 @@ export function AfiliadoEditClient({
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+              className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
             />
           </div>
         </div>
@@ -314,16 +314,16 @@ export function AfiliadoEditClient({
             step="0.5"
             value={commission}
             onChange={(e) => setCommission(e.target.value)}
-            className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           />
         </div>
 
-        <label className="flex items-start gap-2.5 cursor-pointer bg-wine-800 border border-mauve-600 rounded-lg px-3 py-2.5">
+        <label className="flex items-start gap-2.5 cursor-pointer bg-surface-800 border border-muted-600 rounded-lg px-3 py-2.5">
           <input
             type="checkbox"
             checked={isStaff}
             onChange={(e) => setIsStaff(e.target.checked)}
-            className="mt-0.5 accent-amber-sacode-400"
+            className="mt-0.5 accent-accent-400"
           />
           <span className="text-sm text-cream-300">
             Link da organização
@@ -341,21 +341,21 @@ export function AfiliadoEditClient({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           />
         </div>
 
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
+          className="bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
         >
           {saving ? 'Salvando…' : 'Salvar alterações'}
         </button>
       </div>
 
       {/* Resumo de vendas */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-lg p-5">
+      <div className="bg-surface-700 border border-muted-700 rounded-lg p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-cream-200 uppercase tracking-wider">
             Vendas atribuídas
@@ -364,7 +364,7 @@ export function AfiliadoEditClient({
             <p className="text-xs text-cream-400">
               {sales.length} {sales.length === 1 ? 'venda' : 'vendas'} · {fmtCurrency(totalRevenue)}
             </p>
-            <p className="text-sm text-amber-sacode-400 font-semibold">
+            <p className="text-sm text-accent-400 font-semibold">
               Comissão: {fmtCurrency(totalCommission)}
             </p>
           </div>
@@ -377,7 +377,7 @@ export function AfiliadoEditClient({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="text-cream-400 text-xs uppercase tracking-wider border-b border-mauve-700">
+              <thead className="text-cream-400 text-xs uppercase tracking-wider border-b border-muted-700">
                 <tr>
                   <th className="text-left py-2">Data</th>
                   <th className="text-left py-2">Comprador</th>
@@ -390,7 +390,7 @@ export function AfiliadoEditClient({
                   const net = s.total - s.service_fee;
                   const comm = net * (afiliado.commission_percent / 100);
                   return (
-                    <tr key={s.order_id} className="border-b border-mauve-700/50">
+                    <tr key={s.order_id} className="border-b border-muted-700/50">
                       <td className="py-2 text-cream-300">{fmtDateTime(s.created_at)}</td>
                       <td className="py-2 text-cream-200">
                         {s.buyer_name ?? '—'}
@@ -399,7 +399,7 @@ export function AfiliadoEditClient({
                         )}
                       </td>
                       <td className="py-2 text-right text-cream-300">{fmtCurrency(net)}</td>
-                      <td className="py-2 text-right text-amber-sacode-400 font-semibold">
+                      <td className="py-2 text-right text-accent-400 font-semibold">
                         {fmtCurrency(comm)}
                       </td>
                     </tr>

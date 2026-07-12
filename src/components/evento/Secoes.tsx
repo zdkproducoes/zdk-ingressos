@@ -9,14 +9,14 @@ const GMAPS_EMBED = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3654.
 export function CopyAbertura() {
   return (
     <section className="max-w-[850px] mx-auto px-5 pt-16 pb-10 text-center">
-      <div className="font-display text-amber-sacode-400 tracking-[0.2em] text-sm mb-3">
+      <div className="font-display text-accent-400 tracking-[0.2em] text-sm mb-3">
         02 DE AGOSTO • SÃO BERNARDO DO CAMPO • SUPER EDIÇÃO
       </div>
       <h1 className="font-display-bold text-[clamp(2rem,5vw,3rem)] leading-[1.05] text-cream-200 mb-6">
         A 16ª edição virou{" "}
-        <span className="text-amber-sacode-400 relative inline-block">
+        <span className="text-accent-400 relative inline-block">
           Super Edição
-          <span className="absolute left-0 right-0 -bottom-1 h-[5px] bg-mauve-400 -skew-x-12 opacity-70" />
+          <span className="absolute left-0 right-0 -bottom-1 h-[5px] bg-muted-400 -skew-x-12 opacity-70" />
         </span>
       </h1>
       <p className="text-cream-300 text-[1.0625rem] leading-[1.7] max-w-[650px] mx-auto mb-5">
@@ -42,23 +42,23 @@ export function CopyAbertura() {
 export function InfoEvento() {
   return (
     <section className="max-w-[1200px] mx-auto px-5 pt-2 pb-12">
-      <div className="bg-wine-700 border border-mauve-700 border-l-4 border-l-amber-sacode-400
+      <div className="bg-surface-700 border border-muted-700 border-l-4 border-l-accent-400
                       rounded-xl px-7 py-6
                       grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
         <InfoRow
-          icon={<Calendar className="w-[22px] h-[22px] stroke-amber-sacode-400" strokeWidth={2} />}
+          icon={<Calendar className="w-[22px] h-[22px] stroke-accent-400" strokeWidth={2} />}
           label="Quando"
           value="02 de Agosto de 2026"
           sub="Domingo • a partir das 12h"
         />
         <InfoRow
-          icon={<MapPin className="w-[22px] h-[22px] stroke-amber-sacode-400" strokeWidth={2} />}
+          icon={<MapPin className="w-[22px] h-[22px] stroke-accent-400" strokeWidth={2} />}
           label="Onde"
           value="Villa Jardim Bar"
           sub="São Bernardo do Campo • ABC paulista • SP"
         />
         <InfoRow
-          icon={<Clock className="w-[22px] h-[22px] stroke-amber-sacode-400" strokeWidth={2} />}
+          icon={<Clock className="w-[22px] h-[22px] stroke-accent-400" strokeWidth={2} />}
           label="Acesso"
           value="Maiores de 18 anos"
           sub="Menores apenas com pais ou responsáveis"
@@ -73,7 +73,7 @@ function InfoRow({ icon, label, value, sub }: {
 }) {
   return (
     <div className="flex gap-4 items-start py-3.5">
-      <div className="w-[42px] h-[42px] bg-wine-800 border-2 border-mauve-500
+      <div className="w-[42px] h-[42px] bg-surface-800 border-2 border-muted-500
                       rounded-[10px] flex items-center justify-center shrink-0">
         {icon}
       </div>
@@ -89,29 +89,29 @@ function InfoRow({ icon, label, value, sub }: {
 export function LineupSection() {
   return (
     <section id="lineup" className="max-w-[1200px] mx-auto px-5 py-10">
-      <div className="font-display text-amber-sacode-400 tracking-[0.2em] text-[0.85rem] text-center mb-2">
+      <div className="font-display text-accent-400 tracking-[0.2em] text-[0.85rem] text-center mb-2">
         QUEM SOBE NO PALCO
       </div>
       <h2 className="font-display-bold text-[clamp(2rem,4.5vw,2.75rem)] text-cream-200 text-center mb-2">
-        Lineup <span className="text-amber-sacode-400">oficial</span>
+        Lineup <span className="text-accent-400">oficial</span>
       </h2>
       <p className="text-center text-cream-400 mb-10 text-[0.9375rem]">
         Pagode, samba e sertanejo — do começo ao fim
       </p>
 
       {/* Convidado especial: MILTHINHO — o grande destaque da Super Edição */}
-      <div className="bg-gradient-to-br from-amber-sacode-400/15 to-wine-700
-                      border-2 border-amber-sacode-400 rounded-2xl
+      <div className="bg-gradient-to-br from-accent-400/15 to-surface-700
+                      border-2 border-accent-400 rounded-2xl
                       p-8 mb-4 text-center relative overflow-hidden
                       shadow-[0_0_40px_-10px_rgba(228,160,63,0.35)]">
         <span className="absolute top-2 right-4 text-2xl opacity-40">🌟</span>
-        <span className="inline-block bg-amber-sacode-400 text-wine-900
+        <span className="inline-block bg-accent-400 text-surface-900
                          px-3.5 py-1 rounded-full text-[0.7rem] font-extrabold
                          tracking-[0.12em] uppercase mb-3.5">
           🌟 Convidado especial
         </span>
         <div className="font-display-bold text-[clamp(2.5rem,7vw,4rem)]
-                        text-amber-sacode-300 leading-none tracking-wide mb-1.5">
+                        text-accent-300 leading-none tracking-wide mb-1.5">
           MILTHINHO
         </div>
         <div className="font-display text-lg text-cream-200 tracking-[0.1em]">
@@ -120,11 +120,11 @@ export function LineupSection() {
       </div>
 
       {/* Anfitrião: Caio Lacerda */}
-      <div className="bg-gradient-to-br from-mauve-700 to-wine-700
-                      border-2 border-mauve-400 rounded-2xl
+      <div className="bg-gradient-to-br from-muted-700 to-surface-700
+                      border-2 border-muted-400 rounded-2xl
                       p-8 mb-6 text-center relative overflow-hidden">
         <span className="absolute top-2 right-4 text-2xl opacity-40">👑</span>
-        <span className="inline-block bg-mauve-400 text-wine-900
+        <span className="inline-block bg-muted-400 text-surface-900
                          px-3.5 py-1 rounded-full text-[0.7rem] font-extrabold
                          tracking-[0.12em] uppercase mb-3.5">
           ⭐ Anfitrião
@@ -133,7 +133,7 @@ export function LineupSection() {
                         text-cream-100 leading-none tracking-wide mb-1.5">
           CAIO LACERDA
         </div>
-        <div className="font-display text-lg text-amber-sacode-300 tracking-[0.1em]">
+        <div className="font-display text-lg text-accent-300 tracking-[0.1em]">
           Pagode &amp; Samba
         </div>
       </div>
@@ -143,10 +143,10 @@ export function LineupSection() {
         <ArtistCard name="Nayara Oliveira"  genre="Sertanejo"      tipo="sertanejo" />
       </div>
 
-      <div className="bg-wine-900 border border-dashed border-mauve-600 rounded-[10px]
+      <div className="bg-surface-900 border border-dashed border-muted-600 rounded-[10px]
                       px-5 py-3.5 text-center text-cream-300 text-[0.9375rem]">
         🎧 Discotecagem nos intervalos com{" "}
-        <strong className="text-amber-sacode-400 font-display tracking-wider text-lg ml-1">
+        <strong className="text-accent-400 font-display tracking-wider text-lg ml-1">
           DJ SANT
         </strong>
       </div>
@@ -157,10 +157,10 @@ export function LineupSection() {
 function ArtistCard({ name, genre, tipo }: {
   name: string; genre: string; tipo: "pagode" | "sertanejo"
 }) {
-  const borderColor = tipo === "pagode"  ? "border-t-amber-sacode-400" : "border-t-mauve-400"
-  const hoverBorder = tipo === "pagode"  ? "hover:border-t-amber-sacode-300" : "hover:border-t-mauve-300"
+  const borderColor = tipo === "pagode"  ? "border-t-accent-400" : "border-t-muted-400"
+  const hoverBorder = tipo === "pagode"  ? "hover:border-t-accent-300" : "hover:border-t-muted-300"
   return (
-    <div className={`bg-wine-700 border border-mauve-700 border-t-[3px] ${borderColor}
+    <div className={`bg-surface-700 border border-muted-700 border-t-[3px] ${borderColor}
                      rounded-xl px-5 py-5 text-center transition-all duration-200
                      ${hoverBorder} hover:-translate-y-1 hover:shadow-lg`}>
       <div className="font-display text-2xl text-cream-200 tracking-[0.03em] mb-1 leading-tight">{name}</div>
@@ -172,18 +172,18 @@ function ArtistCard({ name, genre, tipo }: {
 export function MapaSection() {
   return (
     <section id="local" className="max-w-[1200px] mx-auto px-5 py-10">
-      <div className="font-display text-amber-sacode-400 tracking-[0.2em] text-[0.85rem] text-center mb-2">
+      <div className="font-display text-accent-400 tracking-[0.2em] text-[0.85rem] text-center mb-2">
         COMO CHEGAR
       </div>
       <h2 className="font-display-bold text-[clamp(2rem,4.5vw,2.75rem)] text-cream-200 text-center mb-2">
-        No <span className="text-amber-sacode-400">Villa Jardim Bar</span>
+        No <span className="text-accent-400">Villa Jardim Bar</span>
       </h2>
       <p className="text-center text-cream-400 mb-10 text-[0.9375rem]">
         Em São Bernardo do Campo, no coração do ABC paulista — fácil acesso pela Marginal
       </p>
 
-      <div className="bg-wine-700 border border-mauve-700 rounded-2xl overflow-hidden">
-        <div className="px-6 py-5 border-b border-mauve-700 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-surface-700 border border-muted-700 rounded-2xl overflow-hidden">
+        <div className="px-6 py-5 border-b border-muted-700 flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="font-display text-2xl text-cream-200 tracking-[0.03em] leading-tight">
               Villa Jardim Bar
@@ -195,17 +195,17 @@ export function MapaSection() {
           </div>
           <div className="flex gap-2 flex-wrap">
             <a href={GMAPS_URL} target="_blank" rel="noopener noreferrer"
-               className="bg-wine-600 text-cream-100 px-3.5 py-2
-                          border border-mauve-500 rounded-lg text-[0.8125rem] font-semibold
+               className="bg-surface-600 text-cream-100 px-3.5 py-2
+                          border border-muted-500 rounded-lg text-[0.8125rem] font-semibold
                           no-underline inline-flex items-center gap-1.5
-                          transition-all duration-200 hover:bg-wine-500 hover:-translate-y-0.5">
+                          transition-all duration-200 hover:bg-surface-500 hover:-translate-y-0.5">
               📍 Google Maps
             </a>
             <a href={WAZE_URL} target="_blank" rel="noopener noreferrer"
-               className="bg-mauve-600 text-cream-100 px-3.5 py-2
-                          border border-mauve-400 rounded-lg text-[0.8125rem] font-semibold
+               className="bg-muted-600 text-cream-100 px-3.5 py-2
+                          border border-muted-400 rounded-lg text-[0.8125rem] font-semibold
                           no-underline inline-flex items-center gap-1.5
-                          transition-all duration-200 hover:bg-mauve-500 hover:-translate-y-0.5">
+                          transition-all duration-200 hover:bg-muted-500 hover:-translate-y-0.5">
               🚗 Waze
             </a>
           </div>

@@ -24,11 +24,11 @@ const addDays = (date: string, days: number) => {
 const STATUS_BADGE: Record<MetaListItem['status'], { label: string; className: string }> = {
   current: {
     label: 'Em andamento',
-    className: 'bg-amber-sacode-400/15 text-amber-sacode-400 border-amber-sacode-400/40',
+    className: 'bg-accent-400/15 text-accent-400 border-accent-400/40',
   },
   past: {
     label: 'Encerrada',
-    className: 'bg-mauve-800/60 text-cream-400 border-mauve-600',
+    className: 'bg-muted-800/60 text-cream-400 border-muted-600',
   },
   future: {
     label: 'Agendada',
@@ -115,9 +115,9 @@ function EventGoalCard({
   };
 
   return (
-    <div className="bg-wine-700 border border-amber-sacode-400/40 rounded-xl p-5">
+    <div className="bg-surface-700 border border-accent-400/40 rounded-xl p-5">
       <h3 className="text-sm font-semibold text-cream-200 uppercase tracking-wider mb-1 flex items-center gap-2">
-        <Trophy size={16} className="text-amber-sacode-400" />
+        <Trophy size={16} className="text-accent-400" />
         Meta do evento (a grande meta)
       </h3>
       <p className="text-xs text-cream-400 mb-4">
@@ -161,7 +161,7 @@ function EventGoalCard({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 disabled:cursor-not-allowed text-wine-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
+          className="bg-accent-400 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed text-surface-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
         >
           {saving ? 'Salvando…' : eventGoal ? 'Salvar grande meta' : 'Definir grande meta'}
         </button>
@@ -171,7 +171,7 @@ function EventGoalCard({
             className={`px-4 py-2.5 rounded-lg text-sm border transition ${
               confirmingRemove
                 ? 'bg-red-900/40 text-red-300 border-red-700/50'
-                : 'bg-wine-800 text-cream-400 border-mauve-600 hover:text-red-300'
+                : 'bg-surface-800 text-cream-400 border-muted-600 hover:text-red-300'
             }`}
           >
             {confirmingRemove ? 'Confirmar remoção?' : 'Remover'}
@@ -181,11 +181,11 @@ function EventGoalCard({
 
       {eventGoal && (
         <div className="grid grid-cols-2 gap-2 text-xs mt-4">
-          <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2">
+          <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2">
             <p className="text-cream-400">Ingressos no evento (todos)</p>
             <p className="text-cream-200 font-bold text-base">{eventGoal.total_tickets}</p>
           </div>
-          <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2">
+          <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2">
             <p className="text-cream-400">Bateram a grande meta</p>
             <p className="text-cream-200 font-bold text-base">
               {eventGoal.achievers}
@@ -313,7 +313,7 @@ export function MetasSemanaisClient({
   };
 
   const inputClass =
-    'w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400';
+    'w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400';
 
   return (
     <div className="space-y-6">
@@ -326,9 +326,9 @@ export function MetasSemanaisClient({
       />
 
       {/* Formulário criar/editar meta semanal */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5">
+      <div className="bg-surface-700 border border-muted-700 rounded-xl p-5">
         <h3 className="text-sm font-semibold text-cream-200 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <Target size={16} className="text-amber-sacode-400" />
+          <Target size={16} className="text-accent-400" />
           {editingId ? 'Editar meta semanal' : 'Nova meta semanal'}
         </h3>
 
@@ -397,14 +397,14 @@ export function MetasSemanaisClient({
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 disabled:cursor-not-allowed text-wine-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
+            className="bg-accent-400 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed text-surface-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
           >
             {submitting ? 'Salvando…' : editingId ? 'Salvar alterações' : 'Criar meta'}
           </button>
           {editingId && (
             <button
               onClick={cancelEdit}
-              className="bg-wine-800 hover:bg-wine-900 text-cream-300 border border-mauve-600 px-4 py-2.5 rounded-lg text-sm transition"
+              className="bg-surface-800 hover:bg-surface-900 text-cream-300 border border-muted-600 px-4 py-2.5 rounded-lg text-sm transition"
             >
               Cancelar
             </button>
@@ -425,8 +425,8 @@ export function MetasSemanaisClient({
             return (
               <div
                 key={item.id}
-                className={`bg-wine-700 border rounded-xl p-4 ${
-                  item.status === 'current' ? 'border-amber-sacode-400/40' : 'border-mauve-700'
+                className={`bg-surface-700 border rounded-xl p-4 ${
+                  item.status === 'current' ? 'border-accent-400/40' : 'border-muted-700'
                 }`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
@@ -452,7 +452,7 @@ export function MetasSemanaisClient({
                     <button
                       onClick={() => startEdit(item)}
                       title="Editar"
-                      className="p-1.5 text-cream-400 hover:text-amber-sacode-400 transition"
+                      className="p-1.5 text-cream-400 hover:text-accent-400 transition"
                     >
                       <Pencil size={16} />
                     </button>
@@ -476,11 +476,11 @@ export function MetasSemanaisClient({
 
                 {/* Resultado agregado da semana */}
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2">
+                  <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2">
                     <p className="text-cream-400">Ingressos na semana (todos)</p>
                     <p className="text-cream-200 font-bold text-base">{item.total_tickets}</p>
                   </div>
-                  <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2">
+                  <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2">
                     <p className="text-cream-400">Bateram a meta</p>
                     <p className="text-cream-200 font-bold text-base">
                       {item.achievers}

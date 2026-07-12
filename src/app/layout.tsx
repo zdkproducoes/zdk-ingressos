@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import { Navbar, type UserProfile } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { platform } from '@/lib/config'
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -22,15 +23,16 @@ const anton = Anton({
 })
 
 export const metadata: Metadata = {
-  // Verificação de propriedade no Google Search Console (meta tag)
-  verification: {
-    google: 'dccWX-mAsbBayo8vJfrDix4s_wG2uroxBRFL-Ek5-Sg',
-  },
-  title: 'Sacode do Lacerda - 16ª Edição | Ingressos',
-  description: 'Garanta seu ingresso para a Super Edição do Sacode do Lacerda com Milthinho, Caio Lacerda, Pagode Na Sena, Nayara Oliveira e DJ Sant. 02 de agosto de 2026, a partir das 12h no Villa Jardim Bar.',
+  // Verificação de propriedade no Google Search Console (meta tag);
+  // sem a env, a tag não é emitida
+  ...(platform.googleSiteVerification
+    ? { verification: { google: platform.googleSiteVerification } }
+    : {}),
+  title: `${platform.name} — Ingressos`,
+  description: `Compre ingressos para os melhores eventos na ${platform.name}.`,
   openGraph: {
-    title: 'Sacode do Lacerda - 16ª Edição | Super Edição com Milthinho',
-    description: 'O pagode que faz São Bernardo tremer! 02/08/2026 no Villa Jardim Bar. Ingressos limitados.',
+    title: `${platform.name} — Ingressos`,
+    description: `Compre ingressos para os melhores eventos na ${platform.name}.`,
     type: 'website',
     locale: 'pt_BR',
   },
@@ -57,11 +59,14 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR" className={`${bebasNeue.variable} ${anton.variable}`}>
-      <body className="bg-wine-800 min-h-screen text-cream-200 pt-14">
+      <body className="bg-surface-800 min-h-screen text-cream-200 pt-14">
         {/* Meta Pixel (base) — dispara PageView em todas as paginas, uma unica vez no layout raiz.
-            O Purchase e enviado server-side via CAPI (lib/meta/capi.ts), mesmo pixel ID. */}
-        <Script id="meta-pixel" strategy="afterInteractive">
-          {`
+            O Purchase e enviado server-side via CAPI (lib/meta/capi.ts), mesmo pixel ID.
+            Sem NEXT_PUBLIC_META_PIXEL_ID configurado, nada é injetado. */}
+        {platform.metaPixelId && (
+          <>
+            <Script id="meta-pixel" strategy="afterInteractive">
+              {`
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -70,21 +75,23 @@ export default async function RootLayout({
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1415319082934143');
+  fbq('init', '${platform.metaPixelId}');
   fbq('track', 'PageView');
-          `}
-        </Script>
-        {/* Fallback oficial do Meta para navegadores sem JavaScript */}
-        <noscript>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            alt=""
-            src="https://www.facebook.com/tr?id=1415319082934143&ev=PageView&noscript=1"
-          />
-        </noscript>
+              `}
+            </Script>
+            {/* Fallback oficial do Meta para navegadores sem JavaScript */}
+            <noscript>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                height="1"
+                width="1"
+                style={{ display: 'none' }}
+                alt=""
+                src={`https://www.facebook.com/tr?id=${platform.metaPixelId}&ev=PageView&noscript=1`}
+              />
+            </noscript>
+          </>
+        )}
 
         <Navbar initialAuth={initialAuth} />
         <Toaster
@@ -92,9 +99,9 @@ export default async function RootLayout({
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#45183F',
-              color: '#EADBC4',
-              border: '1px solid #E4A03F',
+              background: 'var(--background-elevated)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--accent)',
             },
           }}
         />

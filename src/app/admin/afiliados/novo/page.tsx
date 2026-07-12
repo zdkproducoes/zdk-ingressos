@@ -23,7 +23,7 @@ export default async function AfiliadoNovoPage() {
         <ArrowLeft size={16} /> Voltar para a lista
       </Link>
 
-      <div className="bg-wine-700 border border-mauve-700 rounded-lg p-6 max-w-2xl">
+      <div className="bg-surface-700 border border-muted-700 rounded-lg p-6 max-w-2xl">
         <h2 className="text-xl font-bold text-cream-200 mb-1">Novo afiliado</h2>
         <p className="text-sm text-cream-400 mb-6">
           O afiliado fica amarrado a um evento específico. O code é usado no link de divulgação:

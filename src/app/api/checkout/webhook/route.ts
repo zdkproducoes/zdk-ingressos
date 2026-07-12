@@ -130,5 +130,5 @@ export async function POST(req: NextRequest) {
 
 // Permite GET pra healthcheck do MP (eles testam com GET)
 export async function GET() {
-  return NextResponse.json({ ok: true, service: 'sacode-webhook' });
+  return NextResponse.json({ ok: true, service: 'zdk-webhook' });
 }

@@ -20,6 +20,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { resend, EMAIL_FROM } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
 import { sendPurchaseEvent } from '@/lib/meta/capi';
+import { platform } from '@/lib/config';
 
 type FulfillOptions = {
   incrementStock: boolean;
@@ -68,7 +69,7 @@ export async function fulfillOrder(
     let token = it.qr_code_token;
     let qrUrl = it.qr_code_url;
     if (!token) {
-      token = `SCD-${randomBytes(12).toString('hex').toUpperCase()}`;
+      token = `${platform.qrPrefix}${randomBytes(12).toString('hex').toUpperCase()}`;
       const qrBuffer = await QRCode.toBuffer(token, { width: 400, margin: 1, errorCorrectionLevel: 'M' });
       const qrBytes = new Uint8Array(qrBuffer);
       const today = new Date();
@@ -143,7 +144,7 @@ export async function fulfillOrder(
           phone: order.profiles.phone,
           contentName: ev.title,
           eventSourceUrl: ev.slug
-            ? `https://sacode.cantorcaiolacerda.com.br/evento/${ev.slug}`
+            ? `https://www.zdkingressos.com.br/evento/${ev.slug}`
             : undefined,
           // Capturados no checkout (sql/06_meta_atribuicao.sql) — sobem o EMQ.
           fbp: order.meta_fbp,

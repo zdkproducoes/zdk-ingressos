@@ -6,7 +6,7 @@ type TermosContentProps = {
 export function TermosContent({ darkBg = false }: TermosContentProps) {
   // Classes do prose: cores diferentes pra fundo escuro (modal) ou branco (página)
   const proseClasses = darkBg
-    ? 'prose prose-invert max-w-none prose-headings:font-semibold prose-headings:text-cream-200 prose-h2:mt-8 prose-h2:text-lg prose-h2:border-b prose-h2:border-mauve-700 prose-h2:pb-2 prose-p:text-cream-300 prose-p:leading-relaxed prose-li:text-cream-300 prose-strong:text-cream-100 prose-a:text-amber-sacode-400 hover:prose-a:text-amber-sacode-300'
+    ? 'prose prose-invert max-w-none prose-headings:font-semibold prose-headings:text-cream-200 prose-h2:mt-8 prose-h2:text-lg prose-h2:border-b prose-h2:border-muted-700 prose-h2:pb-2 prose-p:text-cream-300 prose-p:leading-relaxed prose-li:text-cream-300 prose-strong:text-cream-100 prose-a:text-accent-400 hover:prose-a:text-accent-300'
     : 'prose prose-zinc max-w-none prose-headings:font-semibold prose-headings:text-zinc-900 prose-h2:mt-10 prose-h2:text-xl prose-h2:border-b prose-h2:border-zinc-200 prose-h2:pb-2 prose-p:text-zinc-700 prose-p:leading-relaxed prose-li:text-zinc-700 prose-strong:text-zinc-900 prose-a:text-red-700 hover:prose-a:text-red-800';
 
   return (
@@ -51,7 +51,7 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
       <ul>
         <li>
           <strong>&ldquo;Plataforma&rdquo;:</strong> o ambiente digital
-          acessível em https://sacode.cantorcaiolacerda.com.br e demais URLs
+          acessível em https://www.zdkingressos.com.br e demais URLs
           operadas pela ZDK Produções para o evento referenciado.
         </li>
         <li>
@@ -492,7 +492,7 @@ export function TermosContent({ darkBg = false }: TermosContentProps) {
       </p>
       <p>
         <strong>15.2</strong> A versão vigente dos Termos estará sempre
-        disponível em https://sacode.cantorcaiolacerda.com.br/termos, com
+        disponível em https://www.zdkingressos.com.br/termos, com
         indicação clara da data da última atualização.
       </p>
       <p>

@@ -72,7 +72,7 @@ export function AfiliadosListClient({
   return (
     <>
       {/* Filtros */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-lg p-4 mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="bg-surface-700 border border-muted-700 rounded-lg p-4 mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-cream-400" size={16} />
           <input
@@ -80,14 +80,14 @@ export function AfiliadosListClient({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar por nome, code, email…"
-            className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           />
         </div>
 
         <select
           value={eventFilter}
           onChange={(e) => setEventFilter(e.target.value)}
-          className="bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         >
           <option value="all">Todos os eventos</option>
           {events.map((e) => (
@@ -100,7 +100,7 @@ export function AfiliadosListClient({
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-          className="bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         >
           <option value="all">Ativos e inativos</option>
           <option value="active">Somente ativos</option>
@@ -110,26 +110,26 @@ export function AfiliadosListClient({
 
       {/* Totais do filtro */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-        <div className="bg-wine-700 border border-mauve-700 rounded-lg p-3">
+        <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
           <p className="text-xs text-cream-400">Visitas</p>
           <p className="text-lg font-bold text-cream-200">{fmtNumber(totals.visits)}</p>
         </div>
-        <div className="bg-wine-700 border border-mauve-700 rounded-lg p-3">
+        <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
           <p className="text-xs text-cream-400">Vendas atribuídas</p>
           <p className="text-lg font-bold text-cream-200">{fmtNumber(totals.sales)}</p>
         </div>
-        <div className="bg-wine-700 border border-mauve-700 rounded-lg p-3">
+        <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
           <p className="text-xs text-cream-400">Faturamento atribuído</p>
           <p className="text-lg font-bold text-cream-200">{fmtCurrency(totals.revenue)}</p>
         </div>
-        <div className="bg-wine-700 border border-mauve-700 rounded-lg p-3">
+        <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
           <p className="text-xs text-cream-400">Comissão devida</p>
-          <p className="text-lg font-bold text-amber-sacode-400">{fmtCurrency(totals.commission)}</p>
+          <p className="text-lg font-bold text-accent-400">{fmtCurrency(totals.commission)}</p>
         </div>
       </div>
 
       {/* Tabela (desktop) */}
-      <div className="hidden md:block bg-wine-700 border border-mauve-700 rounded-lg overflow-hidden">
+      <div className="hidden md:block bg-surface-700 border border-muted-700 rounded-lg overflow-hidden">
         {filtered.length === 0 ? (
           <p className="text-center text-cream-400 py-8 text-sm">
             {items.length === 0
@@ -138,7 +138,7 @@ export function AfiliadosListClient({
           </p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-wine-800 text-cream-400 text-xs uppercase tracking-wider">
+            <thead className="bg-surface-800 text-cream-400 text-xs uppercase tracking-wider">
               <tr>
                 <th className="text-left px-4 py-3">Nome</th>
                 <th className="text-left px-4 py-3">Code</th>
@@ -154,7 +154,7 @@ export function AfiliadosListClient({
             </thead>
             <tbody>
               {filtered.map((it) => (
-                <tr key={it.id} className="border-t border-mauve-700 hover:bg-wine-800/50 transition">
+                <tr key={it.id} className="border-t border-muted-700 hover:bg-surface-800/50 transition">
                   <td className="px-4 py-3 text-cream-200 font-medium">{it.name}</td>
                   <td className="px-4 py-3 text-cream-300 font-mono">{it.code}</td>
                   <td className="px-4 py-3 text-cream-400">{it.event_title}</td>
@@ -162,7 +162,7 @@ export function AfiliadosListClient({
                   <td className="px-4 py-3 text-right text-cream-300">{fmtNumber(it.visits)}</td>
                   <td className="px-4 py-3 text-right text-cream-300">{fmtNumber(it.sales_count)}</td>
                   <td className="px-4 py-3 text-right text-cream-300">{fmtCurrency(it.attributed_revenue)}</td>
-                  <td className="px-4 py-3 text-right text-amber-sacode-400 font-semibold">
+                  <td className="px-4 py-3 text-right text-accent-400 font-semibold">
                     {fmtCurrency(it.commission_due)}
                   </td>
                   <td className="px-4 py-3 text-center">
@@ -171,7 +171,7 @@ export function AfiliadosListClient({
                         Ativo
                       </span>
                     ) : (
-                      <span className="inline-block bg-mauve-800/60 text-cream-400 text-xs px-2 py-0.5 rounded-full border border-mauve-600">
+                      <span className="inline-block bg-muted-800/60 text-cream-400 text-xs px-2 py-0.5 rounded-full border border-muted-600">
                         Inativo
                       </span>
                     )}
@@ -181,14 +181,14 @@ export function AfiliadosListClient({
                       <button
                         onClick={() => copyLink(it)}
                         title="Copiar link de divulgação"
-                        className="p-1.5 text-cream-400 hover:text-amber-sacode-400 transition"
+                        className="p-1.5 text-cream-400 hover:text-accent-400 transition"
                       >
                         {copiedId === it.id ? <Check size={16} /> : <Copy size={16} />}
                       </button>
                       <Link
                         href={`/admin/afiliados/${it.id}`}
                         title="Editar / detalhes"
-                        className="p-1.5 text-cream-400 hover:text-amber-sacode-400 transition"
+                        className="p-1.5 text-cream-400 hover:text-accent-400 transition"
                       >
                         <ExternalLink size={16} />
                       </Link>
@@ -211,7 +211,7 @@ export function AfiliadosListClient({
           </p>
         ) : (
           filtered.map((it) => (
-            <div key={it.id} className="bg-wine-700 border border-mauve-700 rounded-lg p-4">
+            <div key={it.id} className="bg-surface-700 border border-muted-700 rounded-lg p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <p className="text-cream-200 font-semibold">{it.name}</p>
@@ -222,7 +222,7 @@ export function AfiliadosListClient({
                     Ativo
                   </span>
                 ) : (
-                  <span className="bg-mauve-800/60 text-cream-400 text-xs px-2 py-0.5 rounded-full border border-mauve-600">
+                  <span className="bg-muted-800/60 text-cream-400 text-xs px-2 py-0.5 rounded-full border border-muted-600">
                     Inativo
                   </span>
                 )}
@@ -239,20 +239,20 @@ export function AfiliadosListClient({
                 </div>
                 <div>
                   <p className="text-cream-400">Comissão</p>
-                  <p className="text-amber-sacode-400 font-semibold">{fmtCurrency(it.commission_due)}</p>
+                  <p className="text-accent-400 font-semibold">{fmtCurrency(it.commission_due)}</p>
                 </div>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => copyLink(it)}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 bg-wine-800 hover:bg-wine-900 text-cream-200 text-xs py-2 rounded border border-mauve-600 transition"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 bg-surface-800 hover:bg-surface-900 text-cream-200 text-xs py-2 rounded border border-muted-600 transition"
                 >
                   {copiedId === it.id ? <Check size={14} /> : <Copy size={14} />}
                   {copiedId === it.id ? 'Copiado' : 'Copiar link'}
                 </button>
                 <Link
                   href={`/admin/afiliados/${it.id}`}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-900 font-semibold text-xs py-2 rounded transition"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 bg-accent-400 hover:bg-accent-500 text-surface-900 font-semibold text-xs py-2 rounded transition"
                 >
                   Detalhes
                 </Link>

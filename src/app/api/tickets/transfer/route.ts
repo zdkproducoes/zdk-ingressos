@@ -18,6 +18,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { resend, EMAIL_FROM } from '@/lib/email/resend';
 import { renderTicketTransferEmail } from '@/emails/ticket-transfer';
 import { checkRateLimit } from '@/lib/turnstile/ratelimit';
+import { platform } from '@/lib/config';
 
 export const runtime = 'nodejs';
 
@@ -112,7 +113,7 @@ export async function POST(req: NextRequest) {
 
   if (!recipient) {
     return NextResponse.json(
-      { error: 'Não encontramos uma conta com esse e-mail. Peça para a pessoa se cadastrar em sacode.cantorcaiolacerda.com.br primeiro.' },
+      { error: 'Não encontramos uma conta com esse e-mail. Peça para a pessoa se cadastrar em www.zdkingressos.com.br primeiro.' },
       { status: 404 }
     );
   }
@@ -127,7 +128,7 @@ export async function POST(req: NextRequest) {
   // 7. Gera o QR NOVO (mesmo padrão do fulfillment)
   const oldToken = item.qr_code_token as string | null;
   const oldUrl = item.qr_code_url as string | null;
-  const newToken = `SCD-${randomBytes(12).toString('hex').toUpperCase()}`;
+  const newToken = `${platform.qrPrefix}${randomBytes(12).toString('hex').toUpperCase()}`;
   const qrBuffer = await QRCode.toBuffer(newToken, { width: 400, margin: 1, errorCorrectionLevel: 'M' });
   const qrBytes = new Uint8Array(qrBuffer);
   const today = new Date();

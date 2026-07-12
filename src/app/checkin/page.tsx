@@ -21,7 +21,7 @@ export default async function CheckinHomePage() {
       <p className="text-cream-300 text-sm mb-6">Selecione o evento para iniciar o check-in.</p>
 
       {list.length === 0 ? (
-        <div className="bg-wine-700 border border-wine-600 rounded-lg p-6 text-center">
+        <div className="bg-surface-700 border border-surface-600 rounded-lg p-6 text-center">
           <p className="text-cream-200">Nenhum evento agendado no momento.</p>
         </div>
       ) : (
@@ -38,7 +38,7 @@ export default async function CheckinHomePage() {
               <Link
                 key={ev.id}
                 href={`/checkin/${ev.slug}`}
-                className="block bg-wine-700 border border-wine-600 rounded-lg p-5 hover:border-cream-300 transition"
+                className="block bg-surface-700 border border-surface-600 rounded-lg p-5 hover:border-cream-300 transition"
               >
                 <h2 className="text-lg font-bold text-cream-200 mb-1">{ev.title}</h2>
                 <p className="text-cream-300 text-sm capitalize">{dateLabel}{timeLabel && ` • ${timeLabel}`}</p>

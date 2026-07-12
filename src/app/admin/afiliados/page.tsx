@@ -90,7 +90,7 @@ export default async function AfiliadosPage() {
     };
   });
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
 
   return (
     <div>
@@ -101,13 +101,13 @@ export default async function AfiliadosPage() {
         <div className="flex items-center gap-2">
           <Link
             href="/admin/afiliados/metas"
-            className="inline-flex items-center gap-2 bg-wine-700 hover:bg-wine-900 text-cream-200 border border-mauve-600 font-semibold px-4 py-2 rounded-lg text-sm transition"
+            className="inline-flex items-center gap-2 bg-surface-700 hover:bg-surface-900 text-cream-200 border border-muted-600 font-semibold px-4 py-2 rounded-lg text-sm transition"
           >
             🎯 Metas semanais
           </Link>
           <Link
             href="/admin/afiliados/novo"
-            className="inline-flex items-center gap-2 bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-900 font-semibold px-4 py-2 rounded-lg text-sm transition"
+            className="inline-flex items-center gap-2 bg-accent-400 hover:bg-accent-500 text-surface-900 font-semibold px-4 py-2 rounded-lg text-sm transition"
           >
             + Novo afiliado
           </Link>

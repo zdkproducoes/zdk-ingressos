@@ -79,7 +79,7 @@ export function VendaOfflineClient({
       } else {
         setSearchMsg(
           json.error ||
-          'Cliente não encontrado. Ele precisa ter conta na plataforma — peça para se cadastrar em sacode.cantorcaiolacerda.com.br/cadastro (leva 1 minuto no celular).',
+          'Cliente não encontrado. Ele precisa ter conta na plataforma — peça para se cadastrar em www.zdkingressos.com.br/cadastro (leva 1 minuto no celular).',
         );
       }
     } catch {
@@ -129,7 +129,7 @@ export function VendaOfflineClient({
   };
 
   const inputCls =
-    'w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400';
+    'w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400';
 
   const totalOffline = sales
     .filter((s) => s.payment_status === 'approved')
@@ -149,7 +149,7 @@ export function VendaOfflineClient({
 
       {/* ---- Nova venda ---- */}
       {!eventoArquivado && (
-        <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5 space-y-5">
+        <div className="bg-surface-700 border border-muted-700 rounded-xl p-5 space-y-5">
           <div>
             <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider">
               Nova venda offline
@@ -188,14 +188,14 @@ export function VendaOfflineClient({
               <button
                 onClick={handleSearch}
                 disabled={searching}
-                className="inline-flex items-center gap-1.5 bg-wine-800 hover:bg-wine-900 disabled:opacity-50 text-cream-200 text-sm px-4 py-2 rounded-lg border border-mauve-600 transition whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 bg-surface-800 hover:bg-surface-900 disabled:opacity-50 text-cream-200 text-sm px-4 py-2 rounded-lg border border-muted-600 transition whitespace-nowrap"
               >
                 <Search size={15} /> {searching ? 'Buscando…' : 'Buscar'}
               </button>
             </div>
-            {searchMsg && <p className="text-xs text-amber-sacode-300 mt-2">{searchMsg}</p>}
+            {searchMsg && <p className="text-xs text-accent-300 mt-2">{searchMsg}</p>}
             {buyer && (
-              <div className="mt-3 flex items-center gap-3 bg-wine-800 border border-emerald-700/40 rounded-lg px-4 py-3">
+              <div className="mt-3 flex items-center gap-3 bg-surface-800 border border-emerald-700/40 rounded-lg px-4 py-3">
                 <User size={18} className="text-emerald-300 flex-shrink-0" />
                 <div className="text-sm">
                   <p className="text-cream-200 font-medium">{buyer.name}</p>
@@ -212,7 +212,7 @@ export function VendaOfflineClient({
             <div>
               <label className="block text-sm text-cream-300 mb-1">2. Lote *</label>
               {sellableBatches.length === 0 ? (
-                <p className="text-xs text-amber-sacode-300 bg-wine-800 border border-mauve-600 rounded-lg px-3 py-2.5">
+                <p className="text-xs text-accent-300 bg-surface-800 border border-muted-600 rounded-lg px-3 py-2.5">
                   Nenhum lote com estoque neste evento — crie na aba Lotes.
                 </p>
               ) : (
@@ -244,17 +244,17 @@ export function VendaOfflineClient({
           </div>
 
           {/* Passo 3: confirmação do PIX */}
-          <div className="bg-wine-800 border border-mauve-600 rounded-lg px-4 py-3.5 space-y-3">
+          <div className="bg-surface-800 border border-muted-600 rounded-lg px-4 py-3.5 space-y-3">
             <div className="flex justify-between items-baseline">
               <span className="text-sm text-cream-300">Total a receber</span>
-              <span className="text-2xl font-bold text-amber-sacode-400">{fmtCurrency(total)}</span>
+              <span className="text-2xl font-bold text-accent-400">{fmtCurrency(total)}</span>
             </div>
             <label className="flex items-start gap-2.5 cursor-pointer text-sm text-cream-200">
               <input
                 type="checkbox"
                 checked={pixConfirmed}
                 onChange={(e) => setPixConfirmed(e.target.checked)}
-                className="mt-0.5 h-4 w-4 accent-amber-sacode-400"
+                className="mt-0.5 h-4 w-4 accent-accent-400"
               />
               <span>
                 3. Confirmo que <strong>recebi {fmtCurrency(total)} via PIX</strong> deste cliente.
@@ -265,7 +265,7 @@ export function VendaOfflineClient({
           <button
             onClick={handleSell}
             disabled={saving || !buyer || !selectedBatch || !pixConfirmed}
-            className="w-full md:w-auto bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-40 text-wine-900 font-semibold px-8 py-3 rounded-lg text-sm transition"
+            className="w-full md:w-auto bg-accent-400 hover:bg-accent-500 disabled:opacity-40 text-surface-900 font-semibold px-8 py-3 rounded-lg text-sm transition"
           >
             {saving ? 'Registrando…' : 'Registrar venda e enviar ingresso'}
           </button>
@@ -277,14 +277,14 @@ export function VendaOfflineClient({
       )}
 
       {/* ---- Relatório ---- */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5">
+      <div className="bg-surface-700 border border-muted-700 rounded-xl p-5">
         <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
           <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider">
             Vendas offline deste evento
           </h2>
           <p className="text-sm text-cream-400">
             {ticketsOffline} {ticketsOffline === 1 ? 'ingresso' : 'ingressos'} ·{' '}
-            <span className="text-amber-sacode-400 font-semibold">{fmtCurrency(totalOffline)}</span>
+            <span className="text-accent-400 font-semibold">{fmtCurrency(totalOffline)}</span>
           </p>
         </div>
 
@@ -293,7 +293,7 @@ export function VendaOfflineClient({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="text-cream-400 text-xs uppercase tracking-wider border-b border-mauve-700">
+              <thead className="text-cream-400 text-xs uppercase tracking-wider border-b border-muted-700">
                 <tr>
                   <th className="text-left py-2 pr-3">Data / hora</th>
                   <th className="text-left py-2 pr-3">Vendedor</th>
@@ -306,7 +306,7 @@ export function VendaOfflineClient({
               </thead>
               <tbody>
                 {sales.map((s) => (
-                  <tr key={s.order_id} className="border-b border-mauve-700/50">
+                  <tr key={s.order_id} className="border-b border-muted-700/50">
                     <td className="py-2.5 pr-3 text-cream-300 whitespace-nowrap">{fmtDateTime(s.paid_at)}</td>
                     <td className="py-2.5 pr-3 text-cream-200">{s.seller_name}</td>
                     <td className="py-2.5 pr-3 text-cream-200">
@@ -315,7 +315,7 @@ export function VendaOfflineClient({
                     </td>
                     <td className="py-2.5 pr-3 text-cream-300">{s.batch_names.join(', ')}</td>
                     <td className="py-2.5 pr-3 text-right text-cream-300">{s.tickets}</td>
-                    <td className="py-2.5 pr-3 text-right text-amber-sacode-400 font-semibold">
+                    <td className="py-2.5 pr-3 text-right text-accent-400 font-semibold">
                       {fmtCurrency(s.total)}
                     </td>
                     <td className="py-2.5 text-cream-400">

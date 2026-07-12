@@ -5,32 +5,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Paleta SACODE — variáveis CSS pra uso fora do Tailwind (e-mails, SVG inline, etc.) */
-  --sacode-wine-600: #45183F;
-  --sacode-wine-700: #321131;
-  --sacode-wine-800: #2D0F2A;
-  --sacode-wine-900: #1F0A1D;
+  /* Tema padrão da plataforma — variáveis CSS pra uso fora do Tailwind
+     (e-mails, SVG inline, etc.). Organizações podem sobrescrever as
+     --brand-* na página do evento (tema por tenant). */
+  --brand-surface-600: #45183F;
+  --brand-surface-700: #321131;
+  --brand-surface-800: #2D0F2A;
+  --brand-surface-900: #1F0A1D;
 
-  --sacode-mauve-600: #694060;
-  --sacode-mauve-700: #52314B;
+  --brand-muted-600: #694060;
+  --brand-muted-700: #52314B;
 
-  --sacode-amber-400: #E4A03F;
-  --sacode-amber-500: #D08F30;
-  --sacode-amber-300: #EFB560;
+  --brand-accent-400: #E4A03F;
+  --brand-accent-500: #D08F30;
+  --brand-accent-300: #EFB560;
 
-  --sacode-cream-200: #EADBC4;
-  --sacode-cream-300: #D9C2A0;
-  --sacode-cream-400: #BFA279;
+  --brand-cream-200: #EADBC4;
+  --brand-cream-300: #D9C2A0;
+  --brand-cream-400: #BFA279;
 
   /* Aliases semânticos (defaults do projeto) */
-  --background: var(--sacode-wine-800);
-  --background-elevated: var(--sacode-wine-600);
-  --foreground: var(--sacode-cream-200);
-  --foreground-muted: var(--sacode-cream-300);
-  --foreground-subtle: var(--sacode-cream-400);
-  --border-default: var(--sacode-mauve-600);
-  --accent: var(--sacode-amber-400);
-  --accent-hover: var(--sacode-amber-500);
+  --background: var(--brand-surface-800);
+  --background-elevated: var(--brand-surface-600);
+  --foreground: var(--brand-cream-200);
+  --foreground-muted: var(--brand-cream-300);
+  --foreground-subtle: var(--brand-cream-400);
+  --border-default: var(--brand-muted-600);
+  --accent: var(--brand-accent-400);
+  --accent-hover: var(--brand-accent-500);
 }
 
 body {
@@ -43,7 +45,7 @@ body {
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-sacode-400 to-amber-sacode-300;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-400 to-accent-300;
   }
 
   .glass {
@@ -62,19 +64,19 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--sacode-wine-900);
+  background: var(--brand-surface-900);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--sacode-mauve-700);
+  background: var(--brand-muted-700);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--sacode-mauve-600);
+  background: var(--brand-muted-600);
 }
 
 ::selection {
-  background: var(--sacode-amber-400);
-  color: var(--sacode-wine-800);
+  background: var(--brand-accent-400);
+  color: var(--brand-surface-800);
 }
 
 input, select, textarea {
@@ -82,5 +84,5 @@ input, select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-  @apply ring-2 ring-amber-sacode-400/50;
+  @apply ring-2 ring-accent-400/50;
 }

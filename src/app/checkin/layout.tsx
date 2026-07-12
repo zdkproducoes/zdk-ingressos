@@ -21,8 +21,8 @@ export default async function CheckinLayout({ children }: { children: React.Reac
   if (!allowed) redirect('/');
 
   return (
-    <div className="min-h-screen bg-wine-800">
-      <header className="border-b border-wine-700 bg-wine-900">
+    <div className="min-h-screen bg-surface-800">
+      <header className="border-b border-surface-700 bg-surface-900">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
           <Link href="/checkin" className="text-cream-200 font-bold text-xl">
             SACODE Check-in
@@ -34,7 +34,7 @@ export default async function CheckinLayout({ children }: { children: React.Reac
             <form action={signOutAction}>
               <button
                 type="submit"
-                className="text-cream-200 text-sm border border-wine-600 px-3 py-1.5 rounded hover:bg-wine-700 transition"
+                className="text-cream-200 text-sm border border-surface-600 px-3 py-1.5 rounded hover:bg-surface-700 transition"
               >
                 Sair
               </button>

@@ -102,7 +102,7 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Ex.: João da Silva"
-          className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         />
       </div>
 
@@ -118,8 +118,8 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
             setCodeTouched(true);
           }}
           placeholder="joao-da-silva"
-          className={`w-full bg-wine-800 text-cream-200 border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 ${
-            codeValid ? 'border-mauve-600 focus:ring-amber-sacode-400' : 'border-red-600 focus:ring-red-500'
+          className={`w-full bg-surface-800 text-cream-200 border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-1 ${
+            codeValid ? 'border-muted-600 focus:ring-accent-400' : 'border-red-600 focus:ring-red-500'
           }`}
         />
         {!codeValid && (
@@ -134,7 +134,7 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
         <select
           value={eventId}
           onChange={(e) => setEventId(e.target.value)}
-          className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         >
           {events.length === 0 ? (
             <option value="">Nenhum evento ativo</option>
@@ -154,7 +154,7 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="opcional"
-            className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           />
         </div>
         <div>
@@ -164,7 +164,7 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="opcional"
-            className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           />
         </div>
       </div>
@@ -178,7 +178,7 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
           step="0.5"
           value={commission}
           onChange={(e) => setCommission(e.target.value)}
-          className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         />
       </div>
 
@@ -189,14 +189,14 @@ export function AfiliadoNovoClient({ events }: { events: EventOption[] }) {
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           placeholder="opcional — visível só pro admin"
-          className="w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         />
       </div>
 
       <button
         onClick={handleSubmit}
         disabled={submitting || events.length === 0}
-        className="w-full md:w-auto bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 disabled:cursor-not-allowed text-wine-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
+        className="w-full md:w-auto bg-accent-400 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed text-surface-900 font-semibold px-6 py-2.5 rounded-lg text-sm transition"
       >
         {submitting ? 'Criando…' : 'Criar afiliado'}
       </button>

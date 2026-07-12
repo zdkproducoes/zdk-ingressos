@@ -163,7 +163,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
           <select
             value={eventId}
             onChange={(e) => setEventId(e.target.value)}
-            className="bg-wine-700 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+            className="bg-surface-700 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
           >
             {events.map(ev => (
               <option key={ev.id} value={ev.id}>{ev.title}</option>
@@ -173,7 +173,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
       )}
 
       {/* Card de busca + emissão */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-xl p-6">
+      <div className="bg-surface-700 border border-muted-700 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-cream-200 mb-4">Enviar nova cortesia</h2>
 
         <div className="space-y-3">
@@ -188,12 +188,12 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
                 placeholder="000.000.000-00 ou email@exemplo.com"
-                className="flex-1 bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400 placeholder:text-cream-500"
+                className="flex-1 bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400 placeholder:text-cream-500"
               />
               <button
                 onClick={handleSearch}
                 disabled={searching || !searchInput.trim()}
-                className="rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:bg-mauve-600 disabled:cursor-not-allowed text-wine-800 font-semibold px-4 py-2 text-sm transition"
+                className="rounded-lg bg-accent-400 hover:bg-accent-500 disabled:bg-muted-600 disabled:cursor-not-allowed text-surface-800 font-semibold px-4 py-2 text-sm transition"
               >
                 {searching ? 'Buscando...' : 'Buscar'}
               </button>
@@ -205,7 +205,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
 
           {/* Resultado: convidado encontrado */}
           {searchResult && searchResult.found && searchResult.profile && (
-            <div className="bg-wine-800 border border-amber-sacode-400/40 rounded-lg p-4">
+            <div className="bg-surface-800 border border-accent-400/40 rounded-lg p-4">
               <p className="text-sm text-cream-400 mb-1">Convidado encontrado:</p>
               <p className="text-cream-200 font-medium">{searchResult.profile.name}</p>
               <p className="text-cream-400 text-sm">{searchResult.profile.email}</p>
@@ -223,7 +223,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                     value={attendeeName}
                     onChange={(e) => setAttendeeName(e.target.value)}
                     maxLength={200}
-                    className="w-full bg-wine-700 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+                    className="w-full bg-surface-700 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
                   />
                 </div>
 
@@ -231,12 +231,12 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                   <label className="block text-sm text-cream-300 mb-1">
                     Quantidade
                   </label>
-                  <div className="flex items-stretch border border-mauve-600 rounded-lg overflow-hidden">
+                  <div className="flex items-stretch border border-muted-600 rounded-lg overflow-hidden">
                     <button
                       type="button"
                       onClick={() => setQuantity(q => Math.max(1, q - 1))}
                       disabled={quantity <= 1}
-                      className="px-3 bg-wine-700 hover:bg-wine-600 disabled:opacity-40 disabled:cursor-not-allowed text-cream-200 text-lg font-bold"
+                      className="px-3 bg-surface-700 hover:bg-surface-600 disabled:opacity-40 disabled:cursor-not-allowed text-cream-200 text-lg font-bold"
                       aria-label="Diminuir"
                     >
                       −
@@ -251,13 +251,13 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                         if (Number.isNaN(v)) return setQuantity(1);
                         setQuantity(Math.max(1, Math.min(MAX_QUANTITY, v)));
                       }}
-                      className="flex-1 bg-wine-700 text-cream-200 text-center text-sm focus:outline-none focus:bg-wine-600 [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="flex-1 bg-surface-700 text-cream-200 text-center text-sm focus:outline-none focus:bg-surface-600 [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <button
                       type="button"
                       onClick={() => setQuantity(q => Math.min(MAX_QUANTITY, q + 1))}
                       disabled={quantity >= MAX_QUANTITY}
-                      className="px-3 bg-wine-700 hover:bg-wine-600 disabled:opacity-40 disabled:cursor-not-allowed text-cream-200 text-lg font-bold"
+                      className="px-3 bg-surface-700 hover:bg-surface-600 disabled:opacity-40 disabled:cursor-not-allowed text-cream-200 text-lg font-bold"
                       aria-label="Aumentar"
                     >
                       +
@@ -276,7 +276,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
               <button
                 onClick={handleSubmit}
                 disabled={submitting || !attendeeName.trim()}
-                className="mt-4 w-full sm:w-auto rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:bg-mauve-600 disabled:cursor-not-allowed text-wine-800 font-semibold px-6 py-2.5 text-sm transition"
+                className="mt-4 w-full sm:w-auto rounded-lg bg-accent-400 hover:bg-accent-500 disabled:bg-muted-600 disabled:cursor-not-allowed text-surface-800 font-semibold px-6 py-2.5 text-sm transition"
               >
                 {submitting
                   ? 'Enviando...'
@@ -289,7 +289,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
 
           {/* Resultado: convidado não encontrado */}
           {searchResult && !searchResult.found && (
-            <div className="bg-wine-800 border border-mauve-600 rounded-lg p-4">
+            <div className="bg-surface-800 border border-muted-600 rounded-lg p-4">
               <p className="text-cream-300 text-sm mb-3">
                 {searchResult.error || 'Convidado não encontrado.'}
               </p>
@@ -301,11 +301,11 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                 <input
                   readOnly
                   value={signupUrl}
-                  className="flex-1 bg-wine-700 text-cream-300 border border-mauve-600 rounded-lg px-3 py-2 text-xs"
+                  className="flex-1 bg-surface-700 text-cream-300 border border-muted-600 rounded-lg px-3 py-2 text-xs"
                 />
                 <button
                   onClick={handleCopyLink}
-                  className="rounded-lg bg-mauve-600 hover:bg-mauve-500 text-cream-200 font-medium px-4 py-2 text-sm transition whitespace-nowrap"
+                  className="rounded-lg bg-muted-600 hover:bg-muted-500 text-cream-200 font-medium px-4 py-2 text-sm transition whitespace-nowrap"
                 >
                   {linkCopied ? '✓ Copiado' : 'Copiar link'}
                 </button>
@@ -326,7 +326,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
       </div>
 
       {/* Lista de cortesias enviadas */}
-      <div className="bg-wine-700 border border-mauve-700 rounded-xl p-6">
+      <div className="bg-surface-700 border border-muted-700 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-cream-200 mb-4">
           Cortesias já enviadas {cortesias.length > 0 && (
             <span className="text-cream-400 text-sm font-normal">({cortesias.length})</span>
@@ -341,7 +341,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
           <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-cream-400 border-b border-mauve-700">
+                <tr className="text-left text-cream-400 border-b border-muted-700">
                   <th className="py-2 pr-4">#</th>
                   <th className="py-2 pr-4">Data</th>
                   <th className="py-2 pr-4">Convidado</th>
@@ -359,7 +359,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                   const ticketsCount = c.order_items.length;
                   const firstAttendee = c.order_items[0]?.attendee_name || '—';
                   return (
-                    <tr key={c.id} className="border-b border-mauve-800 text-cream-200">
+                    <tr key={c.id} className="border-b border-muted-800 text-cream-200">
                       <td className="py-2 pr-4 text-cream-400">#{c.order_number}</td>
                       <td className="py-2 pr-4 text-cream-300 whitespace-nowrap">{formatDateTime(c.created_at)}</td>
                       <td className="py-2 pr-4">
@@ -369,7 +369,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
                       <td className="py-2 pr-4 text-cream-300">{firstAttendee}</td>
                       <td className="py-2 pr-4 text-cream-300 text-center">
                         {ticketsCount > 1 ? (
-                          <span className="inline-block bg-amber-sacode-400/20 text-amber-sacode-300 px-2 py-0.5 rounded text-xs font-semibold">
+                          <span className="inline-block bg-accent-400/20 text-accent-300 px-2 py-0.5 rounded text-xs font-semibold">
                             {ticketsCount}
                           </span>
                         ) : (

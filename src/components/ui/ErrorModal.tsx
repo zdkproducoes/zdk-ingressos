@@ -38,7 +38,7 @@ export function ErrorModal({ open, title, message, onClose, variant = 'error' }:
       aria-modal="true"
     >
       <div
-        className={`relative w-full max-w-md rounded-2xl bg-wine-700 border border-mauve-600 ring-4 ${colors.ring} p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150`}
+        className={`relative w-full max-w-md rounded-2xl bg-surface-700 border border-muted-600 ring-4 ${colors.ring} p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center">
@@ -61,7 +61,7 @@ export function ErrorModal({ open, title, message, onClose, variant = 'error' }:
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-wine-600 hover:bg-wine-500 text-cream-400 hover:text-cream-200 text-sm transition flex items-center justify-center"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-600 hover:bg-surface-500 text-cream-400 hover:text-cream-200 text-sm transition flex items-center justify-center"
           aria-label="Fechar"
         >
           ✕

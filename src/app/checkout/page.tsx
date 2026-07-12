@@ -13,10 +13,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
   const { event: eventSlug } = await searchParams;
   if (!eventSlug) {
     return (
-      <main className="min-h-screen bg-wine-800 flex items-center justify-center px-4">
+      <main className="min-h-screen bg-surface-800 flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-cream-300 mb-4">Selecione um evento na pagina inicial</p>
-          <Link href="/" className="rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 px-6 inline-block">Ver eventos</Link>
+          <Link href="/" className="rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 px-6 inline-block">Ver eventos</Link>
         </div>
       </main>
     );
@@ -53,7 +53,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
   });
 
   return (
-    <main className="min-h-screen bg-wine-800 py-8 px-4">
+    <main className="min-h-screen bg-surface-800 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <Link href={`/`} className="text-sm text-cream-400 hover:text-cream-200 mb-6 inline-block">Voltar</Link>
         <h1 className="text-2xl md:text-3xl font-bold text-cream-200 mb-6">Checkout</h1>
@@ -65,11 +65,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
         {availableBatches.length === 0 ? (
           <div className={`rounded-2xl border-2 p-8 text-center shadow-xl max-w-2xl mx-auto ${
             vendasEmBreve
-              ? 'border-amber-sacode-400 bg-gradient-to-br from-mauve-700 to-wine-700'
+              ? 'border-accent-400 bg-gradient-to-br from-muted-700 to-surface-700'
               : 'border-red-600 bg-gradient-to-br from-red-900/40 to-red-800/40'
           }`}>
             <p className={`text-sm font-bold uppercase tracking-wider mb-3 ${
-              vendasEmBreve ? 'text-amber-sacode-300' : 'text-red-300'
+              vendasEmBreve ? 'text-accent-300' : 'text-red-300'
             }`}>
               {vendasEmBreve ? 'EM BREVE' : 'ESGOTADO'}
             </p>
@@ -83,7 +83,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
             </p>
             <Link
               href={`/evento/${event.slug}`}
-              className="inline-block bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-bold px-6 py-3 rounded-xl transition"
+              className="inline-block bg-accent-400 hover:bg-accent-500 text-surface-800 font-bold px-6 py-3 rounded-xl transition"
             >
               Voltar para o evento
             </Link>

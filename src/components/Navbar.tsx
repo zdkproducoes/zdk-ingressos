@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { LogOut } from 'lucide-react';
@@ -57,18 +56,13 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
   const isGuest = authState === null;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-wine-600 border-b border-mauve-600 h-14">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-surface-600 border-b border-muted-600 h-14">
       <div className="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
 
-        <Link href="/" aria-label="Sacode do Lacerda — Início">
-          <Image
-            src="/logo-sacode-nav.png"
-            alt="Sacode do Lacerda"
-            width={213}
-            height={120}
-            priority
-            className="h-10 sm:h-11 w-auto"
-          />
+        <Link href="/" aria-label="ZDK Ingressos — Início" className="flex items-baseline gap-1">
+          {/* Wordmark provisório até a identidade visual da plataforma existir */}
+          <span className="font-display text-2xl tracking-wide text-cream-200">ZDK</span>
+          <span className="font-display text-2xl tracking-wide text-accent-400">Ingressos</span>
         </Link>
 
         <div className="flex items-center gap-3">
@@ -83,7 +77,7 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                 </span>
                 <Link
                   href="/minhas-compras"
-                  className="text-cream-200/80 hover:text-amber-sacode-400 transition text-sm"
+                  className="text-cream-200/80 hover:text-accent-400 transition text-sm"
                 >
                   Minhas compras
                 </Link>
@@ -91,7 +85,7 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                   <button
                     type="submit"
                     aria-label="Sair da conta"
-                    className="flex items-center gap-1.5 text-cream-400 hover:text-amber-sacode-300 transition text-sm"
+                    className="flex items-center gap-1.5 text-cream-400 hover:text-accent-300 transition text-sm"
                   >
                     <LogOut size={16} />
                     Sair
@@ -104,14 +98,14 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                 <button
                   onClick={() => setDropdownOpen(v => !v)}
                   aria-label="Abrir menu do usuário"
-                  className="w-9 h-9 rounded-full bg-mauve-600 text-cream-200 text-sm font-semibold flex items-center justify-center"
+                  className="w-9 h-9 rounded-full bg-muted-600 text-cream-200 text-sm font-semibold flex items-center justify-center"
                 >
                   {authState.first_name.charAt(0).toUpperCase()}
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-wine-700 border border-mauve-600 rounded-lg shadow-lg py-1 z-50">
-                    <div className="px-4 py-2 border-b border-mauve-600">
+                  <div className="absolute right-0 mt-2 w-52 bg-surface-700 border border-muted-600 rounded-lg shadow-lg py-1 z-50">
+                    <div className="px-4 py-2 border-b border-muted-600">
                       <p className="text-cream-200 text-sm font-medium">
                         {authState.first_name} {authState.last_name}
                       </p>
@@ -120,7 +114,7 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                     <Link
                       href="/minhas-compras"
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm text-cream-200/80 hover:text-amber-sacode-400 hover:bg-wine-500 transition"
+                      className="block px-4 py-2 text-sm text-cream-200/80 hover:text-accent-400 hover:bg-surface-500 transition"
                     >
                       Minhas compras
                     </Link>
@@ -128,7 +122,7 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                       <button
                         type="submit"
                         aria-label="Sair da conta"
-                        className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-cream-400 hover:text-amber-sacode-300 hover:bg-wine-500 transition"
+                        className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-cream-400 hover:text-accent-300 hover:bg-surface-500 transition"
                       >
                         <LogOut size={16} />
                         Sair
@@ -145,14 +139,14 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
               <Link
                 href="/login"
                 aria-label="Entrar na conta"
-                className="text-cream-200/80 hover:text-amber-sacode-400 transition text-sm"
+                className="text-cream-200/80 hover:text-accent-400 transition text-sm"
               >
                 Entrar
               </Link>
               <Link
                 href="/cadastro"
                 aria-label="Criar conta"
-                className="bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 px-4 py-1.5 rounded text-sm transition"
+                className="bg-accent-400 hover:bg-accent-500 text-surface-800 px-4 py-1.5 rounded text-sm transition"
               >
                 Cadastrar
               </Link>

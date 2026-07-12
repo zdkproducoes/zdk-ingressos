@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function BuscarIngressoPage() {
   return (
-    <main className="min-h-screen bg-wine-800 py-16 px-4">
+    <main className="min-h-screen bg-surface-800 py-16 px-4">
       <div className="max-w-md mx-auto">
         <h1 className="text-2xl font-bold text-cream-200 mb-2">Localizar meu ingresso</h1>
         <p className="text-cream-400 text-sm mb-8">

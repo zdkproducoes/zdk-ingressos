@@ -206,7 +206,7 @@ export function SignupForm() {
               <button type="button"
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => { update('email', emailSuggestion); setEmailSuggestion(null); }}
-                className="mt-1.5 block text-left text-xs text-amber-sacode-300 hover:text-amber-sacode-200">
+                className="mt-1.5 block text-left text-xs text-accent-300 hover:text-accent-200">
                 Você quis dizer <span className="font-semibold underline">{emailSuggestion}</span>?
               </button>
             )}
@@ -288,7 +288,7 @@ export function SignupForm() {
                 onChange={e => update('password', e.target.value)} className={`${cls(errors.password)} pr-10`} placeholder="Mínimo 8 caracteres" />
               <button type="button" onClick={() => setShowPassword(v => !v)}
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-amber-sacode-300 transition">
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-accent-300 transition">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -299,7 +299,7 @@ export function SignupForm() {
                 onChange={e => update('passwordConfirm', e.target.value)} className={`${cls(errors.passwordConfirm)} pr-10`} />
               <button type="button" onClick={() => setShowConfirm(v => !v)}
                 aria-label={showConfirm ? 'Ocultar senha' : 'Mostrar senha'}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-amber-sacode-300 transition">
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-accent-300 transition">
                 {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -310,19 +310,19 @@ export function SignupForm() {
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={form.marketingConsent}
               onChange={e => update('marketingConsent', e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-mauve-600 bg-wine-700 text-amber-sacode-400 focus:ring-amber-sacode-400" />
+              className="mt-1 h-4 w-4 rounded border-muted-600 bg-surface-700 text-accent-400 focus:ring-accent-400" />
             <span className="text-sm text-cream-300">Quero receber novidades sobre eventos e promoções por e-mail.</span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={form.termsAccepted}
               onChange={e => update('termsAccepted', e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-mauve-600 bg-wine-700 text-amber-sacode-400 focus:ring-amber-sacode-400" />
+              className="mt-1 h-4 w-4 rounded border-muted-600 bg-surface-700 text-accent-400 focus:ring-accent-400" />
             <span className="text-sm text-cream-300">
               Li e aceito os{' '}
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); setShowTermosModal(true); }}
-                className="text-amber-sacode-400 underline hover:text-amber-sacode-300"
+                className="text-accent-400 underline hover:text-accent-300"
               >
                 Termos de Uso
               </button>
@@ -330,7 +330,7 @@ export function SignupForm() {
               <button
                 type="button"
                 onClick={(e) => { e.preventDefault(); setShowPrivacidadeModal(true); }}
-                className="text-amber-sacode-400 underline hover:text-amber-sacode-300"
+                className="text-accent-400 underline hover:text-accent-300"
               >
                 Política de Privacidade
               </button>
@@ -347,12 +347,12 @@ export function SignupForm() {
         )}
 
         <button type="submit" disabled={loading}
-          className="w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 disabled:cursor-not-allowed text-wine-800 font-semibold py-3 px-6 transition">
+          className="w-full rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed text-surface-800 font-semibold py-3 px-6 transition">
           {loading ? 'Criando conta…' : 'Criar minha conta'}
         </button>
 
         <p className="text-center text-sm text-cream-400 pt-2">
-          Já tem conta? <Link href="/login" className="text-amber-sacode-400 hover:text-amber-sacode-300 underline">Fazer login</Link>
+          Já tem conta? <Link href="/login" className="text-accent-400 hover:text-accent-300 underline">Fazer login</Link>
         </p>
       </form>
 
@@ -386,8 +386,8 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 }
 
 function cls(error?: string): string {
-  const base = 'w-full rounded-lg bg-wine-700 border px-3 py-2.5 text-cream-200 placeholder:text-cream-400 focus:outline-none focus:ring-2 transition';
-  return error ? `${base} border-red-700 focus:ring-red-600` : `${base} border-mauve-600 focus:border-amber-sacode-400 focus:ring-amber-sacode-400/30`;
+  const base = 'w-full rounded-lg bg-surface-700 border px-3 py-2.5 text-cream-200 placeholder:text-cream-400 focus:outline-none focus:ring-2 transition';
+  return error ? `${base} border-red-700 focus:ring-red-600` : `${base} border-muted-600 focus:border-accent-400 focus:ring-accent-400/30`;
 }
 
 // --- Detector de erro de digitação no e-mail ("você quis dizer ...?") ---

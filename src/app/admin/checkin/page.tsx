@@ -21,7 +21,7 @@ export default async function AdminCheckinPage() {
 
   if (!event) {
     return (
-      <div className="mt-6 bg-wine-700 border border-wine-600 rounded-lg p-6 text-center">
+      <div className="mt-6 bg-surface-700 border border-surface-600 rounded-lg p-6 text-center">
         <p className="text-cream-200">Nenhum evento cadastrado.</p>
       </div>
     );
@@ -105,7 +105,7 @@ export default async function AdminCheckinPage() {
       </div>
 
       {/* Grafico */}
-      <div className="bg-wine-700 border border-wine-600 rounded-lg p-4">
+      <div className="bg-surface-700 border border-surface-600 rounded-lg p-4">
         <h2 className="text-cream-200 font-bold mb-1">Check-ins por horario</h2>
         <p className="text-cream-400 text-xs mb-4">Agrupado a cada {BUCKET_MINUTES} minutos (horario de Sao Paulo)</p>
         {bucketEntries.length === 0 ? (
@@ -116,8 +116,8 @@ export default async function AdminCheckinPage() {
       </div>
 
       {/* Tabela */}
-      <div className="bg-wine-700 border border-wine-600 rounded-lg overflow-hidden">
-        <h2 className="text-cream-200 font-bold p-4 border-b border-wine-600">
+      <div className="bg-surface-700 border border-surface-600 rounded-lg overflow-hidden">
+        <h2 className="text-cream-200 font-bold p-4 border-b border-surface-600">
           Pessoas que entraram ({checkins.length})
         </h2>
         {checkins.length === 0 ? (
@@ -125,7 +125,7 @@ export default async function AdminCheckinPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-wine-800 text-cream-300 text-xs uppercase">
+              <thead className="bg-surface-800 text-cream-300 text-xs uppercase">
                 <tr>
                   <th className="text-left p-3">Horario</th>
                   <th className="text-left p-3">Nome</th>
@@ -137,7 +137,7 @@ export default async function AdminCheckinPage() {
               <tbody>
                 {/* Mais recentes primeiro */}
                 {checkins.slice().reverse().map((c) => (
-                  <tr key={c.id} className="border-t border-wine-600 text-cream-200">
+                  <tr key={c.id} className="border-t border-surface-600 text-cream-200">
                     <td className="p-3 whitespace-nowrap font-mono text-xs">{formatTimeSP(c.checked_in_at)}</td>
                     <td className="p-3">{c.attendee_name || '-'}</td>
                     <td className="p-3 whitespace-nowrap">#{c.order_number}</td>
@@ -156,7 +156,7 @@ export default async function AdminCheckinPage() {
 
 function StatBox({ label, value }: { label: string; value: number }) {
   return (
-    <div className="bg-wine-700 border border-wine-600 rounded-lg p-4">
+    <div className="bg-surface-700 border border-surface-600 rounded-lg p-4">
       <p className="text-cream-400 text-xs uppercase tracking-wider">{label}</p>
       <p className="text-cream-200 text-2xl font-bold">{value}</p>
     </div>

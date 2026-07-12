@@ -91,7 +91,7 @@ export function LoginForm() {
         <label className="block text-sm font-medium text-cream-200 mb-1.5">E-mail</label>
         <input type="email" autoComplete="email" required value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-full rounded-lg bg-wine-700 border border-mauve-600 px-3 py-2.5 text-cream-200 focus:outline-none focus:border-amber-sacode-400"
+          className="w-full rounded-lg bg-surface-700 border border-muted-600 px-3 py-2.5 text-cream-200 focus:outline-none focus:border-accent-400"
           placeholder="voce@email.com" />
       </div>
 
@@ -100,28 +100,28 @@ export function LoginForm() {
         <div className="relative">
           <input type={showPassword ? 'text' : 'password'} autoComplete="current-password" required value={password}
             onChange={e => setPassword(e.target.value)}
-            className="w-full rounded-lg bg-wine-700 border border-mauve-600 px-3 py-2.5 pr-10 text-cream-200 focus:outline-none focus:border-amber-sacode-400" />
+            className="w-full rounded-lg bg-surface-700 border border-muted-600 px-3 py-2.5 pr-10 text-cream-200 focus:outline-none focus:border-accent-400" />
           <button type="button" onClick={() => setShowPassword(v => !v)}
             aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-amber-sacode-300 transition">
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-accent-300 transition">
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
       </div>
 
       <button type="submit" disabled={loading}
-        className="w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-800 font-semibold py-3 transition">
+        className="w-full rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-800 font-semibold py-3 transition">
         {loading ? 'Entrando…' : 'Entrar'}
       </button>
 
       <div className="space-y-1 text-center text-sm pt-2">
         <p>
-          <Link href="/recuperar-senha" className="text-amber-sacode-400 hover:text-amber-sacode-300 underline">
+          <Link href="/recuperar-senha" className="text-accent-400 hover:text-accent-300 underline">
             Esqueci minha senha
           </Link>
         </p>
         <p className="text-cream-400">
-          Não tem conta? <Link href="/cadastro" className="text-amber-sacode-400 hover:text-amber-sacode-300 underline">Criar conta</Link>
+          Não tem conta? <Link href="/cadastro" className="text-accent-400 hover:text-accent-300 underline">Criar conta</Link>
         </p>
       </div>
     </form>

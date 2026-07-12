@@ -6,7 +6,7 @@
 import { cookies } from 'next/headers';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
-export const ADMIN_EVENT_COOKIE = 'sacode_admin_event';
+export const ADMIN_EVENT_COOKIE = 'panel_selected_event';
 
 export type SelectedEvent = {
   id: string;

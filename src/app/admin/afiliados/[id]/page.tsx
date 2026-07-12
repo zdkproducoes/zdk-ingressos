@@ -94,7 +94,7 @@ export default async function AfiliadoDetailPage({
     };
   });
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
 
   return (
     <div>

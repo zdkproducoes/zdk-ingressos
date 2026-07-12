@@ -26,17 +26,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const selectedEvent = await getSelectedEvent();
 
   return (
-    <div className="min-h-screen bg-wine-800">
+    <div className="min-h-screen bg-surface-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-cream-200 mb-1">Painel Admin</h1>
         {selectedEvent && (
           <p className="text-sm text-cream-400 mb-5">
             Gerenciando:{' '}
             <span className="text-cream-200 font-medium">{selectedEvent.title}</span>
-            <span className="ml-2 text-xs px-2 py-0.5 rounded-full border border-mauve-600 bg-wine-700 text-cream-300">
+            <span className="ml-2 text-xs px-2 py-0.5 rounded-full border border-muted-600 bg-surface-700 text-cream-300">
               {STATUS_LABEL[selectedEvent.status] ?? selectedEvent.status}
             </span>
-            <Link href="/admin/eventos" className="ml-2 text-amber-sacode-400 hover:text-amber-sacode-300 underline underline-offset-2">
+            <Link href="/admin/eventos" className="ml-2 text-accent-400 hover:text-accent-300 underline underline-offset-2">
               trocar
             </Link>
           </p>

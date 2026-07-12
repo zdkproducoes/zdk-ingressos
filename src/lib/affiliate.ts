@@ -2,7 +2,7 @@
 // Lado client: setAffiliateCookieClient
 // Lado server (Route Handlers / Server Components): getAffiliateCookieServer
 
-const COOKIE_NAME = 'sacode_ref';
+const COOKIE_NAME = 'ref_code';
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 dias
 
 export const AFFILIATE_COOKIE_NAME = COOKIE_NAME;

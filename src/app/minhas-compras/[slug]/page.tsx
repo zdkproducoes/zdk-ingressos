@@ -73,13 +73,13 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
   return (
-    <main className="min-h-screen bg-wine-800 py-8 px-4">
+    <main className="min-h-screen bg-surface-800 py-8 px-4">
       <div className="max-w-3xl mx-auto">
         <Link href="/minhas-compras" className="text-sm text-cream-400 hover:text-cream-200 mb-6 inline-block">← Minhas compras</Link>
 
-        <header className="rounded-xl bg-wine-700 border border-mauve-700 overflow-hidden mb-6">
+        <header className="rounded-xl bg-surface-700 border border-muted-700 overflow-hidden mb-6">
           {event.banner_url && (
-            <div className="h-40 md:h-56 bg-wine-700">
+            <div className="h-40 md:h-56 bg-surface-700">
               <img src={event.banner_url} alt="" className="w-full h-full object-cover" />
             </div>
           )}
@@ -95,7 +95,7 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
         {hasUsable && (
           <div className="mb-4">
             <Link href={`/evento/${event.slug}/mural`}
-              className="block w-full rounded-xl bg-gradient-to-r from-wine-600 to-mauve-600 hover:from-wine-500 hover:to-mauve-500 p-4 text-cream-200 font-semibold text-center transition">
+              className="block w-full rounded-xl bg-gradient-to-r from-surface-600 to-muted-600 hover:from-surface-500 hover:to-muted-500 p-4 text-cream-200 font-semibold text-center transition">
               💬 Entrar no mural do evento
               <span className="block text-xs font-normal opacity-80 mt-0.5">Converse com outros participantes</span>
             </Link>
@@ -107,17 +107,17 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
         </h2>
 
         {!hasAnything ? (
-          <div className="rounded-xl bg-amber-sacode-900/20 border border-amber-sacode-700/40 p-6 text-center">
-            <p className="text-amber-sacode-200">Você ainda não tem ingressos confirmados para este evento.</p>
+          <div className="rounded-xl bg-accent-900/20 border border-accent-700/40 p-6 text-center">
+            <p className="text-accent-200">Você ainda não tem ingressos confirmados para este evento.</p>
           </div>
         ) : isPast ? (
           <div className="space-y-4">
-            <div className="rounded-xl bg-wine-700 border border-mauve-700 p-4 text-sm text-cream-300">
+            <div className="rounded-xl bg-surface-700 border border-muted-700 p-4 text-sm text-cream-300">
               ✅ Este evento já foi realizado. Os QR Codes não são mais exibidos —
               fica aqui o resumo das suas compras.
             </div>
             {approvedOrders.map((o: any) => (
-              <div key={o.id} className="rounded-xl bg-wine-700 border border-mauve-600 p-5 flex items-center justify-between gap-4">
+              <div key={o.id} className="rounded-xl bg-surface-700 border border-muted-600 p-5 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-cream-200 font-semibold">Pedido #{o.order_number}</p>
                   <p className="text-sm text-cream-400 mt-0.5">
@@ -127,13 +127,13 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
                     )}
                   </p>
                 </div>
-                <p className="text-lg font-bold text-amber-sacode-400 whitespace-nowrap">
+                <p className="text-lg font-bold text-accent-400 whitespace-nowrap">
                   {fmtCurrency(Number(o.total ?? 0))}
                 </p>
               </div>
             ))}
             {receivedItems.length > 0 && (
-              <div className="rounded-xl bg-wine-700 border border-mauve-600 p-5">
+              <div className="rounded-xl bg-surface-700 border border-muted-600 p-5">
                 <p className="text-cream-200 font-semibold">
                   {receivedItems.length} {receivedItems.length === 1 ? 'ingresso recebido' : 'ingressos recebidos'} por transferência
                 </p>
@@ -145,13 +145,13 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
             {usableItems.map((it: any) => {
               const canTransfer = !it.received && it.status === 'valid' && !it.checked_in_at && !it.transferred_at;
               return (
-                <div key={it.id} className="rounded-xl bg-wine-700 border border-mauve-600 overflow-hidden">
-                  <div className="bg-gradient-to-r from-wine-700/40 to-mauve-700/40 px-5 py-3 flex items-center justify-between">
+                <div key={it.id} className="rounded-xl bg-surface-700 border border-muted-600 overflow-hidden">
+                  <div className="bg-gradient-to-r from-surface-700/40 to-muted-700/40 px-5 py-3 flex items-center justify-between">
                     <div>
                       <p className="text-xs uppercase tracking-wide text-cream-300">{it.ticket_batches?.name}</p>
                       <p className="text-cream-200 font-semibold">{it.attendee_name || 'Sem nome'}</p>
                       {it.received && (
-                        <span className="inline-block mt-1 px-2 py-0.5 bg-mauve-700 text-cream-300 text-xs rounded">↪ Recebido por transferência</span>
+                        <span className="inline-block mt-1 px-2 py-0.5 bg-muted-700 text-cream-300 text-xs rounded">↪ Recebido por transferência</span>
                       )}
                     </div>
                     <div className="text-right">
@@ -176,13 +176,13 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
                     <p className="mt-3 text-xs font-mono text-neutral-600 break-all text-center">{it.qr_code_token}</p>
                   </div>
                   {it.status === 'valid' && (
-                    <div className="bg-amber-sacode-900/20 border-t border-amber-sacode-700/30 px-5 py-3 text-xs text-amber-sacode-200">
+                    <div className="bg-accent-900/20 border-t border-accent-700/30 px-5 py-3 text-xs text-accent-200">
                       ⚠️ Apresente este QR Code na entrada. Não compartilhe — uso único.
                       {it.received && <> Ingressos recebidos não podem ser transferidos novamente.</>}
                     </div>
                   )}
                   {canTransfer && (
-                    <div className="border-t border-mauve-700">
+                    <div className="border-t border-muted-700">
                       <TransferTicketButton orderItemId={it.id} batchName={it.ticket_batches?.name || 'Ingresso'} />
                     </div>
                   )}
@@ -191,7 +191,7 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
             })}
 
             {transferredAway.map((it: any) => (
-              <div key={it.id} className="rounded-xl bg-wine-700/60 border border-mauve-700 overflow-hidden opacity-80">
+              <div key={it.id} className="rounded-xl bg-surface-700/60 border border-muted-700 overflow-hidden opacity-80">
                 <div className="px-5 py-4 flex items-center justify-between gap-4">
                   <div>
                     <p className="text-xs uppercase tracking-wide text-cream-400">{it.ticket_batches?.name}</p>
@@ -201,9 +201,9 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
                       {it.transferred_at && <> · em {new Date(it.transferred_at).toLocaleDateString('pt-BR')}</>}
                     </p>
                   </div>
-                  <span className="inline-block px-2 py-1 bg-mauve-700 text-cream-300 text-xs font-semibold rounded whitespace-nowrap">Transferido</span>
+                  <span className="inline-block px-2 py-1 bg-muted-700 text-cream-300 text-xs font-semibold rounded whitespace-nowrap">Transferido</span>
                 </div>
-                <div className="bg-wine-800/60 border-t border-mauve-700 px-5 py-3 text-xs text-cream-400">
+                <div className="bg-surface-800/60 border-t border-muted-700 px-5 py-3 text-xs text-cream-400">
                   O QR Code deste ingresso foi cancelado e um novo foi emitido para quem recebeu.
                 </div>
               </div>

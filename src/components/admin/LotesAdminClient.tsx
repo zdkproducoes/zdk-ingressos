@@ -80,7 +80,7 @@ export function LotesAdminClient({ batches, selectedEvent }: Props) {
         </p>
         <button
           onClick={openNew}
-          className="flex items-center gap-2 bg-amber-sacode-400 text-wine-900 font-bold px-4 py-2 rounded-lg hover:bg-amber-sacode-300 transition"
+          className="flex items-center gap-2 bg-accent-400 text-surface-900 font-bold px-4 py-2 rounded-lg hover:bg-accent-300 transition"
         >
           <Plus size={18} />
           Novo lote
@@ -90,10 +90,10 @@ export function LotesAdminClient({ batches, selectedEvent }: Props) {
       {batches.length === 0 ? (
         <p className="text-cream-400 text-center py-16">Nenhum lote cadastrado. Clique em &quot;Novo lote&quot;.</p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-mauve-700">
+        <div className="overflow-x-auto rounded-lg border border-muted-700">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-mauve-700 bg-wine-800">
+              <tr className="border-b border-muted-700 bg-surface-800">
                 {['Lote', 'Evento', 'Preco', 'Periodo', 'Vendidos', 'Cortesias', 'Progresso', 'Status', 'Acoes'].map((h) => (
                   <th
                     key={h}
@@ -117,7 +117,7 @@ export function LotesAdminClient({ batches, selectedEvent }: Props) {
                 const isActive = batch.status === 'active';
 
                 return (
-                  <tr key={batch.id} className="border-b border-mauve-700 last:border-0 hover:bg-wine-800/50">
+                  <tr key={batch.id} className="border-b border-muted-700 last:border-0 hover:bg-surface-800/50">
                     <td className="px-4 py-3 text-cream-200 font-medium">
                       {batch.name}
                       {!batch.is_visible && (
@@ -139,9 +139,9 @@ export function LotesAdminClient({ batches, selectedEvent }: Props) {
                     </td>
                     <td className="px-4 py-3 text-cream-300">{batch.real_courtesies}</td>
                     <td className="px-4 py-3 w-40">
-                      <div className="w-full bg-mauve-700 rounded-full h-2">
+                      <div className="w-full bg-muted-700 rounded-full h-2">
                         <div
-                          className="bg-amber-sacode-400 h-2 rounded-full transition-all"
+                          className="bg-accent-400 h-2 rounded-full transition-all"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -154,7 +154,7 @@ export function LotesAdminClient({ batches, selectedEvent }: Props) {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => openEdit(batch)}
-                          className="flex items-center gap-1 bg-mauve-700 hover:bg-mauve-600 text-cream-200 text-xs font-medium px-3 py-1.5 rounded transition"
+                          className="flex items-center gap-1 bg-muted-700 hover:bg-muted-600 text-cream-200 text-xs font-medium px-3 py-1.5 rounded transition"
                           title="Editar lote"
                         >
                           <Edit2 size={14} />
@@ -207,10 +207,10 @@ function StatusBadge({ status, esgotado }: { status: string; esgotado: boolean }
     active:    { label: 'Ativo',     className: 'bg-green-900 text-green-300' },
     paused:    { label: 'Pausado',   className: 'bg-yellow-900 text-yellow-300' },
     scheduled: { label: 'Agendado',  className: 'bg-blue-900 text-blue-300' },
-    ended:     { label: 'Encerrado', className: 'bg-mauve-700 text-cream-400' },
+    ended:     { label: 'Encerrado', className: 'bg-muted-700 text-cream-400' },
     sold_out:  { label: 'Esgotado',  className: 'bg-red-900 text-red-300' },
   };
-  const cfg = map[status] || { label: status, className: 'bg-mauve-700 text-cream-400' };
+  const cfg = map[status] || { label: status, className: 'bg-muted-700 text-cream-400' };
   return (
     <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${cfg.className}`}>
       {cfg.label}

@@ -42,7 +42,7 @@ export function ExportCSVButton({ buyers }: { buyers: BuyerData[] }) {
   return (
     <button
       onClick={handleExport}
-      className="flex items-center gap-2 bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 px-4 py-2 rounded text-sm font-medium transition"
+      className="flex items-center gap-2 bg-accent-400 hover:bg-accent-500 text-surface-800 px-4 py-2 rounded text-sm font-medium transition"
     >
       <Download size={16} />
       Exportar CSV

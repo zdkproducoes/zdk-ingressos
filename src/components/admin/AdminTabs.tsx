@@ -24,7 +24,7 @@ export function AdminTabs() {
   return (
     <>
       {/* Desktop: abas horizontais */}
-      <div className="hidden md:flex border-b border-mauve-700 gap-1 mb-6">
+      <div className="hidden md:flex border-b border-muted-700 gap-1 mb-6">
         {tabs.map(tab => {
           const isActive = activeHref === tab.href;
           return (
@@ -33,8 +33,8 @@ export function AdminTabs() {
               href={tab.href}
               className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
                 isActive
-                  ? 'text-cream-200 border-amber-sacode-400'
-                  : 'text-cream-400 border-transparent hover:text-cream-200 hover:border-mauve-500'
+                  ? 'text-cream-200 border-accent-400'
+                  : 'text-cream-400 border-transparent hover:text-cream-200 hover:border-muted-500'
               }`}
             >
               {tab.label}
@@ -48,7 +48,7 @@ export function AdminTabs() {
         <select
           value={activeHref}
           onChange={e => router.push(e.target.value)}
-          className="w-full bg-wine-700 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400"
+          className="w-full bg-surface-700 text-cream-200 border border-muted-600 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400"
         >
           {tabs.map(tab => (
             <option key={tab.href} value={tab.href}>

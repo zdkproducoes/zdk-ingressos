@@ -17,8 +17,8 @@ const fmtDate = (isoDate: string) =>
 
 const STATUS_BADGE: Record<string, { label: string; classes: string }> = {
   active:   { label: 'Ativo',     classes: 'bg-emerald-900/50 text-emerald-300 border-emerald-700/50' },
-  draft:    { label: 'Rascunho',  classes: 'bg-wine-800 text-cream-400 border-mauve-600' },
-  finished: { label: 'Arquivado', classes: 'bg-mauve-800/60 text-cream-300 border-mauve-600' },
+  draft:    { label: 'Rascunho',  classes: 'bg-surface-800 text-cream-400 border-muted-600' },
+  finished: { label: 'Arquivado', classes: 'bg-muted-800/60 text-cream-300 border-muted-600' },
 };
 
 const SLUG_REGEX = /^[a-z0-9-]+$/;
@@ -178,7 +178,7 @@ export function EventosClient({
   };
 
   const inputCls =
-    'w-full bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400';
+    'w-full bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400';
   const labelCls = 'block text-sm text-cream-300 mb-1';
 
   return (
@@ -189,7 +189,7 @@ export function EventosClient({
         </p>
         <button
           onClick={() => { setForm(emptyForm); setFormError(null); setModalOpen(true); }}
-          className="inline-flex items-center gap-2 bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-900 font-semibold px-4 py-2 rounded-lg text-sm transition"
+          className="inline-flex items-center gap-2 bg-accent-400 hover:bg-accent-500 text-surface-900 font-semibold px-4 py-2 rounded-lg text-sm transition"
         >
           <Plus size={16} /> Novo evento
         </button>
@@ -215,15 +215,15 @@ export function EventosClient({
           {items.map((item) => {
             const badge = STATUS_BADGE[item.status] ?? {
               label: item.status,
-              classes: 'bg-mauve-800/60 text-cream-300 border-mauve-600',
+              classes: 'bg-muted-800/60 text-cream-300 border-muted-600',
             };
             const isSelected = item.id === selectedId;
             const busy = busyId === item.id;
             return (
               <div
                 key={item.id}
-                className={`bg-wine-700 border rounded-xl p-5 ${
-                  isSelected ? 'border-amber-sacode-400/60' : 'border-mauve-700'
+                className={`bg-surface-700 border rounded-xl p-5 ${
+                  isSelected ? 'border-accent-400/60' : 'border-muted-700'
                 }`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -234,7 +234,7 @@ export function EventosClient({
                         {badge.label}
                       </span>
                       {isSelected && (
-                        <span className="text-xs px-2.5 py-0.5 rounded-full border border-amber-sacode-400/50 bg-amber-sacode-400/10 text-amber-sacode-300">
+                        <span className="text-xs px-2.5 py-0.5 rounded-full border border-accent-400/50 bg-accent-400/10 text-accent-300">
                           Gerenciando
                         </span>
                       )}
@@ -251,7 +251,7 @@ export function EventosClient({
                       <button
                         onClick={() => handleSelect(item.id)}
                         disabled={busy}
-                        className="text-xs px-3 py-1.5 rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-900 font-semibold transition"
+                        className="text-xs px-3 py-1.5 rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-900 font-semibold transition"
                       >
                         Gerenciar este evento
                       </button>
@@ -269,7 +269,7 @@ export function EventosClient({
                       <button
                         onClick={() => handleSetStatus(item, 'finished')}
                         disabled={busy}
-                        className="text-xs px-3 py-1.5 rounded-lg border border-mauve-600 bg-wine-800 hover:bg-wine-900 disabled:opacity-50 text-cream-300 transition"
+                        className="text-xs px-3 py-1.5 rounded-lg border border-muted-600 bg-surface-800 hover:bg-surface-900 disabled:opacity-50 text-cream-300 transition"
                       >
                         Arquivar
                       </button>
@@ -278,17 +278,17 @@ export function EventosClient({
                 </div>
 
                 <div className="grid grid-cols-3 gap-3 mt-4">
-                  <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2.5">
+                  <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2.5">
                     <p className="text-xs text-cream-400">Pedidos pagos</p>
                     <p className="text-lg font-bold text-cream-200">{item.orders_count}</p>
                   </div>
-                  <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2.5">
+                  <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2.5">
                     <p className="text-xs text-cream-400">Ingressos</p>
                     <p className="text-lg font-bold text-cream-200">{item.tickets_count}</p>
                   </div>
-                  <div className="bg-wine-800 border border-mauve-700 rounded-lg px-3 py-2.5">
+                  <div className="bg-surface-800 border border-muted-700 rounded-lg px-3 py-2.5">
                     <p className="text-xs text-cream-400">Faturamento líquido</p>
-                    <p className="text-lg font-bold text-amber-sacode-400">{fmtCurrency(item.net_revenue)}</p>
+                    <p className="text-lg font-bold text-accent-400">{fmtCurrency(item.net_revenue)}</p>
                   </div>
                 </div>
               </div>
@@ -300,7 +300,7 @@ export function EventosClient({
       {/* Modal de novo evento */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 overflow-y-auto py-8 px-4">
-          <div className="bg-wine-700 border border-mauve-700 rounded-xl w-full max-w-lg p-6 space-y-4">
+          <div className="bg-surface-700 border border-muted-700 rounded-xl w-full max-w-lg p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-cream-200">Novo evento</h3>
               <button
@@ -414,14 +414,14 @@ export function EventosClient({
             <div className="flex gap-2 justify-end pt-2">
               <button
                 onClick={() => setModalOpen(false)}
-                className="px-4 py-2 rounded-lg border border-mauve-600 text-cream-300 hover:bg-wine-800 text-sm transition"
+                className="px-4 py-2 rounded-lg border border-muted-600 text-cream-300 hover:bg-surface-800 text-sm transition"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleCreate}
                 disabled={saving}
-                className="px-5 py-2 rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-900 font-semibold text-sm transition"
+                className="px-5 py-2 rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-900 font-semibold text-sm transition"
               >
                 {saving ? 'Criando…' : 'Criar evento'}
               </button>

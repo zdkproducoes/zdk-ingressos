@@ -7,6 +7,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { resend, EMAIL_FROM } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
+import { platform } from '@/lib/config';
 
 export const runtime = 'nodejs';
 
@@ -178,7 +179,7 @@ export async function POST(req: NextRequest) {
 
   try {
     for (const item of items) {
-      const qrToken = `SCD-${randomBytes(12).toString('hex').toUpperCase()}`;
+      const qrToken = `${platform.qrPrefix}${randomBytes(12).toString('hex').toUpperCase()}`;
       const qrBuffer = await QRCode.toBuffer(qrToken, { width: 400, margin: 1, errorCorrectionLevel: 'M' });
       const qrBytes = new Uint8Array(qrBuffer);
       const today = new Date();

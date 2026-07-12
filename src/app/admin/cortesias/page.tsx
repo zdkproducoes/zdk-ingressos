@@ -22,7 +22,7 @@ export default async function CortesiasPage() {
     return 0;
   });
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
 
   return (
     <CortesiasClient

@@ -258,7 +258,7 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
         <FullscreenOverlay result={result} onDismiss={dismissOverlay} />
       )}
 
-      <div className="flex gap-2 border-b border-wine-600">
+      <div className="flex gap-2 border-b border-surface-600">
         <button
           onClick={() => setMode('scanner')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition ${
@@ -285,7 +285,7 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
         <div>
           <button
             onClick={() => setCameraOpen(true)}
-            className="w-full bg-cream-200 text-wine-900 font-bold py-4 rounded-lg hover:bg-cream-300 transition text-lg"
+            className="w-full bg-cream-200 text-surface-900 font-bold py-4 rounded-lg hover:bg-cream-300 transition text-lg"
           >
             Ativar camera
           </button>
@@ -304,12 +304,12 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
               placeholder="Digite nome ou CPF (busca automatica a partir de 3 letras)"
-              className="flex-1 bg-wine-900 border border-wine-600 text-cream-200 placeholder-cream-500 rounded-lg px-3 py-2"
+              className="flex-1 bg-surface-900 border border-surface-600 text-cream-200 placeholder-cream-500 rounded-lg px-3 py-2"
             />
             <button
               onClick={handleSearch}
               disabled={searching}
-              className="bg-cream-200 text-wine-900 font-bold px-4 py-2 rounded-lg hover:bg-cream-300 transition disabled:opacity-50"
+              className="bg-cream-200 text-surface-900 font-bold px-4 py-2 rounded-lg hover:bg-cream-300 transition disabled:opacity-50"
             >
               {searching ? '...' : 'Buscar'}
             </button>
@@ -324,7 +324,7 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
               {searchResults.map((hit) => (
                 <div
                   key={hit.order_item_id}
-                  className="bg-wine-700 border border-wine-600 rounded-lg p-3 flex items-center justify-between gap-3"
+                  className="bg-surface-700 border border-surface-600 rounded-lg p-3 flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
                     <p className="text-cream-200 font-medium truncate">{hit.attendee_name || 'Sem nome'}</p>
@@ -342,7 +342,7 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
                     <button
                       onClick={() => handleValidateFromSearch(hit.qr_code_token)}
                       disabled={processing}
-                      className="bg-cream-200 text-wine-900 font-bold text-sm px-3 py-1.5 rounded hover:bg-cream-300 transition disabled:opacity-50 whitespace-nowrap"
+                      className="bg-cream-200 text-surface-900 font-bold text-sm px-3 py-1.5 rounded hover:bg-cream-300 transition disabled:opacity-50 whitespace-nowrap"
                     >
                       Validar
                     </button>
@@ -357,7 +357,7 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
       )}
 
       {processing && !overlayVisible && (
-        <div className="bg-wine-700 border border-wine-600 rounded-lg p-4 text-cream-200 text-center">
+        <div className="bg-surface-700 border border-surface-600 rounded-lg p-4 text-cream-200 text-center">
           Validando...
         </div>
       )}
@@ -367,9 +367,9 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
 
 function CameraModal({ containerId, onClose }: { containerId: string; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-40 bg-wine-900 flex flex-col">
+    <div className="fixed inset-0 z-40 bg-surface-900 flex flex-col">
       {/* Header com botao fechar grande e vermelho */}
-      <div className="flex items-center justify-between p-4 border-b border-wine-700 bg-wine-900">
+      <div className="flex items-center justify-between p-4 border-b border-surface-700 bg-surface-900">
         <p className="text-cream-200 font-bold text-lg">Scanner ativo</p>
         <button
           onClick={onClose}
@@ -388,7 +388,7 @@ function CameraModal({ containerId, onClose }: { containerId: string; onClose: (
       </div>
 
       {/* Rodape com dica + botao fechar tambem embaixo (acessivel sem precisar subir) */}
-      <div className="bg-wine-900 border-t border-wine-700 px-4 py-3 space-y-2">
+      <div className="bg-surface-900 border-t border-surface-700 px-4 py-3 space-y-2">
         <p className="text-cream-300 text-sm text-center">
           Aponte a camera para o QR code do ingresso
         </p>
@@ -476,7 +476,7 @@ function FullscreenOverlay({ result, onDismiss }: { result: CheckinResult; onDis
 
       <button
         onClick={onDismiss}
-        className="bg-white text-wine-900 font-black text-2xl px-12 py-5 rounded-2xl shadow-2xl active:scale-95 transition"
+        className="bg-white text-surface-900 font-black text-2xl px-12 py-5 rounded-2xl shadow-2xl active:scale-95 transition"
       >
         PROXIMO
       </button>

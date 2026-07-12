@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        wine: {
+        surface: {
           50:  "#F5E8F1",
           100: "#E5C4D9",
           200: "#C998B6",
@@ -23,7 +23,7 @@ const config: Config = {
           900: "#1F0A1D",
           950: "#140711",
         },
-        mauve: {
+        muted: {
           50:  "#F4ECF1",
           100: "#E5D2DF",
           200: "#D2B5C9",
@@ -35,7 +35,7 @@ const config: Config = {
           800: "#3F2639",
           900: "#2A1926",
         },
-        "amber-sacode": {
+        accent: {
           50:  "#FCF3E2",
           100: "#F8E1B5",
           200: "#F2CB85",
@@ -63,8 +63,8 @@ const config: Config = {
         "display-bold": ["var(--font-display-bold)", "Anton", "sans-serif"],
       },
       backgroundImage: {
-        "sacode-gradient": "linear-gradient(135deg, #45183F 0%, #694060 100%)",
-        "sacode-amber-gradient": "linear-gradient(135deg, #E4A03F 0%, #D08F30 100%)",
+        "brand-gradient": "linear-gradient(135deg, #45183F 0%, #694060 100%)",
+        "brand-accent-gradient": "linear-gradient(135deg, #E4A03F 0%, #D08F30 100%)",
       },
       animation: {
         "pulse-glow": "pulseGlow 2.4s ease-in-out infinite",

@@ -17,9 +17,9 @@ export default async function Home() {
 
   // Nenhum evento com vendas abertas
   return (
-    <main className="min-h-screen bg-wine-800 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-wine-700 border border-mauve-700 rounded-2xl p-10 text-center">
-        <p className="font-display text-amber-sacode-400 tracking-[0.2em] text-sm mb-3">
+    <main className="min-h-screen bg-surface-800 flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-surface-700 border border-muted-700 rounded-2xl p-10 text-center">
+        <p className="font-display text-accent-400 tracking-[0.2em] text-sm mb-3">
           SACODE DO LACERDA
         </p>
         <h1 className="font-display-bold text-3xl text-cream-200 mb-3">

@@ -53,10 +53,10 @@ export function CouponInput({ eventId, subtotal, onApply }: Props) {
       <div className="flex gap-2">
         <input type="text" value={code} onChange={e => setCode(e.target.value.toUpperCase())}
           placeholder="CUPOM DE DESCONTO"
-          className="flex-1 rounded-lg bg-wine-700 border border-mauve-600 px-3 py-2 text-cream-200 placeholder:text-cream-400 focus:outline-none focus:border-amber-sacode-400 uppercase"
+          className="flex-1 rounded-lg bg-surface-700 border border-muted-600 px-3 py-2 text-cream-200 placeholder:text-cream-400 focus:outline-none focus:border-accent-400 uppercase"
           disabled={loading} />
         <button type="button" onClick={apply} disabled={loading || !code.trim()}
-          className="rounded-lg bg-wine-700 hover:bg-wine-500 disabled:opacity-50 text-cream-200 text-sm font-semibold px-4 transition">
+          className="rounded-lg bg-surface-700 hover:bg-surface-500 disabled:opacity-50 text-cream-200 text-sm font-semibold px-4 transition">
           {loading ? '…' : 'Aplicar'}
         </button>
       </div>

@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   authors: [{ name: "ZDK Produções" }],
   creator: "ZDK Produções",
   publisher: "Caio Lacerda",
-  metadataBase: new URL("https://sacode.cantorcaiolacerda.com.br"),
+  metadataBase: new URL("https://www.zdkingressos.com.br"),
   alternates: {
     canonical: "/evento/sacode-16-edicao",
   },
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
       "02 de Agosto • Villa Jardim Bar (São Bernardo do Campo / ABC). " +
       "Milthinho + Caio Lacerda + Pagode Na Sena + Nayara Oliveira + DJ Sant. " +
       "A Super Edição do Sacode. Vendas abrem 08/07 às 18h.",
-    url: "https://sacode.cantorcaiolacerda.com.br/evento/sacode-16-edicao",
+    url: "https://www.zdkingressos.com.br/evento/sacode-16-edicao",
     siteName: "Sacode do Lacerda",
     locale: "pt_BR",
     type: "website",
@@ -121,7 +121,7 @@ const jsonLd = {
       longitude: -46.5833898,
     },
   },
-  image: ["https://sacode.cantorcaiolacerda.com.br/og-image-16.jpg"],
+  image: ["https://www.zdkingressos.com.br/og-image-16.jpg"],
   performer: [
     { "@type": "MusicGroup", name: "Milthinho" },
     { "@type": "MusicGroup", name: "Caio Lacerda" },
@@ -132,11 +132,11 @@ const jsonLd = {
   organizer: {
     "@type": "Organization",
     name: "Caio Lacerda",
-    url: "https://sacode.cantorcaiolacerda.com.br",
+    url: "https://www.zdkingressos.com.br",
   },
   offers: {
     "@type": "Offer",
-    url: "https://sacode.cantorcaiolacerda.com.br/evento/sacode-16-edicao",
+    url: "https://www.zdkingressos.com.br/evento/sacode-16-edicao",
     priceCurrency: "BRL",
     availability: "https://schema.org/InStock",
     validFrom: "2026-07-08T18:00:00-03:00",
@@ -196,8 +196,8 @@ export default async function EventPage({ params }: Props) {
           />
         ) : vendasEmBreve ? (
           <div id="ingressos" className="max-w-[700px] mx-auto px-5 py-12">
-            <div className="rounded-2xl border-2 border-amber-sacode-400 bg-gradient-to-br from-mauve-700 to-wine-700 p-8 text-center shadow-xl">
-              <p className="text-amber-sacode-300 text-sm font-bold uppercase tracking-wider mb-3">
+            <div className="rounded-2xl border-2 border-accent-400 bg-gradient-to-br from-muted-700 to-surface-700 p-8 text-center shadow-xl">
+              <p className="text-accent-300 text-sm font-bold uppercase tracking-wider mb-3">
                 🗓️ EM BREVE
               </p>
               <h3 className="text-cream-200 text-3xl font-black mb-2">
@@ -209,7 +209,7 @@ export default async function EventPage({ params }: Props) {
               </p>
               <button
                 disabled
-                className="w-full bg-wine-800/70 text-amber-sacode-300/70 font-black text-lg py-4 rounded-xl cursor-not-allowed border border-amber-sacode-400/40"
+                className="w-full bg-surface-800/70 text-accent-300/70 font-black text-lg py-4 rounded-xl cursor-not-allowed border border-accent-400/40"
               >
                 ABERTURA DAS VENDAS DIA {AVISO_ABERTURA}
               </button>

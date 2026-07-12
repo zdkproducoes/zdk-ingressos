@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
 async function sendConfirmation(userId: string, email: string, firstName: string) {
   const token = randomBytes(32).toString('hex');
   await supabaseAdmin.from('email_confirmations').insert({ user_id: userId, email, token });
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
   const confirmUrl = `${baseUrl}/auth/confirmar?token=${token}`;
   try {
     await resend.emails.send({

@@ -73,7 +73,7 @@ export function ReembolsarButton({
           onClick={close}
         >
           <div
-            className="bg-wine-700 rounded-lg border border-mauve-700 max-w-md w-full p-6 space-y-4"
+            className="bg-surface-700 rounded-lg border border-muted-700 max-w-md w-full p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ export function ReembolsarButton({
                 rows={3}
                 disabled={loading}
                 placeholder="Descreva o motivo (ex.: solicitacao do cliente, pagamento duplicado...)"
-                className="w-full rounded bg-wine-800 border border-mauve-700 text-cream-100 text-sm p-2 placeholder:text-cream-500 focus:outline-none focus:border-amber-sacode-400 disabled:opacity-60"
+                className="w-full rounded bg-surface-800 border border-muted-700 text-cream-100 text-sm p-2 placeholder:text-cream-500 focus:outline-none focus:border-accent-400 disabled:opacity-60"
               />
               <p className="text-xs text-cream-500 mt-1">Minimo 3 caracteres. Ficara registrado.</p>
             </div>
@@ -116,7 +116,7 @@ export function ReembolsarButton({
               <button
                 onClick={close}
                 disabled={loading}
-                className="px-4 py-2 rounded text-sm text-cream-300 hover:bg-wine-800 transition disabled:opacity-60"
+                className="px-4 py-2 rounded text-sm text-cream-300 hover:bg-surface-800 transition disabled:opacity-60"
               >
                 Voltar
               </button>

@@ -83,10 +83,10 @@ export default async function CompradoresPage() {
       ) : (
         <>
           {/* Desktop */}
-          <div className="hidden md:block overflow-x-auto rounded-lg border border-mauve-700">
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-muted-700">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-mauve-700">
+                <tr className="border-b border-muted-700">
                   {['Nome', 'E-mail', 'Telefone', 'CPF', 'Ingressos', 'Total gasto', 'Primeira compra'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-cream-400 uppercase tracking-wide">
                       {h}
@@ -96,7 +96,7 @@ export default async function CompradoresPage() {
               </thead>
               <tbody>
                 {buyers.map((b, i) => (
-                  <tr key={i} className="border-b border-mauve-700 last:border-0 hover:bg-wine-700/50 transition">
+                  <tr key={i} className="border-b border-muted-700 last:border-0 hover:bg-surface-700/50 transition">
                     <td className="px-4 py-3 text-cream-200 font-medium">{b.full_name}</td>
                     <td className="px-4 py-3 text-cream-300">{b.email}</td>
                     <td className="px-4 py-3 text-cream-300">{b.phone}</td>
@@ -115,7 +115,7 @@ export default async function CompradoresPage() {
           {/* Mobile: cards */}
           <div className="md:hidden space-y-4">
             {buyers.map((b, i) => (
-              <div key={i} className="bg-wine-700 rounded-lg p-4 border border-mauve-700 space-y-1">
+              <div key={i} className="bg-surface-700 rounded-lg p-4 border border-muted-700 space-y-1">
                 <p className="text-cream-200 font-medium">{b.full_name}</p>
                 <p className="text-sm text-cream-400">{b.email}</p>
                 <p className="text-sm text-cream-400">{b.phone}</p>

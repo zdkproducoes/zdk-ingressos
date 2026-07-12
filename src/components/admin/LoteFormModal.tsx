@@ -149,9 +149,9 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="bg-wine-800 border border-mauve-700 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-surface-800 border border-muted-700 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-mauve-700">
+        <div className="flex items-center justify-between p-5 border-b border-muted-700">
           <h2 className="text-cream-200 font-bold text-lg">
             {isEdit ? `Editar lote: ${batch.name}` : 'Novo lote'}
           </h2>
@@ -177,7 +177,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
           {/* Evento: fixo no evento gerenciado (novo lote) ou no evento do lote (edicao).
               Nao ha dropdown de proposito — evita criar lote no evento errado. */}
           <Field label="Evento">
-            <div className="w-full bg-wine-900/60 border border-mauve-700 text-cream-300 rounded px-3 py-2">
+            <div className="w-full bg-surface-900/60 border border-muted-700 text-cream-300 rounded px-3 py-2">
               {isEdit ? (batch?.event_title ?? 'Evento do lote') : selectedEvent.title}
             </div>
             {!isEdit && (
@@ -194,7 +194,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
               value={form.name}
               onChange={(e) => update('name', e.target.value)}
               placeholder="Ex: Ingresso Promocional"
-              className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+              className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
             />
           </Field>
 
@@ -205,7 +205,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
               onChange={(e) => update('description', e.target.value)}
               placeholder="Ex: Lote limitado, valido ate 30/06"
               rows={2}
-              className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+              className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
             />
           </Field>
 
@@ -218,7 +218,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 value={form.price}
                 onChange={(e) => update('price', e.target.value)}
                 placeholder="15.00"
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
               <p className="text-cream-400 text-xs mt-1">Use ponto como separador (15.00). Cortesias = 0.</p>
             </Field>
@@ -228,7 +228,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 min={1}
                 value={form.quantity}
                 onChange={(e) => update('quantity', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
             </Field>
           </div>
@@ -241,7 +241,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 min={1}
                 value={form.min_per_order}
                 onChange={(e) => update('min_per_order', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
             </Field>
             <Field label="Max por pedido">
@@ -250,7 +250,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 min={1}
                 value={form.max_per_order}
                 onChange={(e) => update('max_per_order', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
             </Field>
           </div>
@@ -262,7 +262,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 type="datetime-local"
                 value={form.starts_at}
                 onChange={(e) => update('starts_at', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
             </Field>
             <Field label="Fim das vendas (opcional)">
@@ -270,7 +270,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 type="datetime-local"
                 value={form.ends_at}
                 onChange={(e) => update('ends_at', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
             </Field>
           </div>
@@ -281,7 +281,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
               <select
                 value={form.status}
                 onChange={(e) => update('status', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -293,7 +293,7 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
                 type="number"
                 value={form.sort_order}
                 onChange={(e) => update('sort_order', e.target.value)}
-                className="w-full bg-wine-900 border border-mauve-700 text-cream-200 rounded px-3 py-2"
+                className="w-full bg-surface-900 border border-muted-700 text-cream-200 rounded px-3 py-2"
               />
               <p className="text-cream-400 text-xs mt-1">Menor = aparece primeiro</p>
             </Field>
@@ -321,18 +321,18 @@ export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Prop
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2 p-5 border-t border-mauve-700">
+        <div className="flex items-center justify-end gap-2 p-5 border-t border-muted-700">
           <button
             onClick={onClose}
             disabled={saving}
-            className="bg-mauve-700 hover:bg-mauve-600 text-cream-200 font-medium px-4 py-2 rounded transition disabled:opacity-50"
+            className="bg-muted-700 hover:bg-muted-600 text-cream-200 font-medium px-4 py-2 rounded transition disabled:opacity-50"
           >
             Cancelar
           </button>
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="bg-amber-sacode-400 hover:bg-amber-sacode-300 text-wine-900 font-bold px-4 py-2 rounded transition disabled:opacity-50"
+            className="bg-accent-400 hover:bg-accent-300 text-surface-900 font-bold px-4 py-2 rounded transition disabled:opacity-50"
           >
             {saving ? 'Salvando...' : (isEdit ? 'Salvar alteracoes' : 'Criar lote')}
           </button>

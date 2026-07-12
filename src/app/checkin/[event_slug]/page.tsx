@@ -58,15 +58,15 @@ export default async function CheckinEventPage({ params }: PageProps) {
 
       {/* Caixinhas de stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-wine-700 border border-wine-600 rounded-lg p-4">
+        <div className="bg-surface-700 border border-surface-600 rounded-lg p-4">
           <p className="text-cream-400 text-xs uppercase tracking-wider">Vendidos</p>
           <p className="text-cream-200 text-2xl font-bold">{totalTickets ?? 0}</p>
         </div>
-        <div className="bg-wine-700 border border-wine-600 rounded-lg p-4">
+        <div className="bg-surface-700 border border-surface-600 rounded-lg p-4">
           <p className="text-cream-400 text-xs uppercase tracking-wider">Validados</p>
           <p className="text-cream-200 text-2xl font-bold">{checkedIn ?? 0}</p>
         </div>
-        <div className="bg-wine-700 border border-wine-600 rounded-lg p-4">
+        <div className="bg-surface-700 border border-surface-600 rounded-lg p-4">
           <p className="text-cream-400 text-xs uppercase tracking-wider">Pendentes</p>
           <p className="text-cream-200 text-2xl font-bold">{(totalTickets ?? 0) - (checkedIn ?? 0)}</p>
         </div>

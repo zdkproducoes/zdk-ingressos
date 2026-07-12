@@ -78,7 +78,7 @@ export function BuscarIngressoForm() {
             onChange={e => setCPF(formatCPF(e.target.value))}
             maxLength={14}
             required
-            className="w-full bg-wine-700 border border-mauve-600 text-cream-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400 placeholder:text-cream-400"
+            className="w-full bg-surface-700 border border-muted-600 text-cream-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400 placeholder:text-cream-400"
           />
         </div>
 
@@ -94,7 +94,7 @@ export function BuscarIngressoForm() {
             value={orderNumber}
             onChange={e => setOrderNumber(e.target.value.replace(/\D/g, ''))}
             required
-            className="w-full bg-wine-700 border border-mauve-600 text-cream-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-sacode-400 placeholder:text-cream-400"
+            className="w-full bg-surface-700 border border-muted-600 text-cream-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent-400 placeholder:text-cream-400"
           />
           <p className="mt-1.5 text-xs text-cream-400">
             O número do pedido está no assunto do e-mail (#10, por exemplo) e no rodapé do e-mail.
@@ -105,7 +105,7 @@ export function BuscarIngressoForm() {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="w-full bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-800 font-semibold py-2.5 rounded-lg transition text-sm"
+          className="w-full bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-800 font-semibold py-2.5 rounded-lg transition text-sm"
         >
           {status === 'loading' ? 'Buscando…' : 'Buscar ingresso'}
         </button>
@@ -119,7 +119,7 @@ export function BuscarIngressoForm() {
 
       {status === 'found' && result && (
         <div className="mt-8 space-y-4">
-          <div className="rounded-xl bg-wine-700 border border-mauve-700 p-5">
+          <div className="rounded-xl bg-surface-700 border border-muted-700 p-5">
             <h2 className="text-lg font-bold text-cream-200 mb-1">{result.event.title}</h2>
             <p className="text-sm text-cream-300">
               📅{' '}
@@ -134,8 +134,8 @@ export function BuscarIngressoForm() {
           </div>
 
           {result.items.map((item, i) => (
-            <div key={i} className="rounded-xl bg-wine-700 border border-mauve-600 overflow-hidden">
-              <div className="bg-gradient-to-r from-wine-700/40 to-mauve-700/40 px-5 py-3">
+            <div key={i} className="rounded-xl bg-surface-700 border border-muted-600 overflow-hidden">
+              <div className="bg-gradient-to-r from-surface-700/40 to-muted-700/40 px-5 py-3">
                 <p className="text-xs uppercase tracking-wide text-cream-400">{item.batch_name}</p>
                 <p className="text-cream-200 font-semibold">{item.attendee_name}</p>
               </div>
@@ -148,7 +148,7 @@ export function BuscarIngressoForm() {
                   </div>
                 )}
               </div>
-              <div className="bg-amber-sacode-900/20 border-t border-amber-sacode-700/30 px-5 py-3 text-xs text-amber-sacode-200">
+              <div className="bg-accent-900/20 border-t border-accent-700/30 px-5 py-3 text-xs text-accent-200">
                 ⚠️ Apresente este QR Code na entrada. Não compartilhe — uso único.
               </div>
             </div>

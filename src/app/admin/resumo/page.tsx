@@ -202,9 +202,9 @@ export default async function ResumoPage() {
           return (
             <div
               key={stat.label}
-              className="bg-wine-700 rounded-lg p-6 border border-mauve-700"
+              className="bg-surface-700 rounded-lg p-6 border border-muted-700"
             >
-              <Icon className="text-amber-sacode-400 mb-3" size={24} />
+              <Icon className="text-accent-400 mb-3" size={24} />
               <p className="text-3xl font-bold text-cream-200">{stat.value}</p>
               <p className="text-sm text-cream-400 mt-1">{stat.label}</p>
             </div>
@@ -213,9 +213,9 @@ export default async function ResumoPage() {
       </div>
 
       {/* Faturamento por forma de pagamento */}
-      <div className="bg-wine-700 rounded-lg border border-mauve-700 overflow-hidden">
-        <div className="flex items-center gap-2 p-6 border-b border-mauve-700">
-          <CreditCard className="text-amber-sacode-400" size={20} />
+      <div className="bg-surface-700 rounded-lg border border-muted-700 overflow-hidden">
+        <div className="flex items-center gap-2 p-6 border-b border-muted-700">
+          <CreditCard className="text-accent-400" size={20} />
           <h2 className="text-cream-200 font-bold">Faturamento por forma de pagamento</h2>
         </div>
         <p className="text-cream-400 text-xs px-6 pt-3">
@@ -226,7 +226,7 @@ export default async function ResumoPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-wine-800 text-cream-300 text-xs uppercase">
+              <thead className="bg-surface-800 text-cream-300 text-xs uppercase">
                 <tr>
                   <th className="text-left p-3">Forma</th>
                   <th className="text-right p-3">Pedidos</th>
@@ -240,7 +240,7 @@ export default async function ResumoPage() {
                     ? ((row.revenue / methodTotalRevenue) * 100).toFixed(1)
                     : '0.0';
                   return (
-                    <tr key={row.method} className="border-t border-mauve-700 text-cream-200">
+                    <tr key={row.method} className="border-t border-muted-700 text-cream-200">
                       <td className="p-3 whitespace-nowrap">{row.label}</td>
                       <td className="p-3 text-right">{fmtNumber(row.orders)}</td>
                       <td className="p-3 text-right">{fmtCurrency(row.revenue)}</td>
@@ -249,7 +249,7 @@ export default async function ResumoPage() {
                   );
                 })}
               </tbody>
-              <tfoot className="bg-wine-800 text-cream-200 font-bold">
+              <tfoot className="bg-surface-800 text-cream-200 font-bold">
                 <tr>
                   <td className="p-3">Total</td>
                   <td className="p-3 text-right">{fmtNumber(methodRows.reduce((s, r) => s + r.orders, 0))}</td>
@@ -263,9 +263,9 @@ export default async function ResumoPage() {
       </div>
 
       {/* Grafico de pizza: ingressos pagos por genero */}
-      <div className="bg-wine-700 rounded-lg p-6 border border-mauve-700">
+      <div className="bg-surface-700 rounded-lg p-6 border border-muted-700">
         <div className="flex items-center gap-2 mb-1">
-          <PieChart className="text-amber-sacode-400" size={20} />
+          <PieChart className="text-accent-400" size={20} />
           <h2 className="text-cream-200 font-bold">Ingressos por genero</h2>
         </div>
         <p className="text-cream-400 text-xs mb-4">Inclui ingressos pagos e cortesias</p>
@@ -277,9 +277,9 @@ export default async function ResumoPage() {
       </div>
 
       {/* Tabela: Vendas por dia */}
-      <div className="bg-wine-700 rounded-lg border border-mauve-700 overflow-hidden">
-        <div className="flex items-center gap-2 p-6 border-b border-mauve-700">
-          <CalendarDays className="text-amber-sacode-400" size={20} />
+      <div className="bg-surface-700 rounded-lg border border-muted-700 overflow-hidden">
+        <div className="flex items-center gap-2 p-6 border-b border-muted-700">
+          <CalendarDays className="text-accent-400" size={20} />
           <h2 className="text-cream-200 font-bold">Vendas por dia</h2>
         </div>
         {dailyRows.length === 0 ? (
@@ -287,7 +287,7 @@ export default async function ResumoPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-wine-800 text-cream-300 text-xs uppercase">
+              <thead className="bg-surface-800 text-cream-300 text-xs uppercase">
                 <tr>
                   <th className="text-left p-3">Data</th>
                   <th className="text-right p-3">Pedidos</th>
@@ -297,7 +297,7 @@ export default async function ResumoPage() {
               </thead>
               <tbody>
                 {dailyRows.map((row) => (
-                  <tr key={row.date} className="border-t border-mauve-700 text-cream-200">
+                  <tr key={row.date} className="border-t border-muted-700 text-cream-200">
                     <td className="p-3 whitespace-nowrap">{formatDateDisplay(row.date)}</td>
                     <td className="p-3 text-right">{fmtNumber(row.orders)}</td>
                     <td className="p-3 text-right">{fmtNumber(row.tickets)}</td>
@@ -305,7 +305,7 @@ export default async function ResumoPage() {
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="bg-wine-800 text-cream-200 font-bold">
+              <tfoot className="bg-surface-800 text-cream-200 font-bold">
                 <tr>
                   <td className="p-3">Total</td>
                   <td className="p-3 text-right">{fmtNumber(dailyRows.reduce((s, r) => s + r.orders, 0))}</td>
@@ -384,7 +384,7 @@ function PieChartSVG({
             </div>
           );
         })}
-        <div className="pt-2 mt-2 border-t border-mauve-700 flex items-center gap-3">
+        <div className="pt-2 mt-2 border-t border-muted-700 flex items-center gap-3">
           <span className="inline-block w-4 h-4" />
           <span className="text-cream-200 font-bold flex-1">Total</span>
           <span className="text-cream-200 font-bold text-sm tabular-nums">{total}</span>

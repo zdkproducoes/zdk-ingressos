@@ -80,7 +80,7 @@ export default async function MyPurchasesPage() {
   const events = Array.from(grouped.values());
 
   return (
-    <main className="min-h-screen bg-wine-800 py-8 px-4">
+    <main className="min-h-screen bg-surface-800 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <Link href="/" className="text-sm text-cream-400 hover:text-cream-200 mb-6 inline-block">← Voltar</Link>
         <header className="mb-8">
@@ -89,11 +89,11 @@ export default async function MyPurchasesPage() {
         </header>
 
         {events.length === 0 ? (
-          <div className="rounded-xl bg-wine-700 border border-mauve-700 p-12 text-center">
+          <div className="rounded-xl bg-surface-700 border border-muted-700 p-12 text-center">
             <div className="text-5xl mb-4">🎟️</div>
             <h2 className="text-xl font-semibold text-cream-200 mb-2">Nenhuma compra ainda</h2>
             <p className="text-cream-400 mb-6">Você ainda não comprou ingressos para nenhum evento.</p>
-            <Link href="/" className="rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-2.5 px-6 inline-block transition">Ver eventos disponíveis</Link>
+            <Link href="/" className="rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-2.5 px-6 inline-block transition">Ver eventos disponíveis</Link>
           </div>
         ) : (
           <div className="space-y-4">
@@ -104,17 +104,17 @@ export default async function MyPurchasesPage() {
               const isPast = new Date(ev.eventDate + 'T00:00:00') < new Date(new Date().toDateString());
               return (
                 <Link key={ev.eventId} href={`/minhas-compras/${ev.eventSlug}`}
-                  className="block rounded-xl bg-wine-700 border border-mauve-700 hover:border-mauve-600 hover:bg-wine-700/80 transition overflow-hidden">
+                  className="block rounded-xl bg-surface-700 border border-muted-700 hover:border-muted-600 hover:bg-surface-700/80 transition overflow-hidden">
                   <div className="flex flex-col md:flex-row">
                     {ev.bannerUrl && (
-                      <div className="md:w-48 h-32 md:h-auto bg-wine-700 shrink-0">
+                      <div className="md:w-48 h-32 md:h-auto bg-surface-700 shrink-0">
                         <img src={ev.bannerUrl} alt="" className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="p-5 flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2 mb-2">
-                          {isPast && <span className="text-xs bg-mauve-700 text-cream-400 px-2 py-0.5 rounded">Realizado</span>}
+                          {isPast && <span className="text-xs bg-muted-700 text-cream-400 px-2 py-0.5 rounded">Realizado</span>}
                           {!isPast && ev.totalTickets > 0 && <span className="text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded">Confirmado</span>}
                         </div>
                         <h3 className="text-lg font-semibold text-cream-200">{ev.eventTitle}</h3>

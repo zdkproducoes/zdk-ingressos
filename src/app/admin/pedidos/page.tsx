@@ -1,3 +1,4 @@
+import { platform } from '@/lib/config';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -39,12 +40,12 @@ const statusConfig: Record<string, { label: string; classes: string }> = {
   in_process: { label: 'Em análise', classes: 'bg-yellow-900 text-yellow-300' },
   rejected:   { label: 'Rejeitado',  classes: 'bg-red-900 text-red-300' },
   cancelled:  { label: 'Cancelado',  classes: 'bg-red-900 text-red-300' },
-  refunded:   { label: 'Reembolsado',classes: 'bg-mauve-700 text-cream-300' },
-  abandoned:  { label: 'Não finalizado', classes: 'bg-wine-800 text-cream-400' },
+  refunded:   { label: 'Reembolsado',classes: 'bg-muted-700 text-cream-300' },
+  abandoned:  { label: 'Não finalizado', classes: 'bg-surface-800 text-cream-400' },
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const cfg = statusConfig[status] ?? { label: status, classes: 'bg-mauve-700 text-cream-300' };
+  const cfg = statusConfig[status] ?? { label: status, classes: 'bg-muted-700 text-cream-300' };
   return (
     <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${cfg.classes}`}>
       {cfg.label}
@@ -68,8 +69,8 @@ function waHref(order: OrderRow): string | null {
   const evento = order.events?.title ?? 'nosso evento';
 
   const msg = order.payment_status === 'pending'
-    ? `${ola} Aqui é da equipe do SACODE. Vi que o seu pedido #${order.order_number} para "${evento}" ficou com o pagamento pendente. Posso te ajudar a finalizar a compra?`
-    : `${ola} Aqui é da equipe do SACODE sobre o seu pedido #${order.order_number}.`;
+    ? `${ola} Aqui é da equipe do ${platform.name}. Vi que o seu pedido #${order.order_number} para "${evento}" ficou com o pagamento pendente. Posso te ajudar a finalizar a compra?`
+    : `${ola} Aqui é da equipe do ${platform.name} sobre o seu pedido #${order.order_number}.`;
 
   return `https://wa.me/${intl}?text=${encodeURIComponent(msg)}`;
 }
@@ -161,8 +162,8 @@ export default async function PedidosPage({
   };
   const pages = pageList(page, totalPages);
 
-  const navBtn = 'min-w-[2.25rem] text-center px-3 py-1.5 rounded-lg border border-mauve-700 text-cream-200 hover:bg-wine-700 transition';
-  const navOff = 'min-w-[2.25rem] text-center px-3 py-1.5 rounded-lg border border-mauve-700 text-cream-400 opacity-40 cursor-not-allowed';
+  const navBtn = 'min-w-[2.25rem] text-center px-3 py-1.5 rounded-lg border border-muted-700 text-cream-200 hover:bg-surface-700 transition';
+  const navOff = 'min-w-[2.25rem] text-center px-3 py-1.5 rounded-lg border border-muted-700 text-cream-400 opacity-40 cursor-not-allowed';
   const waBtn = 'inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-green-700 hover:bg-green-600 text-white transition';
 
   return (
@@ -172,12 +173,12 @@ export default async function PedidosPage({
         <span className="text-cream-400">Status:</span>
         {STATUS_TABS.map(t => (
           t.value === status ? (
-            <span key={t.value} className="px-2.5 py-1 rounded-lg border border-amber-sacode-400 bg-amber-sacode-400 text-wine-800 font-semibold">
+            <span key={t.value} className="px-2.5 py-1 rounded-lg border border-accent-400 bg-accent-400 text-surface-800 font-semibold">
               {t.label}
             </span>
           ) : (
             <Link key={t.value} href={buildHref({ status: t.value, page: 1 })}
-              className="px-2.5 py-1 rounded-lg border border-mauve-700 text-cream-200 hover:bg-wine-700 transition">
+              className="px-2.5 py-1 rounded-lg border border-muted-700 text-cream-200 hover:bg-surface-700 transition">
               {t.label}
             </Link>
           )
@@ -193,17 +194,17 @@ export default async function PedidosPage({
           {orders.length === 0 ? (
             <p className="text-cream-400 text-center py-16">
               Nenhum pedido nesta página.{' '}
-              <Link href={buildHref({ page: 1 })} className="text-amber-sacode-400 underline hover:text-amber-sacode-300">
+              <Link href={buildHref({ page: 1 })} className="text-accent-400 underline hover:text-accent-300">
                 Voltar ao início
               </Link>
             </p>
           ) : (
             <>
               {/* Desktop */}
-              <div className="hidden md:block overflow-x-auto rounded-lg border border-mauve-700">
+              <div className="hidden md:block overflow-x-auto rounded-lg border border-muted-700">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-mauve-700">
+                    <tr className="border-b border-muted-700">
                       {['#Pedido', 'Comprador', 'Evento', 'Ingressos', 'Total', 'Status', 'Data', 'Ações'].map(h => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-cream-400 uppercase tracking-wide">
                           {h}
@@ -215,7 +216,7 @@ export default async function PedidosPage({
                     {orders.map(order => {
                       const wa = waHref(order);
                       return (
-                        <tr key={order.id} className="border-b border-mauve-700 hover:bg-wine-700/50 transition">
+                        <tr key={order.id} className="border-b border-muted-700 hover:bg-surface-700/50 transition">
                           <td className="px-4 py-3 text-cream-300 font-mono">#{order.order_number}</td>
                           <td className="px-4 py-3">
                             <p className="text-cream-200">{order.profiles?.full_name ?? '—'}</p>
@@ -227,7 +228,7 @@ export default async function PedidosPage({
                           <td className="px-4 py-3">
                             <StatusBadge status={order.payment_status} />
                             {order.payment_gateway === 'offline' && (
-                              <span className="ml-1.5 inline-block px-2 py-0.5 rounded text-xs font-medium bg-amber-sacode-400/20 text-amber-sacode-300 border border-amber-sacode-400/40">
+                              <span className="ml-1.5 inline-block px-2 py-0.5 rounded text-xs font-medium bg-accent-400/20 text-accent-300 border border-accent-400/40">
                                 Offline
                               </span>
                             )}
@@ -263,12 +264,12 @@ export default async function PedidosPage({
                 {orders.map(order => {
                   const wa = waHref(order);
                   return (
-                    <div key={order.id} className="bg-wine-700 rounded-lg p-4 border border-mauve-700 space-y-2">
+                    <div key={order.id} className="bg-surface-700 rounded-lg p-4 border border-muted-700 space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-cream-300 text-sm">#{order.order_number}</span>
                         <span className="flex items-center gap-1.5">
                           {order.payment_gateway === 'offline' && (
-                            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-amber-sacode-400/20 text-amber-sacode-300 border border-amber-sacode-400/40">
+                            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-accent-400/20 text-accent-300 border border-accent-400/40">
                               Offline
                             </span>
                           )}
@@ -312,12 +313,12 @@ export default async function PedidosPage({
                 <span className="text-cream-400">Itens por página:</span>
                 {ALLOWED_PER_PAGE.map(pp => (
                   pp === perPage ? (
-                    <span key={pp} className="px-2.5 py-1 rounded-lg border border-amber-sacode-400 bg-amber-sacode-400 text-wine-800 font-semibold">
+                    <span key={pp} className="px-2.5 py-1 rounded-lg border border-accent-400 bg-accent-400 text-surface-800 font-semibold">
                       {pp}
                     </span>
                   ) : (
                     <Link key={pp} href={buildHref({ perPage: pp, page: 1 })}
-                      className="px-2.5 py-1 rounded-lg border border-mauve-700 text-cream-200 hover:bg-wine-700 transition">
+                      className="px-2.5 py-1 rounded-lg border border-muted-700 text-cream-200 hover:bg-surface-700 transition">
                       {pp}
                     </Link>
                   )
@@ -346,7 +347,7 @@ export default async function PedidosPage({
                   p === '…' ? (
                     <span key={`gap-${i}`} className="px-2 text-cream-400">…</span>
                   ) : p === page ? (
-                    <span key={p} className="min-w-[2.25rem] text-center px-3 py-1.5 rounded-lg border border-amber-sacode-400 bg-amber-sacode-400 text-wine-800 font-semibold">
+                    <span key={p} className="min-w-[2.25rem] text-center px-3 py-1.5 rounded-lg border border-accent-400 bg-accent-400 text-surface-800 font-semibold">
                       {p}
                     </span>
                   ) : (

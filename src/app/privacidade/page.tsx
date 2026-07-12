@@ -637,7 +637,7 @@ export default function PrivacidadePage() {
           <p>
             <strong>10.1</strong> Esta Política de Privacidade poderá ser
             atualizada periodicamente, sendo a versão vigente sempre
-            acessível em https://sacode.cantorcaiolacerda.com.br/privacidade,
+            acessível em https://www.zdkingressos.com.br/privacidade,
             com indicação clara da data da última atualização.
           </p>
           <p>

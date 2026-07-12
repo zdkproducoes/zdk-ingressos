@@ -42,14 +42,14 @@ export function renderTicketEmail(params: {
 ${ticketsHtml}
 <p style="margin:24px 0 4px;font-size:12px;color:#BFA279;text-align:center;">Caso não consiga visualizar os QR Codes acima</p>
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 24px;"><tr><td style="background:#E4A03F;border-radius:8px;">
-<a href="https://sacode.cantorcaiolacerda.com.br/minhas-compras" style="display:inline-block;padding:12px 28px;font-size:14px;font-weight:600;color:#45183F;text-decoration:none;">🎟️ Ver no site</a>
+<a href="https://www.zdkingressos.com.br/minhas-compras" style="display:inline-block;padding:12px 28px;font-size:14px;font-weight:600;color:#45183F;text-decoration:none;">🎟️ Ver no site</a>
 </td></tr></table>
 <p style="margin:24px 0 0;padding:16px;background:#321131;border-radius:8px;font-size:13px;color:#BFA279;line-height:1.5;">
 ⚠️ <strong style="color:#EADBC4;">Importante:</strong> Não compartilhe estes QR codes. Cada um só pode ser usado uma vez.
 </p>
 <p style="margin:16px 0 0;font-size:13px;color:#BFA279;line-height:1.6;">
 Caso precise localizar seu ingresso novamente, acesse
-<a href="https://sacode.cantorcaiolacerda.com.br/buscar-ingresso" style="color:#E4A03F;text-decoration:none;">sacode.cantorcaiolacerda.com.br/buscar-ingresso</a>
+<a href="https://www.zdkingressos.com.br/buscar-ingresso" style="color:#E4A03F;text-decoration:none;">www.zdkingressos.com.br/buscar-ingresso</a>
 com seu CPF e o nº do pedido (<strong style="color:#EADBC4;">#${orderNumber}</strong>).
 </p>
 </td></tr>

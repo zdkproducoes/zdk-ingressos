@@ -52,7 +52,7 @@ export function Wall({ eventId, eventTitle }: { eventId: string; eventTitle: str
 
       <div className="space-y-3">
         {posts.length === 0 && !loading && (
-          <div className="rounded-xl bg-wine-700 border border-mauve-700 p-8 text-center">
+          <div className="rounded-xl bg-surface-700 border border-muted-700 p-8 text-center">
             <div className="text-4xl mb-3">💬</div>
             <p className="text-cream-300">Seja o primeiro a postar!</p>
           </div>
@@ -65,7 +65,7 @@ export function Wall({ eventId, eventTitle }: { eventId: string; eventTitle: str
 
       {hasMore && (
         <button type="button" onClick={() => load(false)} disabled={loading}
-          className="w-full rounded-lg bg-wine-700 hover:bg-wine-500 disabled:opacity-50 text-cream-200 font-semibold py-2.5 transition">
+          className="w-full rounded-lg bg-surface-700 hover:bg-surface-500 disabled:opacity-50 text-cream-200 font-semibold py-2.5 transition">
           {loading ? 'Carregando…' : 'Carregar mais'}
         </button>
       )}
@@ -134,7 +134,7 @@ function PostComposer({
   }
 
   return (
-    <div className="rounded-xl bg-wine-700 border border-mauve-600 p-4">
+    <div className="rounded-xl bg-surface-700 border border-muted-600 p-4">
       <textarea value={text} onChange={e => setText(e.target.value)} placeholder={placeholder}
         rows={parentId ? 2 : 3} maxLength={2000}
         className="w-full bg-transparent text-cream-200 placeholder:text-cream-400 resize-none focus:outline-none" />
@@ -142,11 +142,11 @@ function PostComposer({
         <div className="relative inline-block mt-2">
           <img src={image.preview} alt="" className="max-h-40 rounded-lg" />
           <button type="button" onClick={() => { setImage(null); if (fileRef.current) fileRef.current.value = ''; }}
-            className="absolute top-1 right-1 bg-wine-900/70 hover:bg-wine-900 text-cream-200 w-7 h-7 rounded-full text-sm">✕</button>
+            className="absolute top-1 right-1 bg-surface-900/70 hover:bg-surface-900 text-cream-200 w-7 h-7 rounded-full text-sm">✕</button>
         </div>
       )}
       {err && <p className="text-xs text-red-400 mt-1">{err}</p>}
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-mauve-700">
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-muted-700">
         <div className="flex items-center gap-2">
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={e => chooseFile(e.target.files?.[0] || null)} className="hidden" />
@@ -159,7 +159,7 @@ function PostComposer({
             <button type="button" onClick={onCancel} className="text-cream-400 hover:text-cream-200 text-sm px-3 py-1.5">Cancelar</button>
           )}
           <button type="button" onClick={submit} disabled={posting || (!text.trim() && !image)}
-            className="rounded-full bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-800 font-semibold text-sm px-5 py-1.5 transition">
+            className="rounded-full bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-800 font-semibold text-sm px-5 py-1.5 transition">
             {posting ? (uploading ? 'Enviando foto…' : 'Publicando…') : (parentId ? 'Responder' : 'Publicar')}
           </button>
         </div>
@@ -232,7 +232,7 @@ function PostCard({
   }
 
   return (
-    <article className="rounded-xl bg-wine-700 border border-mauve-700 p-4">
+    <article className="rounded-xl bg-surface-700 border border-muted-700 p-4">
       <div className="flex items-start gap-3">
         <Avatar author={post.author} />
         <div className="flex-1 min-w-0">
@@ -254,7 +254,7 @@ function PostCard({
           {post.imageUrl && (
             <>
               <button type="button" onClick={() => setShowImg(true)}
-                className="block mt-2 rounded-lg overflow-hidden border border-mauve-700 hover:opacity-90 transition">
+                className="block mt-2 rounded-lg overflow-hidden border border-muted-700 hover:opacity-90 transition">
                 <img src={post.imageUrl} alt="" className="max-h-96 w-auto" />
               </button>
               {showImg && (
@@ -295,7 +295,7 @@ function PostCard({
       )}
 
       {showReplies && (
-        <div className="mt-3 ml-12 space-y-2 border-l-2 border-mauve-700 pl-4">
+        <div className="mt-3 ml-12 space-y-2 border-l-2 border-muted-700 pl-4">
           {loadingReplies && <p className="text-xs text-cream-400">Carregando…</p>}
           {replies.map(r => (
             <ReplyCard key={r.id} post={r} onLikeChanged={onLikeChanged} onDeleted={(id) => setReplies(rs => rs.filter(x => x.id !== id))} />
@@ -335,7 +335,7 @@ function ReplyCard({
           {post.isOwn && <button onClick={del} className="ml-auto text-cream-400 hover:text-red-400">🗑</button>}
         </div>
         {post.content.trim() && <p className="mt-0.5 text-cream-200 text-sm whitespace-pre-wrap break-words">{post.content}</p>}
-        {post.imageUrl && <img src={post.imageUrl} alt="" className="mt-1 max-h-48 rounded border border-mauve-700" />}
+        {post.imageUrl && <img src={post.imageUrl} alt="" className="mt-1 max-h-48 rounded border border-muted-700" />}
         <button onClick={toggleLike} className={`mt-1 text-xs flex items-center gap-1 ${post.liked ? 'text-red-500' : 'text-cream-400 hover:text-red-400'}`}>
           {post.liked ? '❤️' : '🤍'} {post.likeCount}
         </button>
@@ -348,11 +348,11 @@ function ReplyCard({
 function Avatar({ author, small }: { author: Author; small?: boolean }) {
   const size = small ? 'w-7 h-7 text-xs' : 'w-10 h-10 text-sm';
   if (author.avatarUrl) {
-    return <img src={author.avatarUrl} alt="" className={`${size} rounded-full object-cover bg-wine-700 shrink-0`} />;
+    return <img src={author.avatarUrl} alt="" className={`${size} rounded-full object-cover bg-surface-700 shrink-0`} />;
   }
   const initial = (author.firstName[0] || '?').toUpperCase();
   return (
-    <div className={`${size} rounded-full bg-gradient-to-br from-wine-600 to-mauve-600 flex items-center justify-center text-cream-200 font-bold shrink-0`}>
+    <div className={`${size} rounded-full bg-gradient-to-br from-surface-600 to-muted-600 flex items-center justify-center text-cream-200 font-bold shrink-0`}>
       {initial}
     </div>
   );

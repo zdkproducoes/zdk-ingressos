@@ -114,15 +114,15 @@ function PodiumSection({ podium, myRank }: { podium: PodiumEntry[]; myRank: numb
   const heights = ['h-24', 'h-16', 'h-12'];
 
   return (
-    <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5">
+    <div className="bg-surface-700 border border-muted-700 rounded-xl p-5">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider flex items-center gap-2">
-          <Trophy size={16} className="text-amber-sacode-400" />
+          <Trophy size={16} className="text-accent-400" />
           Pódio dos embaixadores
         </h2>
       </div>
       <p className="text-xs text-cream-400 mb-5">
-        Você está em <strong className="text-amber-sacode-400">{myRank}º lugar</strong> de{' '}
+        Você está em <strong className="text-accent-400">{myRank}º lugar</strong> de{' '}
         {podium.length} embaixadores, por ingressos vendidos.
       </p>
 
@@ -135,7 +135,7 @@ function PodiumSection({ podium, myRank }: { podium: PodiumEntry[]; myRank: numb
               <span className="text-2xl mb-1">{medal[i]}</span>
               <p
                 className={`text-xs sm:text-sm font-semibold text-center leading-tight mb-0.5 truncate w-full ${
-                  entry.isMe ? 'text-amber-sacode-400' : 'text-cream-200'
+                  entry.isMe ? 'text-accent-400' : 'text-cream-200'
                 }`}
                 title={entry.name}
               >
@@ -148,8 +148,8 @@ function PodiumSection({ podium, myRank }: { podium: PodiumEntry[]; myRank: numb
               <div
                 className={`w-full ${heights[i]} rounded-t-lg border border-b-0 flex items-start justify-center pt-1.5 text-sm font-bold ${
                   entry.isMe
-                    ? 'bg-amber-sacode-400/20 border-amber-sacode-400/50 text-amber-sacode-400'
-                    : 'bg-wine-800 border-mauve-700 text-cream-300'
+                    ? 'bg-accent-400/20 border-accent-400/50 text-accent-400'
+                    : 'bg-surface-800 border-muted-700 text-cream-300'
                 }`}
               >
                 {rankOf(podium, i)}º
@@ -161,7 +161,7 @@ function PodiumSection({ podium, myRank }: { podium: PodiumEntry[]; myRank: numb
 
       {/* Demais posições */}
       {rest.length > 0 && (
-        <ul className="border-t border-mauve-700 pt-3 space-y-1">
+        <ul className="border-t border-muted-700 pt-3 space-y-1">
           {rest.map((entry, i) => {
             const index = i + 3;
             return (
@@ -169,7 +169,7 @@ function PodiumSection({ podium, myRank }: { podium: PodiumEntry[]; myRank: numb
                 key={index}
                 className={`flex items-center gap-3 text-sm rounded-lg px-3 py-1.5 ${
                   entry.isMe
-                    ? 'bg-amber-sacode-400/10 border border-amber-sacode-400/40 text-amber-sacode-400 font-semibold'
+                    ? 'bg-accent-400/10 border border-accent-400/40 text-accent-400 font-semibold'
                     : 'text-cream-300'
                 }`}
               >
@@ -193,10 +193,10 @@ function PodiumSection({ podium, myRank }: { podium: PodiumEntry[]; myRank: numb
 function GoalProgressBar({ done, target, highlight }: { done: number; target: number; highlight: boolean }) {
   const pct = Math.min(100, Math.round((done / target) * 100));
   return (
-    <div className="w-full h-3 bg-wine-800 border border-mauve-700 rounded-full overflow-hidden">
+    <div className="w-full h-3 bg-surface-800 border border-muted-700 rounded-full overflow-hidden">
       <div
         className={`h-full rounded-full transition-all ${
-          highlight ? 'bg-amber-sacode-400' : done >= target ? 'bg-emerald-500' : 'bg-mauve-500'
+          highlight ? 'bg-accent-400' : done >= target ? 'bg-emerald-500' : 'bg-muted-500'
         }`}
         style={{ width: `${pct}%` }}
       />
@@ -218,15 +218,15 @@ function MetasSection({
   const future = goals.filter((g) => g.status === 'future');
 
   return (
-    <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5 space-y-4">
+    <div className="bg-surface-700 border border-muted-700 rounded-xl p-5 space-y-4">
       <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider flex items-center gap-2">
-        <Target size={16} className="text-amber-sacode-400" />
+        <Target size={16} className="text-accent-400" />
         Suas metas
       </h2>
 
       {/* A grande meta do evento */}
       {eventGoal && (
-        <div className="bg-wine-800 border border-mauve-700 rounded-xl p-4">
+        <div className="bg-surface-800 border border-muted-700 rounded-xl p-4">
           <div className="flex items-baseline justify-between gap-2 mb-1">
             <p className="text-sm font-semibold text-cream-200">🏆 Meta do evento</p>
             <p className="text-xs text-cream-400 whitespace-nowrap">campanha inteira</p>
@@ -249,7 +249,7 @@ function MetasSection({
             )}
           </p>
           {eventGoal.reward && (
-            <p className="text-xs mt-2 text-amber-sacode-400 flex items-center gap-1.5">
+            <p className="text-xs mt-2 text-accent-400 flex items-center gap-1.5">
               <Gift size={14} />
               Prêmio da campanha: {eventGoal.reward}
             </p>
@@ -263,7 +263,7 @@ function MetasSection({
         return (
           <div
             key={g.id}
-            className="bg-amber-sacode-400/10 border border-amber-sacode-400/40 rounded-xl p-4"
+            className="bg-accent-400/10 border border-accent-400/40 rounded-xl p-4"
           >
             <div className="flex items-baseline justify-between gap-2 mb-1">
               <p className="text-sm font-semibold text-cream-200">
@@ -273,7 +273,7 @@ function MetasSection({
                 {fmtShortDate(g.weekStart)} a {fmtShortDate(g.weekEnd)}
               </p>
             </div>
-            <p className="text-2xl font-bold text-amber-sacode-400 mb-2">
+            <p className="text-2xl font-bold text-accent-400 mb-2">
               {g.myTickets}{' '}
               <span className="text-sm font-medium text-cream-400">
                 de {g.target} {g.target === 1 ? 'ingresso' : 'ingressos'}
@@ -292,7 +292,7 @@ function MetasSection({
               )}
             </p>
             {g.reward && (
-              <p className="text-xs mt-2 text-amber-sacode-400 flex items-center gap-1.5">
+              <p className="text-xs mt-2 text-accent-400 flex items-center gap-1.5">
                 <Gift size={14} />
                 Prêmio da semana: {g.reward}
               </p>
@@ -325,7 +325,7 @@ function MetasSection({
                     className={`text-[11px] px-2 py-0.5 rounded-full border whitespace-nowrap ${
                       hit
                         ? 'bg-emerald-900/40 text-emerald-300 border-emerald-700/50'
-                        : 'bg-mauve-800/60 text-cream-400 border-mauve-600'
+                        : 'bg-muted-800/60 text-cream-400 border-muted-600'
                     }`}
                   >
                     {hit ? 'Batida ✓' : 'Não batida'}
@@ -372,10 +372,10 @@ function CheckinSection({ checkin }: { checkin: NonNullable<PanelData['checkin']
     podium.filter((p) => p.pct > podium[index].pct).length + 1;
 
   return (
-    <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5 space-y-4">
+    <div className="bg-surface-700 border border-muted-700 rounded-xl p-5 space-y-4">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider flex items-center gap-2">
-          <UserCheck size={16} className="text-amber-sacode-400" />
+          <UserCheck size={16} className="text-accent-400" />
           Check-in do seu público
         </h2>
         <span className="text-[11px] text-cream-400 whitespace-nowrap">
@@ -385,21 +385,21 @@ function CheckinSection({ checkin }: { checkin: NonNullable<PanelData['checkin']
 
       {/* Meta de check-in */}
       {myTickets > 0 ? (
-        <div className="bg-amber-sacode-400/10 border border-amber-sacode-400/40 rounded-xl p-4">
+        <div className="bg-accent-400/10 border border-accent-400/40 rounded-xl p-4">
           <div className="flex items-baseline justify-between gap-2 mb-1">
             <p className="text-sm font-semibold text-cream-200">Meta de check-in</p>
             <p className="text-xs text-cream-400 whitespace-nowrap">{target}% dos seus ingressos</p>
           </div>
-          <p className="text-2xl font-bold text-amber-sacode-400 mb-2">
+          <p className="text-2xl font-bold text-accent-400 mb-2">
             {Math.round(myPct)}%{' '}
             <span className="text-sm font-medium text-cream-400">
               ({myCheckedIn} de {myTickets} {myTickets === 1 ? 'ingresso' : 'ingressos'} já entraram)
             </span>
           </p>
           {/* Barra com marcador na meta */}
-          <div className="relative w-full h-3 bg-wine-800 border border-mauve-700 rounded-full overflow-hidden">
+          <div className="relative w-full h-3 bg-surface-800 border border-muted-700 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all ${hit ? 'bg-emerald-500' : 'bg-amber-sacode-400'}`}
+              className={`h-full rounded-full transition-all ${hit ? 'bg-emerald-500' : 'bg-accent-400'}`}
               style={{ width: `${Math.min(100, myPct)}%` }}
             />
             <div
@@ -435,7 +435,7 @@ function CheckinSection({ checkin }: { checkin: NonNullable<PanelData['checkin']
                 key={i}
                 className={`flex items-center gap-3 text-sm rounded-lg px-3 py-1.5 ${
                   entry.isMe
-                    ? 'bg-amber-sacode-400/10 border border-amber-sacode-400/40 text-amber-sacode-400 font-semibold'
+                    ? 'bg-accent-400/10 border border-accent-400/40 text-accent-400 font-semibold'
                     : 'text-cream-300'
                 }`}
               >
@@ -446,7 +446,7 @@ function CheckinSection({ checkin }: { checkin: NonNullable<PanelData['checkin']
                   {entry.name}
                   {entry.isMe && ' (você)'}
                 </span>
-                <span className={`text-sm font-bold ${entry.isMe ? 'text-amber-sacode-400' : 'text-cream-200'}`}>
+                <span className={`text-sm font-bold ${entry.isMe ? 'text-accent-400' : 'text-cream-200'}`}>
                   {Math.round(entry.pct)}%
                 </span>
               </li>
@@ -476,15 +476,15 @@ function StatCard({
     <div
       className={`rounded-xl border p-4 ${
         highlight
-          ? 'bg-amber-sacode-400/10 border-amber-sacode-400/40'
-          : 'bg-wine-700 border-mauve-700'
+          ? 'bg-accent-400/10 border-accent-400/40'
+          : 'bg-surface-700 border-muted-700'
       }`}
     >
       <div className="flex items-center gap-2 text-cream-400 text-xs uppercase tracking-wider mb-2">
         {icon}
         {label}
       </div>
-      <p className={`text-2xl font-bold ${highlight ? 'text-amber-sacode-400' : 'text-cream-200'}`}>
+      <p className={`text-2xl font-bold ${highlight ? 'text-accent-400' : 'text-cream-200'}`}>
         {value}
       </p>
     </div>
@@ -529,11 +529,11 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
   );
 
   return (
-    <main className="min-h-screen bg-wine-800 px-4 py-8">
+    <main className="min-h-screen bg-surface-800 px-4 py-8">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Cabeçalho */}
         <div>
-          <p className="text-xs uppercase tracking-widest text-amber-sacode-400 font-semibold mb-1">
+          <p className="text-xs uppercase tracking-widest text-accent-400 font-semibold mb-1">
             Painel do Embaixador
           </p>
           <h1 className="text-2xl md:text-3xl font-bold text-cream-200">
@@ -556,7 +556,7 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
         )}
 
         {/* Link de divulgação */}
-        <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5">
+        <div className="bg-surface-700 border border-muted-700 rounded-xl p-5">
           <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider mb-3">
             Seu link de divulgação
           </h2>
@@ -566,12 +566,12 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
               readOnly
               value={data.shareUrl}
               onFocus={(e) => e.target.select()}
-              className="flex-1 bg-wine-800 text-cream-200 border border-mauve-600 rounded-lg px-3 py-2.5 text-xs font-mono"
+              className="flex-1 bg-surface-800 text-cream-200 border border-muted-600 rounded-lg px-3 py-2.5 text-xs font-mono"
             />
             <div className="flex gap-2">
               <button
                 onClick={copyLink}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-900 font-semibold text-sm px-4 py-2.5 rounded-lg transition"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 bg-accent-400 hover:bg-accent-500 text-surface-900 font-semibold text-sm px-4 py-2.5 rounded-lg transition"
               >
                 {copied ? <Check size={16} /> : <Copy size={16} />}
                 {copied ? 'Copiado!' : 'Copiar'}
@@ -625,7 +625,7 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
         <PodiumSection podium={data.podium} myRank={data.myRank} />
 
         {/* Últimas vendas */}
-        <div className="bg-wine-700 border border-mauve-700 rounded-xl p-5">
+        <div className="bg-surface-700 border border-muted-700 rounded-xl p-5">
           <h2 className="text-sm font-semibold text-cream-200 uppercase tracking-wider mb-4">
             Últimas vendas
           </h2>
@@ -636,7 +636,7 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="text-cream-400 text-xs uppercase tracking-wider border-b border-mauve-700">
+                <thead className="text-cream-400 text-xs uppercase tracking-wider border-b border-muted-700">
                   <tr>
                     <th className="text-left py-2">Quando</th>
                     <th className="text-left py-2">Comprador</th>
@@ -646,7 +646,7 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
                 </thead>
                 <tbody>
                   {data.sales.map((s, i) => (
-                    <tr key={i} className="border-b border-mauve-700/50">
+                    <tr key={i} className="border-b border-muted-700/50">
                       <td className="py-2 text-cream-300 whitespace-nowrap">
                         {fmtDateTime(s.createdAt)}
                       </td>
@@ -661,7 +661,7 @@ export function AfiliadoPanelClient({ data }: { data: PanelData }) {
                                 {s.checkinAt && fmtTime(s.checkinAt)}
                               </span>
                             ) : s.checkedIn > 0 ? (
-                              <span className="text-amber-sacode-400 text-xs">
+                              <span className="text-accent-400 text-xs">
                                 {s.checkedIn}/{s.tickets} ✓ {s.checkinAt && fmtTime(s.checkinAt)}
                               </span>
                             ) : (

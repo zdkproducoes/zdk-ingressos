@@ -77,7 +77,7 @@ export function RedefinirSenhaForm() {
         </p>
         <Link
           href="/recuperar-senha"
-          className="block w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-3 transition"
+          className="block w-full rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-3 transition"
         >
           Solicitar novo link
         </Link>
@@ -96,7 +96,7 @@ export function RedefinirSenhaForm() {
         </p>
         <Link
           href="/login"
-          className="block w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 text-wine-800 font-semibold py-3 transition"
+          className="block w-full rounded-lg bg-accent-400 hover:bg-accent-500 text-surface-800 font-semibold py-3 transition"
         >
           Ir para login
         </Link>
@@ -126,7 +126,7 @@ export function RedefinirSenhaForm() {
           />
           <button type="button" onClick={() => setShowPassword(v => !v)}
             aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-amber-sacode-300 transition">
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-accent-300 transition">
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
@@ -146,7 +146,7 @@ export function RedefinirSenhaForm() {
           />
           <button type="button" onClick={() => setShowConfirm(v => !v)}
             aria-label={showConfirm ? 'Ocultar senha' : 'Mostrar senha'}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-amber-sacode-300 transition">
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-cream-400 hover:text-accent-300 transition">
             {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
@@ -156,7 +156,7 @@ export function RedefinirSenhaForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-amber-sacode-400 hover:bg-amber-sacode-500 disabled:opacity-50 text-wine-800 font-semibold py-3 transition"
+        className="w-full rounded-lg bg-accent-400 hover:bg-accent-500 disabled:opacity-50 text-surface-800 font-semibold py-3 transition"
       >
         {loading ? 'Redefinindo…' : 'Redefinir senha'}
       </button>
@@ -165,8 +165,8 @@ export function RedefinirSenhaForm() {
 }
 
 function cls(error?: string): string {
-  const base = 'w-full rounded-lg bg-wine-700 border px-3 py-2.5 text-cream-200 placeholder:text-cream-400 focus:outline-none focus:ring-2 transition';
+  const base = 'w-full rounded-lg bg-surface-700 border px-3 py-2.5 text-cream-200 placeholder:text-cream-400 focus:outline-none focus:ring-2 transition';
   return error
     ? `${base} border-red-700 focus:ring-red-600`
-    : `${base} border-mauve-600 focus:border-amber-sacode-400 focus:ring-amber-sacode-400/30`;
+    : `${base} border-muted-600 focus:border-accent-400 focus:ring-accent-400/30`;
 }

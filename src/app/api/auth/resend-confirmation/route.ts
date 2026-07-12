@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       .eq('id', recent.id);
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sacode.cantorcaiolacerda.com.br';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.zdkingressos.com.br';
   const confirmUrl = `${baseUrl}/auth/confirmar?token=${token}`;
   try {
     await resend.emails.send({

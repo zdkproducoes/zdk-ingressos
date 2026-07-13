@@ -80,6 +80,12 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                 >
                   Minhas compras
                 </Link>
+                <Link
+                  href="/minha-conta"
+                  className="text-cream-200/80 hover:text-accent-400 transition text-sm"
+                >
+                  Minha conta
+                </Link>
                 <form action="/auth/signout" method="post">
                   <button
                     type="submit"
@@ -116,6 +122,13 @@ export function Navbar({ initialAuth }: { initialAuth: UserProfile | null }) {
                       className="block px-4 py-2 text-sm text-cream-200/80 hover:text-accent-400 hover:bg-surface-500 transition"
                     >
                       Minhas compras
+                    </Link>
+                    <Link
+                      href="/minha-conta"
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm text-cream-200/80 hover:text-accent-400 hover:bg-surface-500 transition"
+                    >
+                      Minha conta
                     </Link>
                     <form action="/auth/signout" method="post">
                       <button

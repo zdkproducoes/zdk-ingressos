@@ -90,7 +90,7 @@ export async function middleware(request: NextRequest) {
   // 2) Auth: só as áreas logadas passam pela checagem de sessão;
   //    todo o resto (home, evento, buscar-ingresso, afiliado…) é público.
   const needsAuthCheck =
-    startsWithAny(pathname, ['/admin', '/checkin', '/checkout', '/minhas-compras']);
+    startsWithAny(pathname, ['/admin', '/checkin', '/checkout', '/minhas-compras', '/minha-conta']);
 
   if (!needsAuthCheck) return NextResponse.next();
 

@@ -29,9 +29,13 @@ ALTER TABLE public.account_change_tokens ENABLE ROW LEVEL SECURITY;
 -- service_role only (BYPASSRLS); nenhuma policy para anon/authenticated
 
 -- ============================================================
--- 🔒 FIX DE SEGURANÇA: grant por coluna no UPDATE de profiles
+-- 🔒 FIX DE SEGURANÇA: escrita de profiles só nas colunas seguras
 -- ============================================================
-REVOKE UPDATE ON public.profiles FROM authenticated;
+-- anon (não logado) nunca escreve em profiles; authenticated só faz
+-- UPDATE das 12 colunas de perfil. O profile é criado pelo trigger
+-- handle_new_user (SECURITY DEFINER), não por INSERT do cliente.
+REVOKE INSERT, UPDATE, DELETE ON public.profiles FROM anon;
+REVOKE INSERT, UPDATE, DELETE ON public.profiles FROM authenticated;
 GRANT UPDATE (
   full_name, first_name, last_name, birth_date, gender,
   city, neighborhood, state, referral_source,

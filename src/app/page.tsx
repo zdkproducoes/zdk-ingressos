@@ -14,23 +14,27 @@ export const dynamic = 'force-dynamic'
 export default async function Home() {
   const today = new Date().toISOString().slice(0, 10)
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('events')
     .select('id, title, slug, banner_url, event_date, event_time, venue_name, venue_city, venue_state, category, organizations(name)')
     .eq('status', 'active')
     .gte('event_date', today)
     .order('event_date', { ascending: true })
 
+  // Sem isso a falha vira "vitrine vazia" silenciosa (já aconteceu em produção)
+  if (error) console.error('[vitrine] erro ao buscar eventos:', error)
+
   const rows = (data ?? []) as any[]
 
   // Preço "a partir de": menor lote visível/comprável de cada evento
   const priceByEvent = new Map<string, number>()
   if (rows.length > 0) {
-    const { data: batches } = await supabase
+    const { data: batches, error: batchesError } = await supabase
       .from('ticket_batches')
       .select('event_id, price, status')
       .in('event_id', rows.map((e) => e.id))
       .in('status', ['active', 'scheduled'])
+    if (batchesError) console.error('[vitrine] erro ao buscar lotes:', batchesError)
     for (const b of (batches ?? []) as { event_id: string; price: number }[]) {
       const current = priceByEvent.get(b.event_id)
       const price = Number(b.price)

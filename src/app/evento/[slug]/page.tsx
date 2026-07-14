@@ -34,6 +34,10 @@ async function fetchEvent(slug: string): Promise<{ event: Event; org: OrgRow | n
     .eq('status', 'active')
     .single()
 
+  // PGRST116 = nenhuma linha (slug inexistente) — 404 esperado, não é falha
+  if (error && error.code !== 'PGRST116') {
+    console.error(`[evento] erro ao buscar evento "${slug}":`, error)
+  }
   if (error || !data) return null
   const raw = data as EventWithOrg
   const org = Array.isArray(raw.organizations) ? raw.organizations[0] ?? null : raw.organizations

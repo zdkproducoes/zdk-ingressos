@@ -36,6 +36,8 @@ export type EventListItem = {
   venue_lat: number | null;
   venue_lng: number | null;
   content: import('@/lib/supabase').EventContent;
+  /** posição no carrossel de destaques da home (1..5); null = não destacado */
+  featured_order: number | null;
 };
 
 export default async function EventosPage() {
@@ -48,6 +50,19 @@ export default async function EventosPage() {
     .select('id, title, slug, status, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, banner_url, og_image_url, venue_lat, venue_lng, content, category, organizations(name)')
     .order('event_date', { ascending: false });
   if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
+
+  // Destaques da home em query separada e tolerante: se a coluna
+  // featured_order ainda não existir no banco, o painel segue funcionando.
+  const featuredByEvent = new Map<string, number>();
+  {
+    const { data: feat } = await supabaseAdmin
+      .from('events')
+      .select('id, featured_order')
+      .not('featured_order', 'is', null);
+    for (const f of (feat ?? []) as { id: string; featured_order: number }[]) {
+      featuredByEvent.set(f.id, f.featured_order);
+    }
+  }
 
   const [eventsRes, ordersRes, itemsRes] = await Promise.all([
     eventsQuery,
@@ -107,10 +122,17 @@ export default async function EventosPage() {
       venue_lat: e.venue_lat != null ? Number(e.venue_lat) : null,
       venue_lng: e.venue_lng != null ? Number(e.venue_lng) : null,
       content: e.content ?? {},
+      featured_order: featuredByEvent.get(e.id) ?? null,
     };
   });
 
   const selected = await getSelectedEvent(ctx);
 
-  return <EventosClient items={items} selectedId={selected?.id ?? null} />;
+  return (
+    <EventosClient
+      items={items}
+      selectedId={selected?.id ?? null}
+      isSuperadmin={ctx.isSuperadmin}
+    />
+  );
 }

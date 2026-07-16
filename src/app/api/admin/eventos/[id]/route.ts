@@ -21,7 +21,7 @@ export async function PATCH(
 
   const { id } = await params;
 
-  let body: { action?: unknown; status?: unknown; category?: unknown } & ContentFormFields;
+  let body: { action?: unknown; status?: unknown; category?: unknown; featured_order?: unknown } & ContentFormFields;
   try {
     body = await request.json();
   } catch {
@@ -57,6 +57,46 @@ export async function PATCH(
     revalidatePath('/admin/eventos');
     revalidatePath('/');
     return NextResponse.json({ ok: true, status: newStatus });
+  }
+
+  // Destaque no carrossel da home (espaço pago) — só o superadmin da plataforma
+  if (body.action === 'set_featured') {
+    if (!auth.ctx.isSuperadmin) {
+      return NextResponse.json(
+        { error: 'Apenas o superadmin da plataforma define destaques da home.' },
+        { status: 403 },
+      );
+    }
+
+    const raw = body.featured_order;
+    const featured = raw === null || raw === '' || raw === undefined ? null : Number(raw);
+    if (featured !== null && (!Number.isInteger(featured) || featured < 1 || featured > 5)) {
+      return NextResponse.json({ error: 'Posição de destaque inválida (1 a 5).' }, { status: 400 });
+    }
+
+    // Posição única: libera o evento que estiver ocupando a mesma vaga
+    if (featured !== null) {
+      const { error: clearError } = await supabaseAdmin
+        .from('events')
+        .update({ featured_order: null })
+        .eq('featured_order', featured)
+        .neq('id', id);
+      if (clearError) {
+        return NextResponse.json({ error: clearError.message }, { status: 500 });
+      }
+    }
+
+    const { error: updateError } = await supabaseAdmin
+      .from('events')
+      .update({ featured_order: featured, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (updateError) {
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    }
+    revalidatePath('/admin/eventos');
+    revalidatePath('/');
+    return NextResponse.json({ ok: true, featured_order: featured });
   }
 
   // Atualiza o conteúdo da página pública do evento

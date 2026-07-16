@@ -1,19 +1,21 @@
 'use client';
 
-// Vitrine da home: hero com o próximo evento em destaque, busca, chips de
-// cidade e grid de cards — padrão dos grandes players, com a cara da ZDK.
+// Vitrine da home: carrossel de destaques (até 5, controlados pelo
+// superadmin via featured_order), busca, chips de cidade e grid com TODOS
+// os eventos — padrão dos grandes players, com a cara da ZDK.
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Search, MapPin, Calendar, ShieldCheck, QrCode, Headset } from 'lucide-react';
+import { Search, ShieldCheck, QrCode, Headset } from 'lucide-react';
 import { EventCard, type VitrineEvent } from '@/components/vitrine/EventCard';
-import { EVENT_CATEGORIES, categoryLabel } from '@/lib/categories';
+import { HeroCarousel } from '@/components/vitrine/HeroCarousel';
+import { EVENT_CATEGORIES } from '@/lib/categories';
 
-function fmtPrice(v: number) {
-  return v % 1 === 0 ? String(v) : v.toFixed(2).replace('.', ',');
-}
-
-export function VitrineClient({ events }: { events: VitrineEvent[] }) {
+export function VitrineClient({
+  events,
+  destaques,
+}: {
+  events: VitrineEvent[];
+  destaques: VitrineEvent[];
+}) {
   const [query, setQuery] = useState('');
   const [city, setCity] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
@@ -42,10 +44,11 @@ export function VitrineClient({ events }: { events: VitrineEvent[] }) {
     });
   }, [events, query, city, category]);
 
-  const [hero, ...rest] = filtered;
-
   return (
     <>
+      {/* Carrossel de destaques (independente dos filtros) */}
+      <HeroCarousel slides={destaques} />
+
       {/* Busca + chips de cidade */}
       <div className="max-w-3xl mx-auto mb-8">
         <label className="relative block mb-4">
@@ -117,73 +120,12 @@ export function VitrineClient({ events }: { events: VitrineEvent[] }) {
           </p>
         </div>
       ) : (
-        <>
-          {/* Hero: o próximo evento em destaque */}
-          {hero && (
-            <Link
-              href={`/evento/${hero.slug}`}
-              className="group block relative rounded-3xl overflow-hidden border border-muted-700 mb-10
-                         hover:border-accent-400/60 transition-all shadow-[0_18px_60px_rgba(0,0,0,.45)]"
-            >
-              <div className="relative aspect-[16/7] min-h-[260px] bg-gradient-to-br from-surface-600 to-muted-700">
-                {hero.banner_url && (
-                  <Image
-                    src={hero.banner_url}
-                    alt={hero.title}
-                    fill
-                    priority
-                    sizes="(max-width: 1152px) 100vw, 1152px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-900/95 via-surface-900/35 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-9 flex flex-wrap items-end justify-between gap-4">
-                  <div>
-                    <p className="font-display text-accent-300 text-xs tracking-[0.28em] uppercase mb-2">
-                      Em destaque{categoryLabel(hero.category) ? ` · ${categoryLabel(hero.category)}` : ''}
-                    </p>
-                    <h2 className="font-display-bold text-[clamp(1.6rem,4.5vw,3rem)] leading-none text-cream-100 uppercase mb-3">
-                      {hero.title}
-                    </h2>
-                    <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-cream-300">
-                      <span className="inline-flex items-center gap-1.5 capitalize">
-                        <Calendar className="w-4 h-4 stroke-accent-400" />
-                        {new Date(hero.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
-                          weekday: 'short', day: '2-digit', month: 'long',
-                        })}
-                        {hero.event_time ? ` • ${hero.event_time.slice(0, 5)}` : ''}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 stroke-accent-400" />
-                        {hero.venue_name} — {hero.venue_city}/{hero.venue_state}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    {hero.price_from != null && (
-                      <div className="text-right leading-tight">
-                        <span className="block text-[11px] uppercase tracking-wider text-cream-400">a partir de</span>
-                        <span className="font-display-bold text-2xl text-accent-300">R$ {fmtPrice(hero.price_from)}</span>
-                      </div>
-                    )}
-                    <span className="bg-accent-400 group-hover:bg-accent-300 text-surface-900 font-display-bold uppercase tracking-wide text-sm px-6 py-3.5 rounded-xl shadow-[0_4px_0_#7C5A16] transition">
-                      Garantir meu lugar
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          )}
-
-          {/* Grid dos demais */}
-          {rest.length > 0 && (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {rest.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          )}
-        </>
+        // Grid com TODOS os eventos (inclusive os do carrossel)
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </div>
       )}
 
       {/* Faixa de confiança */}

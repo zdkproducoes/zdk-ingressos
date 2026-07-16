@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, Check, Plus, X } from 'lucide-react';
+import { AlertCircle, Check, Plus, Star, X } from 'lucide-react';
 import type { EventListItem } from '@/app/admin/eventos/page';
 
 const fmtCurrency = (v: number) =>
@@ -62,9 +62,11 @@ function slugify(text: string): string {
 export function EventosClient({
   items,
   selectedId,
+  isSuperadmin = false,
 }: {
   items: EventListItem[];
   selectedId: string | null;
+  isSuperadmin?: boolean;
 }) {
   const router = useRouter();
 
@@ -213,6 +215,34 @@ export function EventosClient({
     }
   };
 
+  // Destaque no carrossel da home (1..5) — controle exclusivo do superadmin
+  const handleSetFeatured = async (item: EventListItem, value: string) => {
+    setError(null);
+    setBusyId(item.id);
+    try {
+      const res = await fetch(`/api/admin/eventos/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'set_featured',
+          featured_order: value === '' ? null : Number(value),
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) return setError(json.error || 'Erro ao definir destaque.');
+      flash(
+        value === ''
+          ? 'Evento removido dos destaques da home.'
+          : `Evento fixado na posição ${value} do carrossel da home.`,
+      );
+      router.refresh();
+    } catch {
+      setError('Erro de conexão.');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   const handleCreate = async () => {
     setFormError(null);
     if (!form.title.trim()) return setFormError('Título é obrigatório.');
@@ -315,7 +345,28 @@ export function EventosClient({
                     </p>
                   </div>
 
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex gap-2 flex-wrap items-center">
+                    {isSuperadmin && item.status === 'active' && (
+                      <label
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg
+                                   border border-accent-400/40 bg-accent-400/10 text-accent-300"
+                        title="Posição paga no carrossel de destaques da home (1 a 5)"
+                      >
+                        <Star size={13} className={item.featured_order ? 'fill-accent-400 stroke-accent-400' : ''} />
+                        Destaque
+                        <select
+                          value={item.featured_order ?? ''}
+                          onChange={(e) => handleSetFeatured(item, e.target.value)}
+                          disabled={busy}
+                          className="bg-surface-800 border border-muted-600 rounded px-1 py-0.5 text-xs text-cream-200"
+                        >
+                          <option value="">—</option>
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <option key={n} value={n}>{n}º</option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
                     {!isSelected && (
                       <button
                         onClick={() => handleSelect(item.id)}

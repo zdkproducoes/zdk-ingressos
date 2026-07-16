@@ -42,6 +42,21 @@ export default async function Home() {
     }
   }
 
+  // Destaques do carrossel (até 5): posições pagas definidas pelo superadmin
+  // (events.featured_order 1..5). Query separada e tolerante a falha: se a
+  // coluna ainda não existir no banco, a home cai no fallback por data.
+  const featuredOrder = new Map<string, number>()
+  {
+    const { data: feat, error: featError } = await supabase
+      .from('events')
+      .select('id, featured_order')
+      .not('featured_order', 'is', null)
+    if (featError) console.error('[vitrine] erro ao buscar destaques:', featError)
+    for (const f of (feat ?? []) as { id: string; featured_order: number }[]) {
+      featuredOrder.set(f.id, f.featured_order)
+    }
+  }
+
   const events: VitrineEvent[] = rows.map((e) => ({
     id: e.id,
     title: e.title,
@@ -58,6 +73,17 @@ export default async function Home() {
     category: e.category ?? null,
   }))
 
+  // Carrossel: destaques pagos primeiro (na ordem definida), completando as
+  // vagas restantes com os próximos eventos por data — máximo de 5 slides.
+  const MAX_DESTAQUES = 5
+  const pagos = events
+    .filter((e) => featuredOrder.has(e.id))
+    .sort((a, b) => featuredOrder.get(a.id)! - featuredOrder.get(b.id)!)
+  const complemento = events
+    .filter((e) => !featuredOrder.has(e.id))
+    .slice(0, Math.max(0, MAX_DESTAQUES - pagos.length))
+  const destaques = [...pagos, ...complemento].slice(0, MAX_DESTAQUES)
+
   return (
     <main className="min-h-screen bg-surface-800">
       <section className="max-w-6xl mx-auto px-4 pt-10 pb-16">
@@ -70,7 +96,7 @@ export default async function Home() {
           </h1>
         </div>
 
-        <VitrineClient events={events} />
+        <VitrineClient events={events} destaques={destaques} />
 
         {/* CTA para produtores */}
         <div className="mt-14 rounded-3xl border border-accent-400/40 bg-gradient-to-br from-surface-700 to-surface-600 px-8 py-10 text-center">

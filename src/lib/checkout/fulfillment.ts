@@ -84,15 +84,26 @@ export async function fulfillOrder(
       if (uploadError) throw new Error(`QR upload failed: ${uploadError.message}`);
       const { data: pub } = supabaseAdmin.storage.from('qr-codes').getPublicUrl(filename);
       qrUrl = pub.publicUrl;
-      try {
-        const { error: updateError } = await supabaseAdmin
-          .from('order_items')
-          .update({ qr_code_token: token, qr_code_url: qrUrl })
-          .eq('id', it.id);
-        if (updateError) throw updateError;
-      } catch (dbError) {
+      // Gravacao CONDICIONAL (anti-corrida): so grava se o item ainda nao tem
+      // token. Se outra execucao (webhook duplicado + robo) gravou primeiro,
+      // descarta este QR e usa o token oficial do banco — o e-mail sempre leva
+      // o QR valido no check-in.
+      const { data: savedRows, error: updateError } = await supabaseAdmin
+        .from('order_items')
+        .update({ qr_code_token: token, qr_code_url: qrUrl })
+        .eq('id', it.id)
+        .is('qr_code_token', null)
+        .select('id');
+      if (updateError) {
         await supabaseAdmin.storage.from('qr-codes').remove([filename]).catch(() => {});
-        throw new Error(`Failed to save QR URL to database: ${dbError instanceof Error ? dbError.message : 'unknown'}`);
+        throw new Error(`Failed to save QR URL to database: ${updateError.message}`);
+      }
+      if (!savedRows || savedRows.length === 0) {
+        await supabaseAdmin.storage.from('qr-codes').remove([filename]).catch(() => {});
+        const { data: fresh } = await supabaseAdmin
+          .from('order_items').select('qr_code_token, qr_code_url').eq('id', it.id).single();
+        token = fresh?.qr_code_token ?? token;
+        qrUrl = fresh?.qr_code_url ?? qrUrl;
       }
     }
     // Item transferido (owner_id preenchido): o QR atual é de quem recebeu,
@@ -123,6 +134,15 @@ export async function fulfillOrder(
       // Marca do organizador no remetente/rodapé (domínio segue o da plataforma)
       const org = (Array.isArray(ev.organizations) ? ev.organizations[0] : ev.organizations) as OrgForBrand;
       const replyTo = emailReplyToFor(org);
+      // Claim ATOMICO do envio: so quem conseguir carimbar tickets_emailed_at
+      // (de null) envia. Blinda contra chamadas concorrentes (webhook duplicado
+      // + robo). Carimba ANTES de enviar; em caso de falha, destrava no catch.
+      const { data: emailClaim } = await supabaseAdmin.from('orders')
+        .update({ tickets_emailed_at: new Date().toISOString() })
+        .eq('id', orderId)
+        .is('tickets_emailed_at', null)
+        .select('id');
+      if (!emailClaim || emailClaim.length === 0) return { ok: true };
       try {
         await resend.emails.send({
           from: emailFromFor(org), to: order.profiles.email,
@@ -136,9 +156,7 @@ export async function fulfillOrder(
             organizerName: orgPublicName(org),
           }),
         });
-        await supabaseAdmin.from('orders')
-          .update({ tickets_emailed_at: new Date().toISOString() })
-          .eq('id', orderId);
+        // tickets_emailed_at ja foi carimbado no claim atomico acima.
 
         // Meta CAPI — Purchase server-side, junto com a entrega bem-sucedida.
         // Fica DENTRO do guard tickets_emailed_at => dispara 1x por pedido.
@@ -160,6 +178,10 @@ export async function fulfillOrder(
         });
       } catch (err) {
         console.error('ticket email', err);
+        // Envio falhou: destrava o carimbo para o robo reenviar na proxima passada.
+        await supabaseAdmin.from('orders')
+          .update({ tickets_emailed_at: null })
+          .eq('id', orderId);
       }
     }
   }

@@ -94,25 +94,49 @@ export async function POST(req: NextRequest) {
     if (!order) return NextResponse.json({ ok: true });
     if (order.payment_status === 'approved' && newStatus === 'approved') return NextResponse.json({ ok: true });
 
+    const gatewayData = {
+      ...(order.payment_gateway_data || {}),
+      payment_id: payment.id, status: payment.status, status_detail: payment.status_detail,
+    };
+    const paymentMethod = payment.payment_method_id === 'pix'
+      ? 'pix'
+      : (payment.payment_type_id === 'credit_card' ? 'credit_card' : order.payment_method);
+
+    if (newStatus === 'approved') {
+      // Transicao ATOMICA pending->approved: o MP manda a notificacao em 2 formatos
+      // (webhook v2 + IPN legado) e repete, e as chamadas rodam em paralelo. O UPDATE
+      // condicional garante que so UMA vire o status; so ela chama a entrega. Sem
+      // isso, chamadas concorrentes enviavam e-mail/QR e contavam estoque em dobro.
+      const { data: claimed } = await supabaseAdmin
+        .from('orders')
+        .update({
+          payment_status: 'approved',
+          payment_method: paymentMethod,
+          payment_gateway_data: gatewayData,
+          paid_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', orderId)
+        .neq('payment_status', 'approved')
+        .select('id');
+      if (claimed && claimed.length > 0) {
+        await fulfillOrder(orderId, { incrementStock: true });
+      }
+      return NextResponse.json({ ok: true });
+    }
+
+    // Demais status (pending, in_process, cancelled, rejected, refunded)
     const updates: any = {
       payment_status: newStatus,
-      payment_method: payment.payment_method_id === 'pix' ? 'pix' : (payment.payment_type_id === 'credit_card' ? 'credit_card' : order.payment_method),
-      payment_gateway_data: {
-        ...(order.payment_gateway_data || {}),
-        payment_id: payment.id, status: payment.status, status_detail: payment.status_detail,
-      },
+      payment_method: paymentMethod,
+      payment_gateway_data: gatewayData,
       updated_at: new Date().toISOString(),
     };
-    if (newStatus === 'approved') updates.paid_at = new Date().toISOString();
     if (newStatus === 'cancelled' || newStatus === 'rejected') {
       updates.cancelled_at = new Date().toISOString();
       updates.cancellation_reason = payment.status_detail;
     }
     await supabaseAdmin.from('orders').update(updates).eq('id', orderId);
-
-    if (newStatus === 'approved' && order.payment_status !== 'approved') {
-      await fulfillOrder(orderId, { incrementStock: true });
-    }
     // Pagamento nao vai acontecer: devolve a reserva de estoque (idempotente)
     if (newStatus === 'cancelled' || newStatus === 'rejected') {
       await supabaseAdmin.rpc('release_order_reservation', { p_order_id: orderId });

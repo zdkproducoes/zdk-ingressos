@@ -1,6 +1,7 @@
-// Painel financeiro do produtor: vendas brutas por evento, taxa da
-// plataforma, repasses registrados (payouts) e saldo estimado.
-// Acesso: owner da organização (ou superadmin, que vê todas as orgs).
+// Painel financeiro. Acesso: owner da organização (ou superadmin, que vê todas).
+// O PRODUTOR vê apenas as próprias vendas (Vendas, pedidos, ingressos) e o que
+// recebeu de repasse — NUNCA a taxa da plataforma. A taxa é receita do
+// proprietário (superadmin), que vê o detalhamento completo.
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { requirePanelContext, type PanelContext } from '@/lib/auth/panel';
 
@@ -171,10 +172,16 @@ export default async function FinanceiroPage() {
 
   const summaries = await Promise.all(orgs.map((o) => buildOrgSummary(o.id, o.name, o.fee)));
 
+  // A taxa da plataforma é receita do proprietário (superadmin). O produtor
+  // vê apenas as próprias vendas — nunca a taxa, em lugar nenhum.
+  const isSuperadmin = ctx.isSuperadmin;
+
   return (
     <div className="space-y-10">
       {summaries.map((org) => {
         const estimated = org.gross - org.platformFee - org.mpFees - org.paidOut;
+        const totalOrders = org.events.reduce((a, e) => a + e.orders, 0);
+        const totalTickets = org.events.reduce((a, e) => a + e.tickets, 0);
         return (
           <section key={org.id}>
             {summaries.length > 1 && (
@@ -182,29 +189,48 @@ export default async function FinanceiroPage() {
             )}
 
             {/* Cartões de resumo */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-              <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
-                <p className="text-xs text-cream-400">Vendas brutas</p>
-                <p className="text-xl font-bold text-cream-200">{fmtBRL(org.gross)}</p>
+            {isSuperadmin ? (
+              <>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                  <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
+                    <p className="text-xs text-cream-400">Vendas brutas</p>
+                    <p className="text-xl font-bold text-cream-200">{fmtBRL(org.gross)}</p>
+                  </div>
+                  <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
+                    <p className="text-xs text-cream-400">Taxa da plataforma ({org.feePercent}%)</p>
+                    <p className="text-xl font-bold text-cream-200">− {fmtBRL(org.platformFee)}</p>
+                  </div>
+                  <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
+                    <p className="text-xs text-cream-400">Já repassado</p>
+                    <p className="text-xl font-bold text-cream-200">{fmtBRL(org.paidOut)}</p>
+                  </div>
+                  <div className="bg-surface-700 border border-accent-400/50 rounded-lg px-4 py-3">
+                    <p className="text-xs text-cream-400">Saldo estimado a receber</p>
+                    <p className="text-xl font-bold text-accent-400">{fmtBRL(Math.max(0, estimated))}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-cream-400 mb-6">
+                  Saldo estimado = vendas brutas − taxa da plataforma − tarifas do Mercado Pago
+                  registradas ({fmtBRL(org.mpFees)}) − repasses já pagos. Valores finais são
+                  confirmados a cada repasse.
+                </p>
+              </>
+            ) : (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                <div className="bg-surface-700 border border-accent-400/50 rounded-lg px-4 py-3">
+                  <p className="text-xs text-cream-400">Vendas</p>
+                  <p className="text-xl font-bold text-accent-400">{fmtBRL(org.gross)}</p>
+                </div>
+                <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
+                  <p className="text-xs text-cream-400">Pedidos pagos</p>
+                  <p className="text-xl font-bold text-cream-200">{totalOrders}</p>
+                </div>
+                <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
+                  <p className="text-xs text-cream-400">Ingressos vendidos</p>
+                  <p className="text-xl font-bold text-cream-200">{totalTickets}</p>
+                </div>
               </div>
-              <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
-                <p className="text-xs text-cream-400">Taxa da plataforma ({org.feePercent}%)</p>
-                <p className="text-xl font-bold text-cream-200">− {fmtBRL(org.platformFee)}</p>
-              </div>
-              <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
-                <p className="text-xs text-cream-400">Já repassado</p>
-                <p className="text-xl font-bold text-cream-200">{fmtBRL(org.paidOut)}</p>
-              </div>
-              <div className="bg-surface-700 border border-accent-400/50 rounded-lg px-4 py-3">
-                <p className="text-xs text-cream-400">Saldo estimado a receber</p>
-                <p className="text-xl font-bold text-accent-400">{fmtBRL(Math.max(0, estimated))}</p>
-              </div>
-            </div>
-            <p className="text-xs text-cream-400 mb-6">
-              Saldo estimado = vendas brutas − taxa da plataforma − tarifas do Mercado Pago
-              registradas ({fmtBRL(org.mpFees)}) − repasses já pagos. Valores finais são
-              confirmados a cada repasse.
-            </p>
+            )}
 
             {/* Vendas por evento */}
             <h3 className="text-sm font-semibold text-cream-300 uppercase tracking-wider mb-2">
@@ -249,10 +275,10 @@ export default async function FinanceiroPage() {
                   <thead>
                     <tr className="text-left text-cream-400 border-b border-muted-700">
                       <th className="py-2 pr-4">Período / evento</th>
-                      <th className="py-2 pr-4 text-right">Bruto</th>
-                      <th className="py-2 pr-4 text-right">Taxa</th>
-                      <th className="py-2 pr-4 text-right">Tarifas MP</th>
-                      <th className="py-2 pr-4 text-right">Líquido</th>
+                      {isSuperadmin && <th className="py-2 pr-4 text-right">Bruto</th>}
+                      {isSuperadmin && <th className="py-2 pr-4 text-right">Taxa</th>}
+                      {isSuperadmin && <th className="py-2 pr-4 text-right">Tarifas MP</th>}
+                      <th className="py-2 pr-4 text-right">{isSuperadmin ? 'Líquido' : 'Recebido'}</th>
                       <th className="py-2">Status</th>
                     </tr>
                   </thead>
@@ -268,9 +294,9 @@ export default async function FinanceiroPage() {
                             {period}
                             {p.notes && <span className="block text-xs text-cream-400">{p.notes}</span>}
                           </td>
-                          <td className="py-2.5 pr-4 text-right">{fmtBRL(p.gross_amount)}</td>
-                          <td className="py-2.5 pr-4 text-right">− {fmtBRL(p.platform_fee)}</td>
-                          <td className="py-2.5 pr-4 text-right">− {fmtBRL(p.mp_fees)}</td>
+                          {isSuperadmin && <td className="py-2.5 pr-4 text-right">{fmtBRL(p.gross_amount)}</td>}
+                          {isSuperadmin && <td className="py-2.5 pr-4 text-right">− {fmtBRL(p.platform_fee)}</td>}
+                          {isSuperadmin && <td className="py-2.5 pr-4 text-right">− {fmtBRL(p.mp_fees)}</td>}
                           <td className="py-2.5 pr-4 text-right font-medium text-accent-400">{fmtBRL(p.net_amount)}</td>
                           <td className="py-2.5">
                             <span className={`text-xs px-2 py-0.5 rounded-full ${badge.classes}`}>

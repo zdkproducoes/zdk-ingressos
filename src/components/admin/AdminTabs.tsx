@@ -8,6 +8,7 @@ const baseTabs = [
   { label: 'Resumo',      href: '/admin/resumo' },
   { label: 'Pedidos',     href: '/admin/pedidos' },
   { label: 'Lotes',       href: '/admin/lotes' },
+  { label: 'Cupons',      href: '/admin/cupons' },
   { label: 'Compradores', href: '/admin/compradores' },
   { label: 'Cortesias',   href: '/admin/cortesias' },
   { label: 'Venda offline', href: '/admin/venda-offline' },

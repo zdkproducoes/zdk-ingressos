@@ -173,10 +173,14 @@ export default async function ResumoPage() {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
   const fmtNumber = (v: number) => v.toLocaleString('pt-BR');
 
+  // "Faturamento total" é redundante com "Valor de ingressos vendidos" para o
+  // produtor — só o superadmin continua vendo esse card.
   const stats = [
     { icon: ClipboardList, value: fmtNumber(totalOrders ?? 0),    label: 'Total de pedidos' },
     { icon: CheckCircle2,  value: fmtNumber(approvedOrders ?? 0), label: 'Pedidos aprovados' },
-    { icon: TrendingUp,    value: fmtCurrency(totalRevenueNet),   label: 'Faturamento total' },
+    ...(ctx.isSuperadmin
+      ? [{ icon: TrendingUp, value: fmtCurrency(totalRevenueNet), label: 'Faturamento total' }]
+      : []),
     { icon: Ticket,        value: fmtNumber(ticketsSold),         label: 'Ingressos vendidos' },
     { icon: Gift,          value: fmtNumber(courtesiesIssued),    label: 'Cortesias geradas' },
     { icon: TrendingUp,    value: fmtCurrency(ticketsRevenue),    label: 'Valor de ingressos vendidos' },

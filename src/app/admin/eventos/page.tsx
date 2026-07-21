@@ -128,11 +128,28 @@ export default async function EventosPage() {
 
   const selected = await getSelectedEvent(ctx);
 
+  // Organizações onde o usuário pode criar evento (para o seletor do modal):
+  // superadmin vê todas as ativas; produtor vê aquelas em que é owner/admin.
+  let orgs: { id: string; name: string }[];
+  if (ctx.isSuperadmin) {
+    const { data } = await supabaseAdmin
+      .from('organizations')
+      .select('id, name')
+      .eq('is_active', true)
+      .order('name', { ascending: true });
+    orgs = data ?? [];
+  } else {
+    orgs = ctx.memberships
+      .filter((m) => m.role === 'owner' || m.role === 'admin')
+      .map((m) => ({ id: m.organization_id, name: m.organization.name }));
+  }
+
   return (
     <EventosClient
       items={items}
       selectedId={selected?.id ?? null}
       isSuperadmin={ctx.isSuperadmin}
+      orgs={orgs}
     />
   );
 }

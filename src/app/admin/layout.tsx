@@ -6,6 +6,7 @@ import { getSelectedEvent } from '@/lib/admin/selected-event';
 const STATUS_LABEL: Record<string, string> = {
   active: 'Ativo',
   draft: 'Rascunho',
+  pending: 'Aguardando aprovação',
   finished: 'Arquivado',
 };
 
@@ -17,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen bg-surface-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-cream-200 mb-1">Painel Admin</h1>
+        <h1 className="text-3xl font-bold text-cream-200 mb-1">Dashboard</h1>
         {selectedEvent && (
           <p className="text-sm text-cream-400 mb-5">
             Gerenciando:{' '}

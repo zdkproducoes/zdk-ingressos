@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, Check, Plus, Star, X } from 'lucide-react';
 import type { EventListItem } from '@/app/admin/eventos/page';
+import { HeroUploadButton } from '@/components/admin/HeroUploadButton';
 
 const fmtCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -18,12 +19,14 @@ const fmtDate = (isoDate: string) =>
 const STATUS_BADGE: Record<string, { label: string; classes: string }> = {
   active:   { label: 'Ativo',     classes: 'bg-emerald-900/50 text-emerald-300 border-emerald-700/50' },
   draft:    { label: 'Rascunho',  classes: 'bg-surface-800 text-cream-400 border-muted-600' },
+  pending:  { label: 'Aguardando aprovação', classes: 'bg-amber-900/40 text-amber-300 border-amber-700/50' },
   finished: { label: 'Arquivado', classes: 'bg-muted-800/60 text-cream-300 border-muted-600' },
 };
 
 const SLUG_REGEX = /^[a-z0-9-]+$/;
 
 type FormState = {
+  organization_id: string;
   title: string;
   slug: string;
   event_date: string;
@@ -63,10 +66,13 @@ export function EventosClient({
   items,
   selectedId,
   isSuperadmin = false,
+  orgs = [],
 }: {
   items: EventListItem[];
   selectedId: string | null;
   isSuperadmin?: boolean;
+  /** Organizações onde o usuário pode criar evento (seletor do modal) */
+  orgs?: { id: string; name: string }[];
 }) {
   const router = useRouter();
 
@@ -80,6 +86,7 @@ export function EventosClient({
   // Pré-preenche o local com os dados do evento mais recente (mesma casa, novo evento)
   const last = items[0];
   const emptyForm: FormState = {
+    organization_id: orgs.length === 1 ? orgs[0].id : '',
     title: '',
     slug: '',
     event_date: '',
@@ -182,12 +189,15 @@ export function EventosClient({
     }
   };
 
-  const handleSetStatus = async (item: EventListItem, status: 'draft' | 'active' | 'finished') => {
+  const handleSetStatus = async (item: EventListItem, status: 'draft' | 'pending' | 'active' | 'finished') => {
     setError(null);
     const messages: Record<string, string> = {
       active: `Publicar "${item.title}"? Ele fica visível ao público e com vendas abertas (lotes ativos).`,
       finished: `Arquivar "${item.title}"? A página pública sai do ar e as vendas param. Os dados (pedidos, compradores, ingressos) ficam guardados e você continua vendo tudo aqui no admin.`,
-      draft: `Voltar "${item.title}" para rascunho? A página pública sai do ar.`,
+      pending: `Enviar "${item.title}" para aprovação? O superadmin da plataforma vai revisar e publicar. Enquanto isso, o evento continua fora do ar.`,
+      draft: item.status === 'pending'
+        ? `Recusar a publicação de "${item.title}"? Ele volta para rascunho e você pode pedir ajustes ao produtor.`
+        : `Voltar "${item.title}" para rascunho? A página pública sai do ar.`,
     };
     if (!confirm(messages[status])) return;
 
@@ -205,7 +215,9 @@ export function EventosClient({
           ? 'Evento arquivado.'
           : status === 'active'
             ? 'Evento publicado.'
-            : 'Evento voltou para rascunho.',
+            : status === 'pending'
+              ? 'Evento enviado para aprovação do superadmin.'
+              : 'Evento voltou para rascunho.',
       );
       router.refresh();
     } catch {
@@ -245,6 +257,8 @@ export function EventosClient({
 
   const handleCreate = async () => {
     setFormError(null);
+    if (orgs.length > 1 && !form.organization_id) return setFormError('Selecione a organização do evento.');
+    if (orgs.length === 0) return setFormError('Nenhuma organização disponível. Crie uma organização primeiro.');
     if (!form.title.trim()) return setFormError('Título é obrigatório.');
     if (!SLUG_REGEX.test(form.slug)) return setFormError('Slug inválido (letras minúsculas, números e hífen).');
     if (!form.event_date) return setFormError('Data do evento é obrigatória.');
@@ -267,7 +281,11 @@ export function EventosClient({
       }
       setModalOpen(false);
       setForm(emptyForm);
-      flash('Evento criado como rascunho. Agora crie os lotes dele na aba Lotes e publique quando estiver pronto.');
+      flash(
+        isSuperadmin
+          ? 'Evento criado como rascunho. Crie os lotes na aba Lotes e publique quando estiver pronto.'
+          : 'Evento criado como rascunho. Crie os lotes na aba Lotes e clique em "Enviar para aprovação" — o superadmin publica.',
+      );
       router.refresh();
     } catch {
       setFormError('Erro de conexão.');
@@ -376,14 +394,41 @@ export function EventosClient({
                         Gerenciar este evento
                       </button>
                     )}
+                    {/* Publicação: só o superadmin publica ('active'); o produtor
+                        envia para aprovação ('pending'). */}
                     {item.status !== 'active' && (
-                      <button
-                        onClick={() => handleSetStatus(item, 'active')}
-                        disabled={busy}
-                        className="text-xs px-3 py-1.5 rounded-lg border border-emerald-700/50 bg-emerald-900/40 hover:bg-emerald-900/60 disabled:opacity-50 text-emerald-300 transition"
-                      >
-                        Publicar
-                      </button>
+                      isSuperadmin ? (
+                        <>
+                          <button
+                            onClick={() => handleSetStatus(item, 'active')}
+                            disabled={busy}
+                            className="text-xs px-3 py-1.5 rounded-lg border border-emerald-700/50 bg-emerald-900/40 hover:bg-emerald-900/60 disabled:opacity-50 text-emerald-300 transition"
+                          >
+                            {item.status === 'pending' ? 'Aprovar e publicar' : 'Publicar'}
+                          </button>
+                          {item.status === 'pending' && (
+                            <button
+                              onClick={() => handleSetStatus(item, 'draft')}
+                              disabled={busy}
+                              className="text-xs px-3 py-1.5 rounded-lg border border-muted-600 bg-surface-800 hover:bg-surface-900 disabled:opacity-50 text-cream-300 transition"
+                            >
+                              Recusar
+                            </button>
+                          )}
+                        </>
+                      ) : item.status === 'pending' ? (
+                        <span className="text-xs px-3 py-1.5 rounded-lg border border-amber-700/50 bg-amber-900/30 text-amber-300">
+                          Aguardando aprovação
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleSetStatus(item, 'pending')}
+                          disabled={busy}
+                          className="text-xs px-3 py-1.5 rounded-lg border border-amber-700/50 bg-amber-900/40 hover:bg-amber-900/60 disabled:opacity-50 text-amber-200 transition"
+                        >
+                          Enviar para aprovação
+                        </button>
+                      )
                     )}
                     <button
                       onClick={() => openContentModal(item)}
@@ -448,6 +493,23 @@ export function EventosClient({
               <div className="flex items-start gap-2 bg-red-900/30 border border-red-700/50 text-red-200 text-sm rounded-lg px-3 py-2">
                 <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
                 <span>{formError}</span>
+              </div>
+            )}
+
+            {orgs.length > 1 && (
+              <div>
+                <label className={labelCls}>Organização *</label>
+                <select
+                  value={form.organization_id}
+                  onChange={(e) => setForm((f) => ({ ...f, organization_id: e.target.value }))}
+                  className={inputCls}
+                >
+                  <option value="">— Selecionar —</option>
+                  {orgs.map((o) => (
+                    <option key={o.id} value={o.id}>{o.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-cream-400 mt-1">O evento nasce dentro desta organização.</p>
               </div>
             )}
 
@@ -557,8 +619,12 @@ export function EventosClient({
               </p>
               <div className="space-y-3">
                 <div>
-                  <label className={labelCls}>URL do banner (arte principal)</label>
-                  <input type="url" value={form.banner_url} onChange={set('banner_url')} placeholder="https://..." className={inputCls} />
+                  <label className={labelCls}>Banner / hero (arte principal — 2:1)</label>
+                  <HeroUploadButton
+                    value={form.banner_url}
+                    onChange={(url) => setForm((f) => ({ ...f, banner_url: url }))}
+                  />
+                  <input type="url" value={form.banner_url} onChange={set('banner_url')} placeholder="…ou cole uma URL https://" className={`${inputCls} mt-2`} />
                 </div>
                 <div>
                   <label className={labelCls}>URL da imagem de compartilhamento (OG)</label>
@@ -632,8 +698,12 @@ export function EventosClient({
             )}
 
             <div>
-              <label className={labelCls}>URL do banner (arte principal)</label>
-              <input type="url" value={contentForm.banner_url} onChange={setC('banner_url')} placeholder="https://..." className={inputCls} />
+              <label className={labelCls}>Banner / hero (arte principal — 2:1)</label>
+              <HeroUploadButton
+                value={contentForm.banner_url}
+                onChange={(url) => setContentForm((f) => ({ ...f, banner_url: url }))}
+              />
+              <input type="url" value={contentForm.banner_url} onChange={setC('banner_url')} placeholder="…ou cole uma URL https://" className={`${inputCls} mt-2`} />
             </div>
             <div>
               <label className={labelCls}>URL da imagem de compartilhamento (OG)</label>

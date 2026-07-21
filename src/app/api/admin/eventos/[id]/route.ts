@@ -10,7 +10,9 @@ import { assertEventInScope } from '@/lib/auth/scope';
 import { parseContentFields, type ContentFormFields } from '@/lib/admin/event-content';
 import { CATEGORY_SLUGS } from '@/lib/categories';
 
-const ALLOWED_STATUS = ['draft', 'active', 'finished'] as const;
+// Ciclo: draft -> pending (produtor envia p/ aprovação) -> active (superadmin publica) -> finished.
+// Publicar ('active') é exclusivo do superadmin; o produtor só chega até 'pending'.
+const ALLOWED_STATUS = ['draft', 'pending', 'active', 'finished'] as const;
 
 export async function PATCH(
   request: Request,
@@ -38,6 +40,16 @@ export async function PATCH(
     const newStatus = typeof body.status === 'string' ? body.status : '';
     if (!ALLOWED_STATUS.includes(newStatus as (typeof ALLOWED_STATUS)[number])) {
       return NextResponse.json({ error: 'Status inválido.' }, { status: 400 });
+    }
+
+    // Só o superadmin da plataforma publica um evento (deixa 'active').
+    // O produtor cria/edita e envia para aprovação ('pending'); a publicação
+    // fica a cargo do superadmin.
+    if (newStatus === 'active' && !auth.ctx.isSuperadmin) {
+      return NextResponse.json(
+        { error: 'Apenas o superadmin da plataforma publica eventos. Envie para aprovação.' },
+        { status: 403 },
+      );
     }
 
     const { error: updateError } = await supabaseAdmin

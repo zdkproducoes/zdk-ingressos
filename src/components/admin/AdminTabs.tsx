@@ -30,7 +30,7 @@ export function AdminTabs({
   const tabs = [
     ...baseTabs,
     ...(showFinanceiro ? [{ label: 'Financeiro', href: '/admin/financeiro' }] : []),
-    ...(showPlataforma ? [{ label: 'Plataforma', href: '/admin/plataforma' }] : []),
+    ...(showPlataforma ? [{ label: 'Organizações', href: '/admin/plataforma' }] : []),
   ];
 
   const activeHref = tabs.find(t => pathname.startsWith(t.href))?.href ?? tabs[0].href;

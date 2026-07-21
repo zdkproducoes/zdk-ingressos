@@ -16,6 +16,7 @@ export type EventListItem = {
   title: string;
   slug: string;
   status: string;
+  description: string | null;
   event_date: string;
   event_time: string | null;
   venue_name: string;
@@ -47,7 +48,7 @@ export default async function EventosPage() {
 
   let eventsQuery = supabaseAdmin
     .from('events')
-    .select('id, title, slug, status, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, banner_url, og_image_url, venue_lat, venue_lng, content, category, organizations(name)')
+    .select('id, title, slug, status, description, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, banner_url, og_image_url, venue_lat, venue_lng, content, category, organizations(name)')
     .order('event_date', { ascending: false });
   if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
 
@@ -102,6 +103,7 @@ export default async function EventosPage() {
       title: e.title,
       slug: e.slug,
       status: e.status,
+      description: e.description ?? null,
       event_date: e.event_date,
       event_time: e.event_time,
       venue_name: e.venue_name,

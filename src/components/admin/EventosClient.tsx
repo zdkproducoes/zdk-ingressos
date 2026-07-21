@@ -8,6 +8,11 @@ import { useRouter } from 'next/navigation';
 import { AlertCircle, Check, Plus, Star, X } from 'lucide-react';
 import type { EventListItem } from '@/app/admin/eventos/page';
 import { HeroUploadButton } from '@/components/admin/HeroUploadButton';
+import { RichTextEditor } from '@/components/admin/RichTextEditor';
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
 const fmtCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -114,7 +119,7 @@ export function EventosClient({
   const [contentTarget, setContentTarget] = useState<EventListItem | null>(null);
   const [contentForm, setContentForm] = useState({
     banner_url: '', og_image_url: '', venue_lat: '', venue_lng: '',
-    subtitle: '', opening_notice: '', lineup_text: '', category: '',
+    subtitle: '', opening_notice: '', lineup_text: '', category: '', about_html: '',
   });
   const setC = (field: keyof typeof contentForm) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -131,6 +136,8 @@ export function EventosClient({
       opening_notice: item.content?.opening_notice ?? '',
       lineup_text: lineupToText(item.content?.lineup),
       category: item.category ?? '',
+      about_html: item.content?.about_html
+        ?? (item.description ? `<p>${escapeHtml(item.description)}</p>` : ''),
     });
     setContentTarget(item);
   };
@@ -696,6 +703,19 @@ export function EventosClient({
                 <span>{formError}</span>
               </div>
             )}
+
+            <div>
+              <label className={labelCls}>Sobre o evento (copy)</label>
+              <RichTextEditor
+                key={contentTarget.id}
+                value={contentForm.about_html}
+                onChange={(html) => setContentForm((f) => ({ ...f, about_html: html }))}
+              />
+              <p className="text-xs text-cream-400 mt-1">
+                Use negrito, itálico, sublinhado, listas e links. Este texto aparece na página do
+                evento e vira a descrição no Google.
+              </p>
+            </div>
 
             <div>
               <label className={labelCls}>Banner / hero (arte principal — 2:1)</label>

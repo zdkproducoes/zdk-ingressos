@@ -7,6 +7,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 import { requirePanelApi } from '@/lib/auth/panel';
 import { parseContentFields } from '@/lib/admin/event-content';
+import { sanitizeEventHtml } from '@/lib/admin/sanitize-html';
 import { CATEGORY_SLUGS } from '@/lib/categories';
 
 const SLUG_REGEX = /^[a-z0-9-]+$/;
@@ -107,6 +108,12 @@ export async function POST(request: Request) {
   const parsedContent = parseContentFields(body);
   if (!parsedContent.ok) {
     return NextResponse.json({ error: parsedContent.error }, { status: 400 });
+  }
+  // Defensivo: se vier copy rica na criação, sanitiza antes de gravar.
+  const contentCol = parsedContent.columns.content as Record<string, unknown>;
+  if (typeof contentCol.about_html === 'string' && contentCol.about_html.trim()) {
+    const clean = sanitizeEventHtml(contentCol.about_html);
+    if (clean) contentCol.about_html = clean; else delete contentCol.about_html;
   }
 
   // Slug duplicado

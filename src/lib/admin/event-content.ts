@@ -56,6 +56,8 @@ export type ContentFormFields = {
   subtitle?: unknown
   opening_notice?: unknown
   lineup_text?: unknown
+  /** HTML da copy rica; gravado CRU aqui e sanitizado na rota (server). */
+  about_html?: unknown
 }
 
 /** Normaliza os campos de conteúdo vindos do form. Retorna erro em coordenada inválida. */
@@ -80,9 +82,12 @@ export function parseContentFields(body: ContentFormFields):
   const subtitle = strOrNull(body.subtitle)
   const openingNotice = strOrNull(body.opening_notice)
   const lineupText = strOrNull(body.lineup_text)
+  const aboutHtml = strOrNull(body.about_html)
   if (subtitle) content.subtitle = subtitle
   if (openingNotice) content.opening_notice = openingNotice
   if (lineupText) content.lineup = parseLineupText(lineupText)
+  // CRU — a rota sanitiza com sanitize-html antes de gravar (server-only).
+  if (aboutHtml) content.about_html = aboutHtml
 
   return {
     ok: true,

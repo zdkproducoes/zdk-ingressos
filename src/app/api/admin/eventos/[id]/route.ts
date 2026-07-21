@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { requirePanelApi } from '@/lib/auth/panel';
 import { assertEventInScope } from '@/lib/auth/scope';
 import { parseContentFields, type ContentFormFields } from '@/lib/admin/event-content';
+import { sanitizeEventHtml, htmlToPlainText } from '@/lib/admin/sanitize-html';
 import { CATEGORY_SLUGS } from '@/lib/categories';
 
 // Ciclo: draft -> pending (produtor envia p/ aprovação) -> active (superadmin publica) -> finished.
@@ -124,9 +125,37 @@ export async function PATCH(
       return NextResponse.json({ error: 'Categoria inválida.' }, { status: 400 });
     }
 
+    // Preserva os campos de content que o formulário não edita (ex.: seo_keywords),
+    // já que parseContentFields monta um content novo só com os campos do form.
+    const { data: cur } = await supabaseAdmin.from('events').select('content').eq('id', id).single();
+    const curContent = (cur?.content ?? {}) as Record<string, unknown>;
+    const content: Record<string, unknown> = { ...parsed.columns.content };
+    if (Array.isArray(curContent.seo_keywords) && curContent.seo_keywords.length) {
+      content.seo_keywords = curContent.seo_keywords;
+    }
+
+    // Sanitiza a copy rica (renderizada na página pública) e deriva a
+    // description (meta/SEO) do texto limpo.
+    let description: string | undefined;
+    if (typeof content.about_html === 'string' && content.about_html.trim()) {
+      const clean = sanitizeEventHtml(content.about_html);
+      if (clean) {
+        content.about_html = clean;
+        description = htmlToPlainText(clean);
+      } else {
+        delete content.about_html;
+      }
+    }
+
     const { error: updateError } = await supabaseAdmin
       .from('events')
-      .update({ ...parsed.columns, category, updated_at: new Date().toISOString() })
+      .update({
+        ...parsed.columns,
+        content,
+        category,
+        ...(description !== undefined ? { description } : {}),
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', id);
 
     if (updateError) {

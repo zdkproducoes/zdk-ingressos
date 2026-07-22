@@ -27,13 +27,14 @@ export function BotaoAjuda() {
   const [erro, setErro] = useState<string | null>(null);
 
   const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
   const [celular, setCelular] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [website, setWebsite] = useState(''); // honeypot
 
   const reset = () => {
-    setNome(''); setCpf(''); setCelular(''); setMensagem(''); setWebsite('');
+    setNome(''); setEmail(''); setCpf(''); setCelular(''); setMensagem(''); setWebsite('');
     setErro(null); setSent(false);
   };
 
@@ -51,7 +52,7 @@ export function BotaoAjuda() {
       const res = await fetch('/api/suporte', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, cpf, celular, mensagem, website }),
+        body: JSON.stringify({ nome, email, cpf, celular, mensagem, website }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -150,6 +151,17 @@ export function BotaoAjuda() {
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 maxLength={120}
+                required
+              />
+              <input
+                className={inputCls}
+                type="email"
+                placeholder="E-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={160}
+                inputMode="email"
+                autoComplete="email"
                 required
               />
               <input

@@ -11,12 +11,16 @@ export const dynamic = 'force-dynamic';
 
 type Body = {
   nome?: string;
+  email?: string;
   cpf?: string;
   celular?: string;
   mensagem?: string;
   // honeypot anti-bot: deve chegar sempre vazio
   website?: string;
 };
+
+// Validação simples de e-mail (suficiente para o formulário de suporte).
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Escapa texto do usuário antes de interpolar no HTML do e-mail.
 function esc(s: string): string {
@@ -50,12 +54,14 @@ export async function POST(req: NextRequest) {
   }
 
   const nome = (body.nome ?? '').trim().slice(0, 120);
+  const email = (body.email ?? '').trim().slice(0, 160);
   const cpf = (body.cpf ?? '').replace(/\D/g, '').slice(0, 11);
   const celular = (body.celular ?? '').trim().slice(0, 20);
   const celularDigits = celular.replace(/\D/g, '');
   const mensagem = (body.mensagem ?? '').trim().slice(0, 2000);
 
   if (!nome) return NextResponse.json({ error: 'Informe seu nome.' }, { status: 400 });
+  if (!EMAIL_RE.test(email)) return NextResponse.json({ error: 'Informe um e-mail válido.' }, { status: 400 });
   if (celularDigits.length < 10) return NextResponse.json({ error: 'Informe um celular válido com DDD.' }, { status: 400 });
   if (mensagem.length < 5) return NextResponse.json({ error: 'Escreva sua mensagem.' }, { status: 400 });
 
@@ -67,6 +73,7 @@ export async function POST(req: NextRequest) {
     <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#111;line-height:1.6">
       <h2 style="margin:0 0 12px">Nova solicitação de suporte — ${esc(platform.name)}</h2>
       <p style="margin:0 0 4px"><strong>Nome:</strong> ${esc(nome)}</p>
+      <p style="margin:0 0 4px"><strong>E-mail:</strong> ${esc(email)}</p>
       <p style="margin:0 0 4px"><strong>CPF:</strong> ${esc(cpfFmt)}</p>
       <p style="margin:0 0 4px"><strong>Celular:</strong> ${esc(celular)}</p>
       <p style="margin:12px 0 4px"><strong>Mensagem:</strong></p>
@@ -82,6 +89,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: EMAIL_FROM,
       to: platform.supportInbox,
+      replyTo: email, // resposta vai direto para o cliente
       subject: `[Suporte] ${nome} — ${platform.name}`,
       html: html + `<p style="font-family:Arial,sans-serif;font-size:12px"><a href="${waLink}">Responder no WhatsApp</a></p>`,
     });

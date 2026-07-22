@@ -18,10 +18,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? '';
 // Rotas que moram no host do painel
 const PANEL_PAGE_PREFIXES = ['/admin', '/checkin'];
 const PANEL_API_PREFIXES = ['/api/admin', '/api/checkin'];
-// Rotas de autenticação/estáticas permitidas em qualquer host
+// Rotas de autenticação/estáticas permitidas em qualquer host.
+// /api/suporte é o formulário "Precisa de ajuda?" — o botão aparece em todas
+// as páginas (inclusive no painel), então a API precisa responder nos dois
+// hosts, senão no painel o fetch vira redirect cross-origin (falha de CORS).
 const SHARED_PREFIXES = [
   '/login', '/cadastro', '/recuperar-senha', '/redefinir-senha', '/auth',
-  '/api/auth', '/icon.png',
+  '/api/auth', '/api/suporte', '/icon.png',
 ];
 
 function startsWithAny(pathname: string, prefixes: string[]): boolean {

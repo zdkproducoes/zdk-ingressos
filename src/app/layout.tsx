@@ -5,6 +5,7 @@ import { Archivo } from "next/font/google"
 import { Toaster } from 'react-hot-toast'
 import { Navbar, type UserProfile } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import { BotaoAjuda } from '@/components/suporte/BotaoAjuda'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { platform } from '@/lib/config'
 
@@ -103,6 +104,7 @@ export default async function RootLayout({
         />
         {children}
         <Footer />
+        <BotaoAjuda />
       </body>
     </html>
   )

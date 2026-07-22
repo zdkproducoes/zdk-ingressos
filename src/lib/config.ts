@@ -11,6 +11,8 @@ export const platform = {
   panelHost: process.env.NEXT_PUBLIC_PANEL_HOST ?? '',
   /** E-mail de suporte exibido ao comprador */
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? '',
+  /** Caixa de entrada que recebe as solicitações do formulário "Precisa de ajuda?" */
+  supportInbox: process.env.SUPPORT_INBOX_EMAIL ?? 'suporte@zdkproducoes.com.br',
   /** WhatsApp comercial (só dígitos com DDI, ex.: 5511999990000); vazio = esconde botões */
   whatsapp: process.env.NEXT_PUBLIC_PLATFORM_WHATSAPP ?? '',
   /** Remetente dos e-mails transacionais (domínio verificado no Resend) */

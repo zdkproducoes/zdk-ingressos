@@ -15,8 +15,11 @@ type OrgSummary = {
   id: string;
   name: string;
   feePercent: number;
-  events: { id: string; title: string; gross: number; orders: number; tickets: number }[];
+  // gross = total pago pelo cliente (ingresso + taxa); revenue = só ingresso
+  // (total − taxa), que é o que o produtor recebe.
+  events: { id: string; title: string; gross: number; revenue: number; orders: number; tickets: number }[];
   gross: number;
+  ticketRevenue: number;
   platformFee: number;
   payouts: {
     id: string;
@@ -45,16 +48,16 @@ async function buildOrgSummary(orgId: string, name: string, feePercent: number):
   const eventIds = (events ?? []).map((e) => e.id);
 
   // Vendas aprovadas (cortesia fora — não é receita)
-  let orders: { event_id: string; total: number }[] = [];
+  let orders: { event_id: string; total: number; service_fee: number }[] = [];
   if (eventIds.length > 0) {
     const { data } = await supabaseAdmin
       .from('orders')
-      .select('event_id, total, is_courtesy')
+      .select('event_id, total, service_fee, is_courtesy')
       .in('event_id', eventIds)
       .eq('payment_status', 'approved')
       .eq('is_courtesy', false)
       .range(0, 49999);
-    orders = (data ?? []) as { event_id: string; total: number }[];
+    orders = (data ?? []) as { event_id: string; total: number; service_fee: number }[];
   }
 
   let items: { event_id: string }[] = [];
@@ -72,10 +75,14 @@ async function buildOrgSummary(orgId: string, name: string, feePercent: number):
     });
   }
 
-  const grossByEvent = new Map<string, { gross: number; orders: number }>();
+  const grossByEvent = new Map<string, { gross: number; revenue: number; fee: number; orders: number }>();
   for (const o of orders) {
-    const agg = grossByEvent.get(o.event_id) ?? { gross: 0, orders: 0 };
-    agg.gross += Number(o.total ?? 0);
+    const agg = grossByEvent.get(o.event_id) ?? { gross: 0, revenue: 0, fee: 0, orders: 0 };
+    const total = Number(o.total ?? 0);
+    const fee = Number(o.service_fee ?? 0);
+    agg.gross += total;
+    agg.revenue += total - fee; // valor dos ingressos (o que o produtor recebe)
+    agg.fee += fee;             // taxa da plataforma efetivamente cobrada
     agg.orders += 1;
     grossByEvent.set(o.event_id, agg);
   }
@@ -86,17 +93,22 @@ async function buildOrgSummary(orgId: string, name: string, feePercent: number):
   }
 
   const eventRows = (events ?? []).map((e) => {
-    const agg = grossByEvent.get(e.id) ?? { gross: 0, orders: 0 };
+    const agg = grossByEvent.get(e.id) ?? { gross: 0, revenue: 0, fee: 0, orders: 0 };
     return {
       id: e.id,
       title: e.title,
       gross: agg.gross,
+      revenue: agg.revenue,
       orders: agg.orders,
       tickets: ticketsByEvent.get(e.id) ?? 0,
     };
   });
 
   const gross = eventRows.reduce((acc, e) => acc + e.gross, 0);
+  const ticketRevenue = eventRows.reduce((acc, e) => acc + e.revenue, 0);
+  // Taxa real cobrada = total pago − valor dos ingressos. Não usar gross×fee%,
+  // que ignora descontos de cupom e o arredondamento aplicado no checkout.
+  const platformFee = gross - ticketRevenue;
 
   const { data: payoutRows } = await supabaseAdmin
     .from('payouts')
@@ -127,7 +139,8 @@ async function buildOrgSummary(orgId: string, name: string, feePercent: number):
     feePercent,
     events: eventRows,
     gross,
-    platformFee: gross * (feePercent / 100),
+    ticketRevenue,
+    platformFee,
     payouts,
     paidOut,
     mpFees,
@@ -219,7 +232,7 @@ export default async function FinanceiroPage() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
                 <div className="bg-surface-700 border border-accent-400/50 rounded-lg px-4 py-3">
                   <p className="text-xs text-cream-400">Vendas</p>
-                  <p className="text-xl font-bold text-accent-400">{fmtBRL(org.gross)}</p>
+                  <p className="text-xl font-bold text-accent-400">{fmtBRL(org.ticketRevenue)}</p>
                 </div>
                 <div className="bg-surface-700 border border-muted-700 rounded-lg px-4 py-3">
                   <p className="text-xs text-cream-400">Pedidos pagos</p>
@@ -243,7 +256,7 @@ export default async function FinanceiroPage() {
                     <th className="py-2 pr-4">Evento</th>
                     <th className="py-2 pr-4 text-right">Pedidos</th>
                     <th className="py-2 pr-4 text-right">Ingressos</th>
-                    <th className="py-2 text-right">Bruto</th>
+                    <th className="py-2 text-right">{isSuperadmin ? 'Bruto' : 'Vendas'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -254,7 +267,7 @@ export default async function FinanceiroPage() {
                       <td className="py-2.5 pr-4">{e.title}</td>
                       <td className="py-2.5 pr-4 text-right">{e.orders}</td>
                       <td className="py-2.5 pr-4 text-right">{e.tickets}</td>
-                      <td className="py-2.5 text-right font-medium">{fmtBRL(e.gross)}</td>
+                      <td className="py-2.5 text-right font-medium">{fmtBRL(isSuperadmin ? e.gross : e.revenue)}</td>
                     </tr>
                   ))}
                 </tbody>

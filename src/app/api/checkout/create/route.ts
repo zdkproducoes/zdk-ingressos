@@ -197,7 +197,10 @@ export async function POST(req: NextRequest) {
         auto_return: 'approved',
         notification_url: `${baseUrl}/api/checkout/webhook`,
         expires: true,
-        expiration_date_to: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+        // 24h: o pedido fica pagável por 24h antes de ser marcado como "nao
+        // finalizado" pela reconciliacao. Mantem o link do PIX vivo durante
+        // toda a janela em que o pedido aparece como "pendente".
+        expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       },
     });
     await supabaseAdmin.from('orders').update({

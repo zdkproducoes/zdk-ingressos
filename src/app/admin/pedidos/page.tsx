@@ -10,6 +10,7 @@ type OrderRow = {
   id: string;
   order_number: number;
   total: number;
+  service_fee: number;
   payment_status: string;
   payment_gateway: string | null;
   created_at: string;
@@ -127,7 +128,7 @@ export default async function PedidosPage({
   let query = supabaseAdmin
     .from('orders')
     .select(`
-      id, order_number, total, payment_status, payment_gateway, created_at, is_courtesy,
+      id, order_number, total, service_fee, payment_status, payment_gateway, created_at, is_courtesy,
       profiles!orders_customer_id_fkey ( full_name, email, phone, first_name ),
       events ( title ),
       order_items ( id )
@@ -144,6 +145,11 @@ export default async function PedidosPage({
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
   const fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  // O produtor vê só o valor dos ingressos (total menos a taxa da plataforma);
+  // o superadmin continua vendo o total cheio pago pelo cliente.
+  const orderValue = (o: OrderRow) =>
+    ctx.isSuperadmin ? Number(o.total) : Number(o.total) - Number(o.service_fee ?? 0);
 
   const start = orders.length > 0 ? from + 1 : 0;
   const end = orders.length > 0 ? from + orders.length : 0;
@@ -219,7 +225,7 @@ export default async function PedidosPage({
                           </td>
                           <td className="px-4 py-3 text-cream-300">{order.events?.title ?? '—'}</td>
                           <td className="px-4 py-3 text-cream-300 text-center">{order.order_items.length}</td>
-                          <td className="px-4 py-3 text-cream-200 font-medium">{fmt.format(order.total)}</td>
+                          <td className="px-4 py-3 text-cream-200 font-medium">{fmt.format(orderValue(order))}</td>
                           <td className="px-4 py-3">
                             <StatusBadge status={order.payment_status} />
                             {order.payment_gateway === 'offline' && (
@@ -276,7 +282,7 @@ export default async function PedidosPage({
                       <p className="text-sm text-cream-300">{order.events?.title ?? '—'}</p>
                       <div className="flex items-center justify-between pt-1">
                         <span className="text-sm text-cream-400">{order.order_items.length} ingresso(s)</span>
-                        <span className="text-cream-200 font-semibold">{fmt.format(order.total)}</span>
+                        <span className="text-cream-200 font-semibold">{fmt.format(orderValue(order))}</span>
                       </div>
                       <p className="text-xs text-cream-400">
                         {new Date(order.created_at).toLocaleDateString('pt-BR')}

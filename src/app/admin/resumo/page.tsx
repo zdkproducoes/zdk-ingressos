@@ -43,7 +43,7 @@ export default async function ResumoPage() {
   // -------- itens de pedidos pagos (vendas + cortesias) --------
   const { data: paidItems } = await supabaseAdmin
     .from('order_items')
-    .select('unit_price, is_courtesy, orders!inner(payment_status, event_id)')
+    .select('is_courtesy, orders!inner(payment_status, event_id)')
     .eq('orders.payment_status', 'approved')
     .eq('orders.event_id', eventId)
     .range(0, 49999);
@@ -52,10 +52,6 @@ export default async function ResumoPage() {
   const courtesyItems = (paidItems ?? []).filter((i) => i.is_courtesy);
   const ticketsSold = soldItems.length;
   const courtesiesIssued = courtesyItems.length;
-  const ticketsRevenue = soldItems.reduce(
-    (sum, i) => sum + Number(i.unit_price ?? 0),
-    0,
-  );
 
   // -------- taxa e faturamento total dos pedidos pagos --------
   const { data: paidOrders } = await supabaseAdmin
@@ -74,13 +70,20 @@ export default async function ResumoPage() {
     0,
   );
   const totalRevenueNet = totalRevenue - totalFees;
+
+  // "Valor de ingressos vendidos" = o que o produtor de fato recebeu pelos
+  // ingressos, ou seja, o total pago MENOS a taxa da plataforma (e já líquido
+  // de cupons de desconto, pois o desconto está embutido no total). NÃO usar a
+  // soma de order_items.unit_price: aquilo é o valor de FACE bruto, que ignora
+  // descontos e a taxa (era o que fazia o card mostrar R$140 em vez de R$70).
+  const ticketsRevenue = totalRevenueNet;
   const averageTicket = ticketsSold > 0 ? ticketsRevenue / ticketsSold : 0;
 
   // -------- itens com order_id e customer_id para agregacoes --------
   // Buscamos novamente os order_items pagos, agora com order_id para cruzar com paidOrders
   const { data: paidItemsWithOrder } = await supabaseAdmin
     .from('order_items')
-    .select('order_id, is_courtesy, unit_price, orders!inner(customer_id, paid_at, payment_status, event_id)')
+    .select('order_id, is_courtesy, orders!inner(customer_id, paid_at, payment_status, event_id)')
     .eq('orders.payment_status', 'approved')
     .eq('orders.event_id', eventId)
     .range(0, 49999);

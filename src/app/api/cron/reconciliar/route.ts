@@ -2,7 +2,7 @@
 // Robo de reconciliacao. Chamado de hora em hora por um agendador externo
 // (cron do cPanel da HostGator) com o cabecalho: Authorization: Bearer <CRON_SECRET>.
 //
-// PASSO 1: pedidos 'pending' criados ha mais de 1h -> consulta o status real no MP.
+// PASSO 1: pedidos 'pending' criados ha mais de 24h -> consulta o status real no MP.
 //          - achou pagamento aprovado -> marca approved + entrega (salva o caso
 //            "pagou mas o webhook sumiu").
 //          - nenhum aprovado -> marca 'abandoned' (PIX nao pago).
@@ -35,14 +35,16 @@ export async function GET(req: NextRequest) {
     reparados: 0,
     erros: 0,
   };
-  const umaHoraAtras = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  // Um pedido só é considerado "não finalizado" (abandonado) depois de 24h
+  // pendente — antes disso ainda pode ser um PIX que o cliente vai pagar.
+  const vinteQuatroHorasAtras = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-  // ---------- PASSO 1: pending ha mais de 1h ----------
+  // ---------- PASSO 1: pending ha mais de 24h ----------
   const { data: pendings } = await supabaseAdmin
     .from('orders')
     .select('id, payment_method, payment_gateway_data')
     .eq('payment_status', 'pending')
-    .lt('created_at', umaHoraAtras)
+    .lt('created_at', vinteQuatroHorasAtras)
     .limit(MAX_PENDING);
 
   for (const order of pendings ?? []) {

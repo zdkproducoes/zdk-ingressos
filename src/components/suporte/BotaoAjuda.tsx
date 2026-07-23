@@ -78,7 +78,7 @@ export function BotaoAjuda() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="fixed bottom-16 right-4 z-50 inline-flex items-center gap-2 rounded-full bg-accent-400
+          className="fixed bottom-20 right-4 z-50 inline-flex items-center gap-2 rounded-full bg-accent-400
                      px-4 py-3 font-display-bold text-sm text-surface-800 shadow-lg shadow-black/30
                      hover:bg-accent-300 transition"
           aria-label="Precisa de ajuda?"
@@ -94,7 +94,7 @@ export function BotaoAjuda() {
           role="dialog"
           aria-modal="false"
           aria-label="Formulário de ajuda"
-          className="fixed bottom-16 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-xl border border-muted-700
+          className="fixed bottom-20 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-xl border border-muted-700
                      bg-surface-700 shadow-2xl shadow-black/40"
         >
           <div className="flex items-center justify-between border-b border-muted-700 px-4 py-3">

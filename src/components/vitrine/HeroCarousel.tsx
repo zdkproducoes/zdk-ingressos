@@ -97,14 +97,14 @@ export function HeroCarousel({ slides }: { slides: VitrineEvent[] }) {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between sm:justify-start gap-4 shrink-0">
+                <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4 sm:shrink-0">
                   {slide.price_from != null && (
                     <div className="leading-tight">
                       <span className="block text-[11px] uppercase tracking-wider text-cream-400">a partir de</span>
                       <span className="font-display-bold text-xl sm:text-2xl text-accent-300">R$ {fmtPrice(slide.price_from)}</span>
                     </div>
                   )}
-                  <span className="bg-accent-400 group-hover:bg-accent-300 text-surface-900 font-display-bold uppercase tracking-wide text-[13px] sm:text-sm px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl shadow-[0_4px_0_#7C5A16] transition whitespace-nowrap">
+                  <span className="w-full text-center sm:w-auto bg-accent-400 group-hover:bg-accent-300 text-surface-900 font-display-bold uppercase tracking-wide text-[13px] sm:text-sm px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl shadow-[0_4px_0_#7C5A16] transition">
                     Garantir meu lugar
                   </span>
                 </div>

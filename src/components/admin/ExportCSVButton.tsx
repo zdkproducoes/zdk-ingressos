@@ -15,7 +15,7 @@ export type BuyerData = {
 export function ExportCSVButton({ buyers }: { buyers: BuyerData[] }) {
   function handleExport() {
     const bom = '﻿';
-    const header = 'Nome;Email;Telefone;CPF;Ingressos;Total Gasto;Primeira Compra\n';
+    const header = 'Nome;Email;Telefone;CPF;Ingressos;Total em Ingressos;Primeira Compra\n';
     const rows = buyers.map(b => {
       const cols = [
         b.full_name,

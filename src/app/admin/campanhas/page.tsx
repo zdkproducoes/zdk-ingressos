@@ -141,7 +141,8 @@ async function getSiteSales(ctx: PanelContext, periodKey: string): Promise<SiteS
       orderNumber: o.order_number,
       buyerName: o.profiles?.full_name?.trim() || '—',
       tickets: qty,
-      total: Number(o.total ?? 0),
+      // Só a receita de ingressos (total − taxa); o produtor nunca vê o bruto.
+      total: Number(o.total ?? 0) - Number(o.service_fee ?? 0),
       paidAt: o.paid_at,
     });
   }

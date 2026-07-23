@@ -6,6 +6,7 @@ import { getSelectedEvent } from '@/lib/admin/selected-event';
 type OrderForAgg = {
   customer_id: string;
   total: number;
+  service_fee: number;
   created_at: string;
   profiles: { full_name: string; email: string; phone: string; cpf: string } | null;
   order_items: { id: string }[];
@@ -26,7 +27,7 @@ export default async function CompradoresPage() {
   const { data: raw } = await supabaseAdmin
     .from('orders')
     .select(`
-      customer_id, total, created_at,
+      customer_id, total, service_fee, created_at,
       profiles!orders_customer_id_fkey ( full_name, email, phone, cpf ),
       order_items ( id )
     `)
@@ -36,14 +37,16 @@ export default async function CompradoresPage() {
 
   const orders = (raw as unknown as OrderForAgg[]) ?? [];
 
-  // Agrupa por comprador
+  // Agrupa por comprador. "total_gasto" = só ingressos (total − taxa): o
+  // produtor nunca vê o bruto com a taxa da plataforma.
   const map = new Map<string, BuyerData & { customer_id: string }>();
   for (const order of orders) {
     if (!order.profiles) continue;
+    const net = Number(order.total) - Number(order.service_fee ?? 0);
     const existing = map.get(order.customer_id);
     if (existing) {
       existing.total_ingressos += order.order_items.length;
-      existing.total_gasto += Number(order.total);
+      existing.total_gasto += net;
       if (order.created_at < existing.primeira_compra) {
         existing.primeira_compra = order.created_at;
       }
@@ -55,7 +58,7 @@ export default async function CompradoresPage() {
         phone: order.profiles.phone ?? '',
         cpf: order.profiles.cpf ?? '',
         total_ingressos: order.order_items.length,
-        total_gasto: Number(order.total),
+        total_gasto: net,
         primeira_compra: order.created_at,
       });
     }
@@ -82,7 +85,7 @@ export default async function CompradoresPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-muted-700">
-                  {['Nome', 'E-mail', 'Telefone', 'CPF', 'Ingressos', 'Total gasto', 'Primeira compra'].map(h => (
+                  {['Nome', 'E-mail', 'Telefone', 'CPF', 'Ingressos', 'Total (ingressos)', 'Primeira compra'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-cream-400 uppercase tracking-wide">
                       {h}
                     </th>

@@ -23,7 +23,7 @@ export type CupomListItem = {
   // Desempenho (pedidos aprovados)
   orders_count: number;
   discount_total: number; // desconto concedido (R$) — p/ free_fee é a taxa isenta estimada
-  revenue_total: number; // faturamento dos pedidos que usaram o cupom
+  revenue_total: number; // receita de ingressos (total − taxa) dos pedidos com o cupom — nunca o bruto
   pending_count: number; // pedidos pendentes com o cupom (ainda não contam no used_count)
 };
 
@@ -56,7 +56,7 @@ export default async function CuponsPage() {
   // 2) Pedidos do evento que usaram cupom (agrega em memória, igual à aba Afiliados)
   const { data: couponOrders } = await supabaseAdmin
     .from('orders')
-    .select('coupon_id, payment_status, subtotal, discount, total')
+    .select('coupon_id, payment_status, subtotal, discount, total, service_fee')
     .eq('event_id', selectedEvent.id)
     .not('coupon_id', 'is', null);
 
@@ -71,7 +71,8 @@ export default async function CuponsPage() {
     if (order.payment_status === 'approved') {
       current.orders += 1;
       current.discount += Number(order.discount ?? 0);
-      current.revenue += Number(order.total ?? 0);
+      // Receita = só os ingressos (total − taxa). O produtor nunca vê o bruto.
+      current.revenue += Number(order.total ?? 0) - Number(order.service_fee ?? 0);
     } else if (order.payment_status === 'pending') {
       current.pending += 1;
     }

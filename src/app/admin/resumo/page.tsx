@@ -213,7 +213,7 @@ export default async function ResumoPage() {
       <div className="bg-surface-700 rounded-lg border border-muted-700 overflow-hidden">
         <div className="flex items-center gap-2 p-6 border-b border-muted-700">
           <CreditCard className="text-accent-400" size={20} />
-          <h2 className="text-cream-200 font-bold">Faturamento por forma de pagamento</h2>
+          <h2 className="text-cream-200 font-bold">Receita por forma de pagamento</h2>
         </div>
         <p className="text-cream-400 text-xs px-6 pt-3">
           Pedidos pagos, cortesias excluidas.
@@ -227,7 +227,7 @@ export default async function ResumoPage() {
                 <tr>
                   <th className="text-left p-3">Forma</th>
                   <th className="text-right p-3">Pedidos</th>
-                  <th className="text-right p-3">Faturamento</th>
+                  <th className="text-right p-3">Receita</th>
                   <th className="text-right p-3">% do total</th>
                 </tr>
               </thead>
@@ -289,7 +289,7 @@ export default async function ResumoPage() {
                   <th className="text-left p-3">Data</th>
                   <th className="text-right p-3">Pedidos</th>
                   <th className="text-right p-3">Ingressos</th>
-                  <th className="text-right p-3">Faturamento</th>
+                  <th className="text-right p-3">Receita</th>
                 </tr>
               </thead>
               <tbody>

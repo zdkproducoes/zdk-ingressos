@@ -119,7 +119,7 @@ export function AfiliadosListClient({
           <p className="text-lg font-bold text-cream-200">{fmtNumber(totals.sales)}</p>
         </div>
         <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
-          <p className="text-xs text-cream-400">Faturamento atribuído</p>
+          <p className="text-xs text-cream-400">Receita atribuída (ingressos)</p>
           <p className="text-lg font-bold text-cream-200">{fmtCurrency(totals.revenue)}</p>
         </div>
         <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
@@ -146,7 +146,7 @@ export function AfiliadosListClient({
                 <th className="text-right px-4 py-3">%</th>
                 <th className="text-right px-4 py-3">Visitas</th>
                 <th className="text-right px-4 py-3">Vendas</th>
-                <th className="text-right px-4 py-3">Faturamento</th>
+                <th className="text-right px-4 py-3">Receita</th>
                 <th className="text-right px-4 py-3">Comissão</th>
                 <th className="text-center px-4 py-3">Status</th>
                 <th className="text-center px-4 py-3">Ações</th>

@@ -260,7 +260,7 @@ export function CuponsClient({
           <p className="text-lg font-bold text-cream-200">{fmtCurrency(totals.discount)}</p>
         </div>
         <div className="bg-surface-700 border border-muted-700 rounded-lg p-3">
-          <p className="text-xs text-cream-400">Faturamento com cupom</p>
+          <p className="text-xs text-cream-400">Receita com cupom (ingressos)</p>
           <p className="text-lg font-bold text-accent-400">{fmtCurrency(totals.revenue)}</p>
         </div>
       </div>
@@ -282,7 +282,7 @@ export function CuponsClient({
                 <th className="text-left px-4 py-3">Validade</th>
                 <th className="text-right px-4 py-3">Usos</th>
                 <th className="text-right px-4 py-3">Desconto dado</th>
-                <th className="text-right px-4 py-3">Faturamento</th>
+                <th className="text-right px-4 py-3">Receita</th>
                 <th className="text-center px-4 py-3">Status</th>
                 <th className="text-center px-4 py-3">Ações</th>
               </tr>
@@ -387,7 +387,7 @@ export function CuponsClient({
                   <p className="text-cream-200 font-semibold">{fmtCurrency(c.discount_total)}</p>
                 </div>
                 <div>
-                  <p className="text-cream-400">Faturamento</p>
+                  <p className="text-cream-400">Receita</p>
                   <p className="text-accent-400 font-semibold">{fmtCurrency(c.revenue_total)}</p>
                 </div>
               </div>

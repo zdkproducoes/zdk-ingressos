@@ -35,8 +35,12 @@ export function BotaoAjuda() {
   const [mensagem, setMensagem] = useState('');
   const [website, setWebsite] = useState(''); // honeypot
 
-  // Na home o botão não aparece (pedido do Fernando); segue nas demais páginas.
-  const hidden = pathname === '/';
+  // Escondido no funil de compra (home, página do evento e checkout); segue
+  // nas demais páginas. Pedido do Fernando.
+  const hidden =
+    pathname === '/' ||
+    pathname.startsWith('/evento') ||
+    pathname.startsWith('/checkout');
 
   const reset = () => {
     setNome(''); setEmail(''); setCpf(''); setCelular(''); setMensagem(''); setWebsite('');

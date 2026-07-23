@@ -75,36 +75,36 @@ export function HeroCarousel({ slides }: { slides: VitrineEvent[] }) {
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-surface-900/95 via-surface-900/35 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 pb-8 sm:p-9 sm:pb-12 flex flex-col sm:flex-row sm:flex-wrap sm:items-end sm:justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="font-display text-accent-300 text-[11px] sm:text-xs tracking-[0.18em] sm:tracking-[0.28em] uppercase mb-1.5 sm:mb-2">
+              <div className="absolute bottom-0 left-0 right-0 p-6 pb-10 sm:p-9 sm:pb-12 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p className="font-display text-accent-300 text-xs tracking-[0.28em] uppercase mb-2">
                     Em destaque{categoryLabel(slide.category) ? ` · ${categoryLabel(slide.category)}` : ''}
                   </p>
-                  <h2 className="font-display-bold text-[clamp(1.5rem,6vw,3rem)] leading-[1.08] text-cream-100 uppercase mb-2 sm:mb-3 line-clamp-2">
+                  <h2 className="font-display-bold text-[clamp(1.6rem,4.5vw,3rem)] leading-none text-cream-100 uppercase mb-3">
                     {slide.title}
                   </h2>
-                  <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-x-4 gap-y-1 text-[13px] sm:text-sm text-cream-300">
+                  <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-cream-300">
                     <span className="inline-flex items-center gap-1.5 capitalize">
-                      <Calendar className="w-4 h-4 stroke-accent-400 shrink-0" />
+                      <Calendar className="w-4 h-4 stroke-accent-400" />
                       {new Date(slide.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
                         weekday: 'short', day: '2-digit', month: 'long',
                       })}
                       {slide.event_time ? ` • ${slide.event_time.slice(0, 5)}` : ''}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 min-w-0 max-w-full">
-                      <MapPin className="w-4 h-4 stroke-accent-400 shrink-0" />
-                      <span className="truncate">{slide.venue_name} — {slide.venue_city}/{slide.venue_state}</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 stroke-accent-400" />
+                      {slide.venue_name} — {slide.venue_city}/{slide.venue_state}
                     </span>
-                  </div>
+                  </p>
                 </div>
-                <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4 sm:shrink-0">
+                <div className="flex items-center gap-4">
                   {slide.price_from != null && (
-                    <div className="leading-tight">
+                    <div className="text-right leading-tight">
                       <span className="block text-[11px] uppercase tracking-wider text-cream-400">a partir de</span>
-                      <span className="font-display-bold text-xl sm:text-2xl text-accent-300">R$ {fmtPrice(slide.price_from)}</span>
+                      <span className="font-display-bold text-2xl text-accent-300">R$ {fmtPrice(slide.price_from)}</span>
                     </div>
                   )}
-                  <span className="w-full text-center sm:w-auto bg-accent-400 group-hover:bg-accent-300 text-surface-900 font-display-bold uppercase tracking-wide text-[13px] sm:text-sm px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl shadow-[0_4px_0_#7C5A16] transition">
+                  <span className="bg-accent-400 group-hover:bg-accent-300 text-surface-900 font-display-bold uppercase tracking-wide text-sm px-6 py-3.5 rounded-xl shadow-[0_4px_0_#7C5A16] transition">
                     Garantir meu lugar
                   </span>
                 </div>

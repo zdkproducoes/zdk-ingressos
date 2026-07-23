@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { HelpCircle, X, CheckCircle2, Loader2 } from 'lucide-react';
 
 // Máscaras leves só para exibição; o backend re-normaliza tudo.
@@ -21,6 +22,7 @@ function maskCelular(v: string): string {
 }
 
 export function BotaoAjuda() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,6 +34,9 @@ export function BotaoAjuda() {
   const [celular, setCelular] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [website, setWebsite] = useState(''); // honeypot
+
+  // Na home o botão não aparece (pedido do Fernando); segue nas demais páginas.
+  const hidden = pathname === '/';
 
   const reset = () => {
     setNome(''); setEmail(''); setCpf(''); setCelular(''); setMensagem(''); setWebsite('');
@@ -70,6 +75,8 @@ export function BotaoAjuda() {
   const inputCls =
     'w-full rounded-lg bg-surface-800 border border-muted-700 px-3 py-2 text-sm text-cream-200 ' +
     'placeholder:text-cream-400 focus:outline-none focus:border-accent-400';
+
+  if (hidden) return null;
 
   return (
     <>

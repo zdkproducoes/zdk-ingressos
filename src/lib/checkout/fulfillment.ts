@@ -10,9 +10,11 @@
 //   - Meta CAPI (Purchase): disparado no mesmo bloco do e-mail, logo apos o
 //     carimbo tickets_emailed_at -> 1x por pedido (webhook OU robo). Nunca
 //     lanca excecao (o helper trata os erros internamente).
-//   - Estoque/cupom (increment_batch_sold / increment_coupon_usage): NAO sao
-//     idempotentes, entao so rodam quando o chamador passa { incrementStock: true }.
-//     O chamador deve passar true APENAS na transicao real para "approved".
+//   - Cupom (increment_coupon_usage): NAO e idempotente, entao so roda quando o
+//     chamador passa { incrementStock: true }. O chamador deve passar true
+//     APENAS na transicao real para "approved".
+//   - Estoque (sold_count): NAO e mexido aqui. Quem conta e o banco, via
+//     trigger — ver o bloco comentado no corpo da funcao.
 
 import { randomBytes, randomUUID } from 'crypto';
 import QRCode from 'qrcode';
@@ -45,19 +47,19 @@ export async function fulfillOrder(
     .select('*, ticket_batches ( name )').eq('order_id', orderId);
   if (!items?.length) return { ok: false, reason: 'no-items' };
 
-  // Estoque + cupom: SO na transicao real para approved (chamador passa true).
-  // Roda ANTES da geracao de QR: se o upload de QR falhar no meio, o estoque
+  // Cupom: SO na transicao real para approved (chamador passa true).
+  // Roda ANTES da geracao de QR: se o upload de QR falhar no meio, o cupom
   // ja foi contado e a reserva devolvida — o robo repara a entrega depois.
-  const batchCounts = new Map<string, number>();
-  for (const it of items) {
-    batchCounts.set(it.ticket_batch_id, (batchCounts.get(it.ticket_batch_id) || 0) + 1);
-  }
-  if (opts.incrementStock) {
-    const entries = Array.from(batchCounts.entries());
-    for (const [batchId, qty] of entries) {
-      await supabaseAdmin.rpc('increment_batch_sold', { p_batch_id: batchId, p_qty: qty });
-    }
-    if (order.coupon_id) await supabaseAdmin.rpc('increment_coupon_usage', { p_coupon_id: order.coupon_id });
+  //
+  // ⚠️ sold_count NAO e mexido aqui: quem conta o estoque e o banco, sempre.
+  // Fluxo online (pedido nasce pending): trigger tr_order_stock em orders,
+  // na transicao para 'approved'. Fluxos que nascem approved (venda offline,
+  // cortesia): trigger tr_order_items_stock_insert em order_items. Chamar
+  // increment_batch_sold aqui somava DE NOVO e contava toda venda 2x — o lote
+  // se declarava esgotado com metade dos ingressos vendidos. Ver
+  // sql/08_estoque_fonte_unica.sql (fonte unica de verdade do sold_count).
+  if (opts.incrementStock && order.coupon_id) {
+    await supabaseAdmin.rpc('increment_coupon_usage', { p_coupon_id: order.coupon_id });
   }
   // Converte a reserva do checkout em venda (idempotente: so age se o pedido
   // ainda segura reserva; depois do increment pra nunca abrir vaga fantasma).

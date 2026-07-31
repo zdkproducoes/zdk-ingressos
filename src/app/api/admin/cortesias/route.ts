@@ -218,8 +218,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Erro ao gerar QR Codes' }, { status: 500 });
   }
 
-  // 7. Incrementar sold_count do lote cortesia (qty de uma vez)
-  await supabaseAdmin.rpc('increment_batch_sold', { p_batch_id: batch.id, p_qty: qty });
+  // 7. sold_count do lote cortesia: NAO incrementar aqui. O pedido nasce
+  // 'approved', entao o trigger tr_order_items_stock_insert ja contou +1 por
+  // item no INSERT do passo 5. Chamar increment_batch_sold aqui somava de novo
+  // e contava cada cortesia 2x. Ver sql/08_estoque_fonte_unica.sql.
 
   // 8. Enviar e-mail único com todos os ingressos
   try {

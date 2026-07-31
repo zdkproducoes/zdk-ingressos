@@ -5,6 +5,7 @@ import { renderTicketEmail } from '@/emails/ticket';
 import { requirePanelApi } from '@/lib/auth/panel';
 import { orgPublicName, emailFromFor, type OrgForBrand } from '@/lib/brand';
 import { assertEventInScope } from '@/lib/auth/scope';
+import { dataEvento } from '@/lib/datas';
 
 export const runtime = 'nodejs';
 
@@ -73,7 +74,7 @@ export async function POST(
     qrToken: it.qr_code_token || '',
   }));
 
-  const eventDate = new Date(ev.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+  const eventDate = dataEvento(ev.event_date, {
     weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
   });
 

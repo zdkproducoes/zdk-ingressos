@@ -5,6 +5,7 @@ import { requirePanelContext } from '@/lib/auth/panel';
 import { ResendEmailButton } from '@/components/admin/ResendEmailButton';
 import { ReembolsarButton } from '@/components/admin/ReembolsarButton';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
+import { dataSP } from '@/lib/datas';
 
 type OrderRow = {
   id: string;
@@ -235,7 +236,7 @@ export default async function PedidosPage({
                             )}
                           </td>
                           <td className="px-4 py-3 text-cream-400">
-                            {new Date(order.created_at).toLocaleDateString('pt-BR')}
+                            {dataSP(order.created_at)}
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex flex-col gap-1.5 items-start">
@@ -285,7 +286,7 @@ export default async function PedidosPage({
                         <span className="text-cream-200 font-semibold">{fmt.format(orderValue(order))}</span>
                       </div>
                       <p className="text-xs text-cream-400">
-                        {new Date(order.created_at).toLocaleDateString('pt-BR')}
+                        {dataSP(order.created_at)}
                       </p>
                       {(order.payment_status === 'approved' || wa) && (
                         <div className="pt-1 flex flex-col gap-2 items-start">

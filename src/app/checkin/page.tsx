@@ -2,13 +2,16 @@ import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { requirePanelContext } from '@/lib/auth/panel';
 import { getScopedEventIds } from '@/lib/auth/scope';
+import { hojeSP, dataEvento } from '@/lib/datas';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CheckinHomePage() {
   const ctx = await requirePanelContext({ allowCheckinRole: true, redirectTo: '/checkin' });
-  // Data de hoje em SP (formato YYYY-MM-DD)
-  const today = new Date().toISOString().slice(0, 10);
+  // Data de hoje em SP (formato YYYY-MM-DD). Antes usava toISOString() (UTC):
+  // às 21h do dia do evento o servidor já virava o dia e o evento sumia da
+  // lista de check-in no meio da operação.
+  const today = hojeSP();
 
   // Escopo: operador só vê eventos das organizações dele
   const scopedIds = await getScopedEventIds(ctx);
@@ -34,7 +37,7 @@ export default async function CheckinHomePage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {list.map((ev) => {
-            const dateLabel = new Date(ev.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+            const dateLabel = dataEvento(ev.event_date, {
               weekday: 'short',
               day: '2-digit',
               month: 'long',

@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Pencil, Trash2, Power, X } from 'lucide-react';
 import type { CupomListItem } from '@/app/admin/cupons/page';
+import { dataHoraSP, isoParaInputSP, inputSPParaIso } from '@/lib/datas';
 
 const fmtCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -11,9 +12,7 @@ const fmtCurrency = (v: number) =>
 const fmtNumber = (v: number) => v.toLocaleString('pt-BR');
 
 const fmtDateTime = (iso: string | null) =>
-  iso
-    ? new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })
-    : null;
+  iso ? dataHoraSP(iso, { anoCurto: true }) : null;
 
 const TYPE_LABEL: Record<CupomListItem['coupon_type'], string> = {
   discount_percent: '% de desconto',
@@ -51,12 +50,11 @@ function StatusBadge({ c }: { c: CupomListItem }) {
   );
 }
 
-// datetime-local trabalha em horário local; o banco em ISO/UTC
+// datetime-local trabalha em "hora de parede", sem fuso. O admin digita
+// horário de Brasília, então a conversão é feita em SP (não no fuso da máquina
+// de quem está com o painel aberto).
 function isoToLocalInput(iso: string | null): string {
-  if (!iso) return '';
-  const d = new Date(iso);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return isoParaInputSP(iso);
 }
 
 type FormState = {
@@ -148,8 +146,8 @@ export function CuponsClient({
       discount_value:
         form.coupon_type === 'free_fee' ? null : Number(form.discount_value.replace(',', '.')),
       max_uses: form.max_uses.trim() ? Number(form.max_uses) : null,
-      valid_from: form.valid_from ? new Date(form.valid_from).toISOString() : null,
-      valid_until: form.valid_until ? new Date(form.valid_until).toISOString() : null,
+      valid_from: inputSPParaIso(form.valid_from),
+      valid_until: inputSPParaIso(form.valid_until),
     };
 
     try {

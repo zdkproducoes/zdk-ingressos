@@ -10,6 +10,7 @@ import { resend } from '@/lib/email/resend';
 import { renderTicketEmail } from '@/emails/ticket';
 import { platform } from '@/lib/config';
 import { orgPublicName, emailFromFor, type OrgForBrand } from '@/lib/brand';
+import { dataEvento } from '@/lib/datas';
 
 export const runtime = 'nodejs';
 
@@ -225,7 +226,7 @@ export async function POST(req: NextRequest) {
 
   // 8. Enviar e-mail único com todos os ingressos
   try {
-    const eventDate = new Date(event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+    const eventDate = dataEvento(event.event_date, {
       weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
     });
     const subjectSuffix = qty === 1 ? 'uma cortesia' : `${qty} cortesias`;

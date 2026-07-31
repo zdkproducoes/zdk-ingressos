@@ -24,6 +24,7 @@ import { renderTicketEmail } from '@/emails/ticket';
 import { sendPurchaseEvent } from '@/lib/meta/capi';
 import { platform } from '@/lib/config';
 import { orgPublicName, emailFromFor, emailReplyToFor, type OrgForBrand } from '@/lib/brand';
+import { dataEvento } from '@/lib/datas';
 
 type FulfillOptions = {
   incrementStock: boolean;
@@ -130,7 +131,7 @@ export async function fulfillOrder(
   } else if (!order.tickets_emailed_at) {
     const ev = order.events;
     if (ev && order.profiles?.email) {
-      const eventDate = new Date(ev.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+      const eventDate = dataEvento(ev.event_date, {
         weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
       });
       // Marca do organizador no remetente/rodapé (domínio segue o da plataforma)

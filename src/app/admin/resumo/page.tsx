@@ -12,6 +12,7 @@ import {
   CalendarDays,
   CreditCard,
 } from 'lucide-react';
+import { diaSP, dataEvento } from '@/lib/datas';
 
 export const dynamic = 'force-dynamic';
 
@@ -161,7 +162,7 @@ export default async function ResumoPage() {
 
   for (const o of paidOrders ?? []) {
     if (!o.paid_at) continue;
-    const dateKey = formatDateSP(o.paid_at); // 'YYYY-MM-DD' em SP
+    const dateKey = diaSP(o.paid_at); // 'YYYY-MM-DD' em SP
     const existing = dailyMap.get(dateKey) ?? { date: dateKey, orders: 0, tickets: 0, revenue: 0 };
     existing.orders += 1;
     existing.tickets += ticketsByOrder.get(o.id) ?? 0;
@@ -392,27 +393,11 @@ function PieChartSVG({
 }
 
 // -------- helpers de data em horario SP --------
-
-// 'YYYY-MM-DD' para um ISO timestamp em horario SP
-function formatDateSP(isoDate: string): string {
-  const d = new Date(isoDate);
-  const fmt = new Intl.DateTimeFormat('sv-SE', {
-    timeZone: 'America/Sao_Paulo',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-  const parts = fmt.formatToParts(d);
-  const get = (t: string) => parts.find((p) => p.type === t)?.value || '00';
-  return `${get('year')}-${get('month')}-${get('day')}`;
-}
+// A conversao de fuso mora em src/lib/datas.ts (diaSP / dataEvento).
 
 // 'YYYY-MM-DD' -> 'DD/MM/YYYY (dia da semana)'
 function formatDateDisplay(dateKey: string): string {
-  const [y, m, d] = dateKey.split('-').map(Number);
-  // Cria a data como local (sem timezone shift)
-  const date = new Date(y, m - 1, d);
-  const weekday = date.toLocaleDateString('pt-BR', { weekday: 'short' });
-  const ddmm = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const ddmm = dataEvento(dateKey);
+  const weekday = dataEvento(dateKey, { weekday: 'short' });
   return `${ddmm} (${weekday.replace('.', '')})`;
 }

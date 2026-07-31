@@ -4,6 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { CheckinScannerClient } from '@/components/checkin/CheckinScannerClient';
 import { requirePanelContext } from '@/lib/auth/panel';
 import { assertEventSlugInScope } from '@/lib/auth/scope';
+import { dataEvento } from '@/lib/datas';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,7 +43,7 @@ export default async function CheckinEventPage({ params }: PageProps) {
     .eq('orders.payment_status', 'approved')
     .not('checked_in_at', 'is', null);
 
-  const dateLabel = new Date(event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+  const dateLabel = dataEvento(event.event_date, {
     weekday: 'short',
     day: '2-digit',
     month: 'long',

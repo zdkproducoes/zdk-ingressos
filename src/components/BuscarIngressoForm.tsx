@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { dataEvento } from '@/lib/datas';
 
 type FoundData = {
   order_number: number;
@@ -123,7 +124,7 @@ export function BuscarIngressoForm() {
             <h2 className="text-lg font-bold text-cream-200 mb-1">{result.event.title}</h2>
             <p className="text-sm text-cream-300">
               📅{' '}
-              {new Date(result.event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+              {dataEvento(result.event.event_date, {
                 weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
               })}{' '}
               às {(result.event.event_time || '').slice(0, 5)}

@@ -4,6 +4,7 @@ import { redirect, notFound } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { Wall } from '@/components/wall/Wall';
+import { dataEvento } from '@/lib/datas';
 export const dynamic = 'force-dynamic';
 export default async function MuralPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -54,7 +55,7 @@ export default async function MuralPage({ params }: { params: Promise<{ slug: st
       </main>
     );
   }
-  const eventDate = new Date(event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+  const eventDate = dataEvento(event.event_date, {
     weekday: 'short', day: '2-digit', month: 'short',
   });
   return (

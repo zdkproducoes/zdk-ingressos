@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { formatarSP } from '@/lib/datas';
 
 type Author = { firstName: string; lastName: string; avatarUrl: string | null };
 type Post = {
@@ -369,5 +370,5 @@ function timeAgo(iso: string): string {
   if (h < 24) return `${h}h`;
   const d = Math.floor(h / 24);
   if (d < 7) return `${d}d`;
-  return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  return formatarSP(iso, { day: '2-digit', month: 'short' });
 }

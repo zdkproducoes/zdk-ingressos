@@ -4,18 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Copy, Check, AlertCircle, RefreshCw } from 'lucide-react';
 import type { AfiliadoDetail, AfiliadoSale } from '@/app/admin/afiliados/[id]/page';
+import { dataHoraSP } from '@/lib/datas';
 
 const fmtCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
-const fmtDateTime = (iso: string) =>
-  new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(iso));
+const fmtDateTime = (iso: string) => dataHoraSP(iso);
 
 const CODE_REGEX = /^[a-z0-9-]+$/;
 

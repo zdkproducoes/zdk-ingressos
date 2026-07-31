@@ -19,6 +19,7 @@ import { resend, EMAIL_FROM } from '@/lib/email/resend';
 import { renderTicketTransferEmail } from '@/emails/ticket-transfer';
 import { checkRateLimit } from '@/lib/turnstile/ratelimit';
 import { platform } from '@/lib/config';
+import { dataEvento, eventoJaPassou } from '@/lib/datas';
 
 export const runtime = 'nodejs';
 
@@ -97,7 +98,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Este ingresso não está mais válido.' }, { status: 400 });
   }
   if (ev?.event_date) {
-    const isPast = new Date(ev.event_date + 'T00:00:00') < new Date(new Date().toDateString());
+    const isPast = eventoJaPassou(ev.event_date);
     if (isPast) {
       return NextResponse.json({ error: 'Este evento já foi realizado.' }, { status: 400 });
     }
@@ -217,7 +218,7 @@ export async function POST(req: NextRequest) {
     const senderName = senderProfile?.full_name || senderProfile?.first_name || 'Um amigo';
 
     if (ev && recipient.email) {
-      const eventDate = new Date(ev.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+      const eventDate = dataEvento(ev.event_date, {
         weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
       });
       await resend.emails.send({

@@ -20,6 +20,7 @@ import {
   UserCheck,
   MessageCircle,
 } from 'lucide-react';
+import { dataEvento, horaSP } from '@/lib/datas';
 
 export type WeeklyGoal = {
   id: string;
@@ -86,11 +87,7 @@ const fmtDateTime = (iso: string) =>
   }).format(new Date(iso));
 
 const fmtEventDate = (isoDate: string) =>
-  new Intl.DateTimeFormat('pt-BR', {
-    weekday: 'long',
-    day: '2-digit',
-    month: 'long',
-  }).format(new Date(isoDate + 'T00:00:00'));
+  dataEvento(isoDate, { weekday: 'long', day: '2-digit', month: 'long' });
 
 // '2026-07-01' -> '01/07'
 const fmtShortDate = (d: string) => {
@@ -359,8 +356,7 @@ function MetasSection({
   );
 }
 
-const fmtTime = (iso: string) =>
-  new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+const fmtTime = (iso: string) => horaSP(iso);
 
 function CheckinSection({ checkin }: { checkin: NonNullable<PanelData['checkin']> }) {
   const { target, myTickets, myCheckedIn, podium } = checkin;

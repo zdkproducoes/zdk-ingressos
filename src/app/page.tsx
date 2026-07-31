@@ -5,6 +5,7 @@
 // controlam o que é público.
 import { supabase } from '@/lib/supabase'
 import { platform } from '@/lib/config'
+import { hojeSP } from '@/lib/datas'
 import Link from 'next/link'
 import { VitrineClient } from '@/components/vitrine/VitrineClient'
 import type { VitrineEvent } from '@/components/vitrine/EventCard'
@@ -12,7 +13,9 @@ import type { VitrineEvent } from '@/components/vitrine/EventCard'
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
-  const today = new Date().toISOString().slice(0, 10)
+  // Hoje em Brasília. Com toISOString() (UTC) a vitrine derrubava o evento do
+  // dia às 21h, quando lá ainda era o dia do show.
+  const today = hojeSP()
 
   const { data, error } = await supabase
     .from('events')

@@ -5,6 +5,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { CheckoutClient } from '@/components/checkout/CheckoutClient';
 import { resolveLoteAtual } from '@/lib/lotes';
+import { dataEvento } from '@/lib/datas';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Checkout' };
@@ -48,7 +49,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
   const isLoggedIn = !!user;
   const emailConfirmed = !!user?.email_confirmed_at;
 
-  const eventDate = new Date(event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+  const eventDate = dataEvento(event.event_date, {
     weekday: 'long', day: '2-digit', month: 'long',
   });
 

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin } from 'lucide-react'
 import { categoryLabel } from '@/lib/categories'
+import { dataEventoComoDate } from '@/lib/datas'
 
 export type VitrineEvent = {
   id: string
@@ -26,7 +27,7 @@ function fmtPrice(v: number) {
 }
 
 export function EventCard({ event }: { event: VitrineEvent }) {
-  const date = new Date(event.event_date + 'T00:00:00')
+  const date = dataEventoComoDate(event.event_date)
   const timeLabel = (event.event_time || '').slice(0, 5)
 
   return (

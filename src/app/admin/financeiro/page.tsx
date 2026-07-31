@@ -4,6 +4,7 @@
 // proprietário (superadmin), que vê o detalhamento completo.
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { requirePanelContext, type PanelContext } from '@/lib/auth/panel';
+import { dataSP } from '@/lib/datas';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Financeiro — Painel' };
@@ -317,7 +318,7 @@ export default async function FinanceiroPage() {
                             </span>
                             {p.paid_at && (
                               <span className="block text-xs text-cream-400 mt-0.5">
-                                {new Date(p.paid_at).toLocaleDateString('pt-BR')}
+                                {dataSP(p.paid_at)}
                               </span>
                             )}
                           </td>

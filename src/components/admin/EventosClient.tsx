@@ -9,6 +9,7 @@ import { AlertCircle, Check, Plus, Star, X } from 'lucide-react';
 import type { EventListItem } from '@/app/admin/eventos/page';
 import { HeroUploadButton } from '@/components/admin/HeroUploadButton';
 import { RichTextEditor } from '@/components/admin/RichTextEditor';
+import { dataEvento } from '@/lib/datas';
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -18,8 +19,7 @@ const fmtCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
 const fmtDate = (isoDate: string) =>
-  new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    .format(new Date(isoDate + 'T00:00:00'));
+  dataEvento(isoDate);
 
 const STATUS_BADGE: Record<string, { label: string; classes: string }> = {
   active:   { label: 'Ativo',     classes: 'bg-emerald-900/50 text-emerald-300 border-emerald-700/50' },

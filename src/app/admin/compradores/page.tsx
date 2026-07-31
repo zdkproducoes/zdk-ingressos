@@ -2,6 +2,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { requirePanelContext } from '@/lib/auth/panel';
 import { ExportCSVButton, type BuyerData } from '@/components/admin/ExportCSVButton';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
+import { dataSP } from '@/lib/datas';
 
 type OrderForAgg = {
   customer_id: string;
@@ -102,7 +103,7 @@ export default async function CompradoresPage() {
                     <td className="px-4 py-3 text-cream-300 text-center">{b.total_ingressos}</td>
                     <td className="px-4 py-3 text-cream-200 font-medium">{fmt.format(b.total_gasto)}</td>
                     <td className="px-4 py-3 text-cream-400">
-                      {new Date(b.primeira_compra).toLocaleDateString('pt-BR')}
+                      {dataSP(b.primeira_compra)}
                     </td>
                   </tr>
                 ))}
@@ -123,7 +124,7 @@ export default async function CompradoresPage() {
                   <span className="text-cream-200 font-semibold">{fmt.format(b.total_gasto)}</span>
                 </div>
                 <p className="text-xs text-cream-400">
-                  Desde {new Date(b.primeira_compra).toLocaleDateString('pt-BR')}
+                  Desde {dataSP(b.primeira_compra)}
                 </p>
               </div>
             ))}

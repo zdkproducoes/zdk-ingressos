@@ -2,9 +2,10 @@
 // (events.* + events.content jsonb). Cada seção só renderiza se tiver dados.
 import { Calendar, MapPin, Clock } from "lucide-react"
 import type { Event, EventLineupItem } from "@/lib/supabase"
+import { dataEvento } from '@/lib/datas'
 
 function formatEventDate(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', {
+  return dataEvento(dateStr, {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -12,7 +13,7 @@ function formatEventDate(dateStr: string) {
 }
 
 function formatWeekday(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long' })
+  return dataEvento(dateStr, { weekday: 'long' })
 }
 
 // ---------------------------------------------------------------------------

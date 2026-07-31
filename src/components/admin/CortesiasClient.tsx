@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { dataHoraSP } from '@/lib/datas';
 
 type EventOption = { id: string; title: string; slug: string };
 
@@ -33,11 +34,7 @@ function formatCpf(value: string): string {
 }
 
 function formatDateTime(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleString('pt-BR', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  });
+  return dataHoraSP(iso);
 }
 
 export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; signupUrl: string }) {

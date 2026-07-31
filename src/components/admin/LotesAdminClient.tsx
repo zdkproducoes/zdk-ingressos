@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, Edit2, Power, PowerOff } from 'lucide-react';
 import { LoteFormModal } from './LoteFormModal';
 import type { BatchRow, SelectedEventOption } from '@/app/admin/lotes/page';
+import { dataHoraSP } from '@/lib/datas';
 
 interface Props {
   batches: BatchRow[];
@@ -67,9 +68,7 @@ export function LotesAdminClient({ batches, selectedEvent }: Props) {
 
   // Formata data ISO em dd/mm/aa (pt-BR); retorna travessao quando nao ha data.
   const fmtDate = (iso: string | null) =>
-    iso
-      ? new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })
-      : '—';
+    iso ? dataHoraSP(iso, { anoCurto: true }).slice(0, 8) : '—';
 
   return (
     <div className="mt-6 space-y-4">

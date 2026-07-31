@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { type VitrineEvent } from '@/components/vitrine/EventCard';
 import { categoryLabel } from '@/lib/categories';
+import { dataEvento } from '@/lib/datas';
 
 const AUTOPLAY_MS = 5000;
 
@@ -86,7 +87,7 @@ export function HeroCarousel({ slides }: { slides: VitrineEvent[] }) {
                   <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-cream-300">
                     <span className="inline-flex items-center gap-1.5 capitalize">
                       <Calendar className="w-4 h-4 stroke-accent-400" />
-                      {new Date(slide.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+                      {dataEvento(slide.event_date, {
                         weekday: 'short', day: '2-digit', month: 'long',
                       })}
                       {slide.event_time ? ` • ${slide.event_time.slice(0, 5)}` : ''}

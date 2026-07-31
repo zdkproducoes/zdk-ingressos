@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
 import type { BatchRow, SelectedEventOption } from '@/app/admin/lotes/page';
+import { isoParaInputSP, inputSPParaIso } from '@/lib/datas';
 
 interface Props {
   batch: BatchRow | null; // null = criar; preenchido = editar
@@ -36,21 +37,11 @@ const STATUS_OPTIONS = [
   { value: 'sold_out',  label: 'Esgotado' },
 ];
 
-// Converte ISO UTC ('2026-06-07T22:00:00.000Z') -> 'YYYY-MM-DDTHH:MM' local pro input
-function isoToLocalInput(iso: string | null): string {
-  if (!iso) return '';
-  const d = new Date(iso);
-  // Subtrai o offset pra mostrar em local time no input
-  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-  return local.toISOString().slice(0, 16);
-}
-
-// Converte 'YYYY-MM-DDTHH:MM' local -> ISO UTC pra mandar pra API
-function localInputToISO(local: string): string | null {
-  if (!local) return null;
-  // new Date('2026-06-07T22:00') interpreta como local time; toISOString vira UTC
-  return new Date(local).toISOString();
-}
+// A abertura/fechamento de lote é sempre em horário de Brasília — não no
+// fuso da máquina de quem está com o painel aberto (era o que o offset local
+// fazia). Ver src/lib/datas.ts.
+const isoToLocalInput = isoParaInputSP;
+const localInputToISO = inputSPParaIso;
 
 export function LoteFormModal({ batch, selectedEvent, onClose, onSuccess }: Props) {
   const isEdit = batch !== null;

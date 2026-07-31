@@ -1,6 +1,7 @@
 'use client';
 
 import { Download } from 'lucide-react';
+import { dataSP, hojeSP } from '@/lib/datas';
 
 export type BuyerData = {
   full_name: string;
@@ -24,7 +25,7 @@ export function ExportCSVButton({ buyers }: { buyers: BuyerData[] }) {
         b.cpf,
         String(b.total_ingressos),
         b.total_gasto.toFixed(2).replace('.', ','),
-        new Date(b.primeira_compra).toLocaleDateString('pt-BR'),
+        dataSP(b.primeira_compra),
       ];
       return cols.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';');
     });
@@ -34,7 +35,7 @@ export function ExportCSVButton({ buyers }: { buyers: BuyerData[] }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `compradores-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `compradores-${hojeSP()}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   }

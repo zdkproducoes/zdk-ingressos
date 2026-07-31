@@ -1,5 +1,6 @@
 // app/minhas-compras/[slug]/page.tsx
 import Link from 'next/link';
+import { dataEvento, dataSP, eventoJaPassou } from '@/lib/datas';
 import { redirect, notFound } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -61,13 +62,13 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
   const hasUsable = usableItems.length > 0;
   const hasAnything = hasUsable || transferredAway.length > 0;
 
-  const eventDate = new Date(event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+  const eventDate = dataEvento(event.event_date, {
     weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
   });
 
   // Evento já realizado: some o QR (não tem mais uso e evita print circulando),
   // fica só o resumo dos pedidos (nº, quantidade e valor)
-  const isPast = new Date(event.event_date + 'T00:00:00') < new Date(new Date().toDateString());
+  const isPast = eventoJaPassou(event.event_date);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -123,7 +124,7 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
                   <p className="text-sm text-cream-400 mt-0.5">
                     {(o.order_items || []).length} {(o.order_items || []).length === 1 ? 'ingresso' : 'ingressos'}
                     {o.paid_at && (
-                      <> · pago em {new Date(o.paid_at).toLocaleDateString('pt-BR')}</>
+                      <> · pago em {dataSP(o.paid_at)}</>
                     )}
                   </p>
                 </div>
@@ -198,7 +199,7 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ s
                     <p className="text-cream-300 font-semibold">↗ Transferido para {it.attendee_name || 'outra pessoa'}</p>
                     <p className="text-xs text-cream-400 mt-1">
                       Pedido #{it.orderNumber}
-                      {it.transferred_at && <> · em {new Date(it.transferred_at).toLocaleDateString('pt-BR')}</>}
+                      {it.transferred_at && <> · em {dataSP(it.transferred_at)}</>}
                     </p>
                   </div>
                   <span className="inline-block px-2 py-1 bg-muted-700 text-cream-300 text-xs font-semibold rounded whitespace-nowrap">Transferido</span>

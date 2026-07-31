@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { requirePanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
+import { dataEvento, formatarSP } from '@/lib/datas';
 
 export const dynamic = 'force-dynamic';
 
@@ -282,18 +283,13 @@ function fillEmptyBuckets(entries: [string, number][], bucketMinutes: number): [
 }
 
 function formatTimeSP(isoDate: string): string {
-  const d = new Date(isoDate);
-  return d.toLocaleString('pt-BR', {
-    timeZone: 'America/Sao_Paulo',
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
+  return formatarSP(isoDate, {
+    day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
   });
 }
 
 function formatEventDate(dateStr: string): string {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', {
+  return dataEvento(dateStr, {
     weekday: 'long',
     day: '2-digit',
     month: 'long',

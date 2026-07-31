@@ -15,6 +15,7 @@ import { buildEventJsonLd } from '@/lib/seo/event-jsonld'
 import { BrandTheme } from '@/components/theme/BrandTheme'
 import { StickyBuyBar } from '@/components/evento/StickyBuyBar'
 import { orgPublicName, type OrgBrand } from '@/lib/brand'
+import { dataEvento } from '@/lib/datas';
 
 type Props = { params: { slug: string } }
 
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { event, org } = result
   const content: EventContent = event.content ?? {}
 
-  const dateLabel = new Date(event.event_date + 'T00:00:00').toLocaleDateString('pt-BR', {
+  const dateLabel = dataEvento(event.event_date, {
     day: '2-digit',
     month: 'long',
     year: 'numeric',

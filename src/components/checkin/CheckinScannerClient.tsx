@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { dataHoraSP } from '@/lib/datas';
 
 type CheckinResult =
   | { kind: 'success'; attendeeName: string; batchName: string; orderNumber: number }
@@ -333,7 +334,7 @@ export function CheckinScannerClient({ eventId, eventSlug }: { eventId: string; 
                     </p>
                     {hit.checked_in_at && (
                       <p className="text-yellow-300 text-xs mt-1">
-                        Validado em {new Date(hit.checked_in_at).toLocaleString('pt-BR')}
+                        Validado em {dataHoraSP(hit.checked_in_at)}
                         {hit.checked_in_by_name && ` por ${hit.checked_in_by_name}`}
                       </p>
                     )}
@@ -433,7 +434,7 @@ function FullscreenOverlay({ result, onDismiss }: { result: CheckinResult; onDis
             Pedido #{result.orderNumber} | {result.batchName}
           </p>
           <p className="text-white text-base mt-3 opacity-90">
-            Validado em {new Date(result.checkedInAt).toLocaleString('pt-BR')}
+            Validado em {dataHoraSP(result.checkedInAt)}
             {result.checkedInBy && <><br />por {result.checkedInBy}</>}
           </p>
         </>

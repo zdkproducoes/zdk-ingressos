@@ -1,5 +1,6 @@
 // app/minhas-compras/page.tsx
 import Link from 'next/link';
+import { dataEvento, eventoJaPassou } from '@/lib/datas';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -98,10 +99,10 @@ export default async function MyPurchasesPage() {
         ) : (
           <div className="space-y-4">
             {events.map(ev => {
-              const eventDate = new Date(ev.eventDate + 'T00:00:00').toLocaleDateString('pt-BR', {
+              const eventDate = dataEvento(ev.eventDate, {
                 weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
               });
-              const isPast = new Date(ev.eventDate + 'T00:00:00') < new Date(new Date().toDateString());
+              const isPast = eventoJaPassou(ev.eventDate);
               return (
                 <Link key={ev.eventId} href={`/minhas-compras/${ev.eventSlug}`}
                   className="block rounded-xl bg-surface-700 border border-muted-700 hover:border-muted-600 hover:bg-surface-700/80 transition overflow-hidden">

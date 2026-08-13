@@ -2,8 +2,11 @@
 // quando o Danilo entregar. Gera um banner tipográfico na identidade ZDK
 // (Preto Palco + Ouro ZDK + barras de equalizador do símbolo da marca).
 //
-// Uso: node scripts/arte/sambow-fest-provisoria.js
+// Uso: npm install --no-save sharp && node scripts/arte/sambow-fest-provisoria.js
 // Saída: scripts/arte/sambow-fest-provisoria.jpg (1600x800)
+//
+// O sharp NÃO está no package.json de propósito — é ferramenta de bastidor,
+// não dependência do app. Instale com --no-save quando for gerar a arte.
 //
 // Fontes: usa Arial Black / Arial do sistema (a Archivo Expanded da marca não
 // está instalada na máquina). É arte temporária — o que importa é não deixar

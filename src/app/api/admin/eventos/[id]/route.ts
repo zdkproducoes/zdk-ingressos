@@ -24,7 +24,13 @@ export async function PATCH(
 
   const { id } = await params;
 
-  let body: { action?: unknown; status?: unknown; category?: unknown; featured_order?: unknown } & ContentFormFields;
+  let body: {
+    action?: unknown;
+    status?: unknown;
+    category?: unknown;
+    featured_order?: unknown;
+    is_unlisted?: unknown;
+  } & ContentFormFields;
   try {
     body = await request.json();
   } catch {
@@ -70,6 +76,34 @@ export async function PATCH(
     revalidatePath('/admin/eventos');
     revalidatePath('/');
     return NextResponse.json({ ok: true, status: newStatus });
+  }
+
+  // "Não listado": o evento continua publicado e vendendo por link direto,
+  // mas sai da vitrine da home e do sitemap. Serve pra abrir vendas antes de
+  // ter arte oficial, ou pra pré-venda fechada. Não é controle de acesso —
+  // quem tem o link compra normalmente. Nível admin da org: é decisão sobre
+  // a divulgação do próprio evento.
+  if (body.action === 'set_unlisted') {
+    const unlisted = body.is_unlisted === true;
+
+    const { error: updateError } = await supabaseAdmin
+      .from('events')
+      .update({
+        is_unlisted: unlisted,
+        // Sair da vitrine e continuar ocupando vaga paga no carrossel seria
+        // incoerente (a vaga não renderiza) — libera o destaque junto.
+        ...(unlisted ? { featured_order: null } : {}),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
+
+    if (updateError) {
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    }
+    revalidatePath('/admin/eventos');
+    revalidatePath('/');
+    revalidatePath('/sitemap.xml');
+    return NextResponse.json({ ok: true, is_unlisted: unlisted });
   }
 
   // Destaque no carrossel da home (espaço pago) — só o superadmin da plataforma

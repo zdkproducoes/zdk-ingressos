@@ -10,11 +10,14 @@ const BASE_URL = platform.baseUrl;
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Eventos ativos (páginas públicas de venda)
+  // Eventos ativos (páginas públicas de venda). Os "não listados" ficam de
+  // fora: eles vendem por link direto, mas a plataforma não os divulga —
+  // mesma regra da vitrine da home.
   const { data: events } = await supabaseAdmin
     .from('events')
     .select('slug, updated_at')
-    .eq('status', 'active');
+    .eq('status', 'active')
+    .eq('is_unlisted', false);
 
   const eventEntries: MetadataRoute.Sitemap = (events ?? []).map((e) => ({
     url: `${BASE_URL}/evento/${e.slug}`,

@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, Check, Plus, Star, X } from 'lucide-react';
+import { AlertCircle, Check, Eye, EyeOff, Plus, Star, X } from 'lucide-react';
 import type { EventListItem } from '@/app/admin/eventos/page';
 import { HeroUploadButton } from '@/components/admin/HeroUploadButton';
 import { RichTextEditor } from '@/components/admin/RichTextEditor';
@@ -262,6 +262,39 @@ export function EventosClient({
     }
   };
 
+  // Vitrine da home: mostrar/esconder o evento sem tirá-lo do ar.
+  // "Não listado" continua vendendo por link direto — só some da home e do
+  // sitemap. Útil enquanto a arte oficial não fica pronta.
+  const handleToggleUnlisted = async (item: EventListItem) => {
+    const esconder = !item.is_unlisted;
+    const msg = esconder
+      ? `Tirar "${item.title}" da vitrine da home?\n\nO evento CONTINUA no ar e vendendo normalmente para quem tem o link — ele só deixa de aparecer na página inicial e no sitemap.`
+      : `Mostrar "${item.title}" na vitrine da home?\n\nEle passa a aparecer na página inicial para todo mundo.`;
+    if (!confirm(msg)) return;
+
+    setError(null);
+    setBusyId(item.id);
+    try {
+      const res = await fetch(`/api/admin/eventos/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set_unlisted', is_unlisted: esconder }),
+      });
+      const json = await res.json();
+      if (!res.ok) return setError(json.error || 'Erro ao alterar a vitrine.');
+      flash(
+        esconder
+          ? 'Evento fora da vitrine — segue vendendo por link direto.'
+          : 'Evento aparecendo na vitrine da home.',
+      );
+      router.refresh();
+    } catch {
+      setError('Erro de conexão.');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   const handleCreate = async () => {
     setFormError(null);
     if (orgs.length > 1 && !form.organization_id) return setFormError('Selecione a organização do evento.');
@@ -371,7 +404,26 @@ export function EventosClient({
                   </div>
 
                   <div className="flex gap-2 flex-wrap items-center">
-                    {isSuperadmin && item.status === 'active' && (
+                    {item.status === 'active' && (
+                      <button
+                        onClick={() => handleToggleUnlisted(item)}
+                        disabled={busy}
+                        title={
+                          item.is_unlisted
+                            ? 'Fora da vitrine: vendendo por link direto. Clique para mostrar na home.'
+                            : 'Aparecendo na vitrine da home. Clique para esconder (continua vendendo por link).'
+                        }
+                        className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border transition disabled:opacity-50 ${
+                          item.is_unlisted
+                            ? 'border-amber-500/50 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20'
+                            : 'border-muted-600 bg-surface-800 text-cream-300 hover:bg-surface-900'
+                        }`}
+                      >
+                        {item.is_unlisted ? <EyeOff size={13} /> : <Eye size={13} />}
+                        {item.is_unlisted ? 'Fora da vitrine' : 'Na vitrine'}
+                      </button>
+                    )}
+                    {isSuperadmin && item.status === 'active' && !item.is_unlisted && (
                       <label
                         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg
                                    border border-accent-400/40 bg-accent-400/10 text-accent-300"

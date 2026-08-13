@@ -39,6 +39,8 @@ export type EventListItem = {
   content: import('@/lib/supabase').EventContent;
   /** posição no carrossel de destaques da home (1..5); null = não destacado */
   featured_order: number | null;
+  /** true = publicado, mas fora da vitrine da home e do sitemap (vende por link) */
+  is_unlisted: boolean;
 };
 
 export default async function EventosPage() {
@@ -48,7 +50,7 @@ export default async function EventosPage() {
 
   let eventsQuery = supabaseAdmin
     .from('events')
-    .select('id, title, slug, status, description, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, banner_url, og_image_url, venue_lat, venue_lng, content, category, organizations(name)')
+    .select('id, title, slug, status, description, event_date, event_time, venue_name, venue_address, venue_neighborhood, venue_city, venue_state, venue_zip, service_fee_percent, max_tickets_per_cpf, banner_url, og_image_url, venue_lat, venue_lng, content, category, is_unlisted, organizations(name)')
     .order('event_date', { ascending: false });
   if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
 
@@ -125,6 +127,7 @@ export default async function EventosPage() {
       venue_lng: e.venue_lng != null ? Number(e.venue_lng) : null,
       content: e.content ?? {},
       featured_order: featuredByEvent.get(e.id) ?? null,
+      is_unlisted: Boolean(e.is_unlisted),
     };
   });
 

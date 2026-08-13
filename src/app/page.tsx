@@ -21,6 +21,7 @@ export default async function Home() {
     .from('events')
     .select('id, title, slug, banner_url, event_date, event_time, venue_name, venue_city, venue_state, category, organizations(name)')
     .eq('status', 'active')
+    .eq('is_unlisted', false) // evento "não listado": vende por link, fora da vitrine
     .gte('event_date', today)
     .order('event_date', { ascending: true })
 

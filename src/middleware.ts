@@ -92,7 +92,16 @@ export async function middleware(request: NextRequest) {
 
   // 2) Auth: só as áreas logadas passam pela checagem de sessão;
   //    todo o resto (home, evento, buscar-ingresso, afiliado…) é público.
+  //
+  // Exceção: /evento/<slug>?preview=1 — a pré-visualização de evento não
+  // publicado depende da sessão do painel, e /evento normalmente não passa
+  // por aqui (é a página mais quente do site; não vale um getUser por visita).
+  // Com o ?preview=1 a sessão é renovada antes de a página checar o escopo.
+  const isPreviewDeEvento =
+    pathname.startsWith('/evento/') && request.nextUrl.searchParams.has('preview');
+
   const needsAuthCheck =
+    isPreviewDeEvento ||
     startsWithAny(pathname, ['/admin', '/checkin', '/checkout', '/minhas-compras', '/minha-conta']);
 
   if (!needsAuthCheck) return NextResponse.next();
@@ -121,6 +130,12 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
+    // Pré-visualização: aqui o objetivo é só renovar a sessão. Sem login,
+    // a página do evento decide sozinha (404 se não for publicado, página
+    // normal se for) — nunca mandar visitante pro login por causa de um
+    // ?preview= perdido num link de evento que já está no ar.
+    if (isPreviewDeEvento) return supabaseResponse;
+
     const loginUrl = new URL('/login', request.url);
     const redirectTarget = request.nextUrl.pathname + request.nextUrl.search;
     loginUrl.searchParams.set('redirect', redirectTarget);

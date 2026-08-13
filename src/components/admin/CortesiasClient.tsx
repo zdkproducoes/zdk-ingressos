@@ -5,11 +5,12 @@ import { dataHoraSP } from '@/lib/datas';
 
 type EventOption = { id: string; title: string; slug: string };
 
+// e-mail e CPF chegam MASCARADOS da API (/api/admin/cortesias/buscar) — servem
+// só para o operador conferir que achou a pessoa certa. Não reformatar.
 type GuestProfile = {
   id: string;
   name: string;
-  email: string;
-  phone: string | null;
+  email: string | null;
   cpf: string | null;
 };
 
@@ -207,7 +208,7 @@ export function CortesiasClient({ events, signupUrl }: { events: EventOption[]; 
               <p className="text-cream-200 font-medium">{searchResult.profile.name}</p>
               <p className="text-cream-400 text-sm">{searchResult.profile.email}</p>
               {searchResult.profile.cpf && (
-                <p className="text-cream-400 text-sm">CPF: {formatCpf(searchResult.profile.cpf)}</p>
+                <p className="text-cream-400 text-sm">CPF: {searchResult.profile.cpf}</p>
               )}
 
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-[1fr_140px] gap-3">

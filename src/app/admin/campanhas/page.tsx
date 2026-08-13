@@ -4,6 +4,7 @@ import { requirePanelContext, type PanelContext } from '@/lib/auth/panel';
 import { getSelectedEvent } from '@/lib/admin/selected-event';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { GerenciarCampanhasButton } from '@/components/admin/GerenciarCampanhasButton';
+import { platform } from '@/lib/config';
 import {
   getCampaignInsights,
   PERIOD_PRESETS,
@@ -180,6 +181,27 @@ export default async function CampanhasPage({
   }
   const isFiltered = linkedCampaignIds.length > 0;
 
+  // A conta de anuncios do Meta e UNICA da plataforma: sem vinculo, o fallback
+  // "todas as campanhas da conta" mostraria o investimento da ZDK inteira —
+  // incluindo campanhas de eventos de OUTROS produtores. So o superadmin ve
+  // esse agregado; o produtor precisa vincular a campanha ao evento dele.
+  if (!ctx.isSuperadmin && !isFiltered) {
+    return (
+      <div className="bg-surface-700 rounded-lg border border-muted-700 p-6 max-w-2xl">
+        <div className="flex items-center gap-2 mb-3">
+          <Megaphone className="text-accent-400" size={20} />
+          <h2 className="text-cream-200 font-bold">Nenhuma campanha vinculada</h2>
+        </div>
+        <p className="text-cream-300 text-sm">
+          Esta aba mostra o desempenho das campanhas do Meta Ads vinculadas a{' '}
+          <strong>{selectedEvent?.title ?? 'este evento'}</strong>. Ainda não há nenhuma
+          vinculada. Fale com a {platform.name} para vincular as campanhas do seu evento —
+          a conta de anúncios é gerenciada pela plataforma.
+        </p>
+      </div>
+    );
+  }
+
   const [result, siteSales] = await Promise.all([
     getCampaignInsights(periodo, linkedCampaignIds),
     getSiteSales(ctx, periodo),
@@ -285,7 +307,9 @@ export default async function CampanhasPage({
           ))}
         </div>
         <div className="flex items-center gap-4">
-          <GerenciarCampanhasButton />
+          {/* Vincular campanha = escolher da conta de anuncios da plataforma
+              (lista todas). Só o superadmin, que é quem gerencia essa conta. */}
+          {ctx.isSuperadmin && <GerenciarCampanhasButton />}
           <a
             href={META_ADS_MANAGER_URL()}
             target="_blank"

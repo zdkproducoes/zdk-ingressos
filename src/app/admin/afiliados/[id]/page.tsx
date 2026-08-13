@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
+import { assertResourceInScope } from '@/lib/auth/scope';
 import { AfiliadoEditClient } from '@/components/admin/AfiliadoEditClient';
 
 export const dynamic = 'force-dynamic';
@@ -41,6 +43,12 @@ export default async function AfiliadoDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+
+  // Escopo: esta tela expõe PII do afiliado e o panel_token (que dá acesso ao
+  // painel dele). Sem isto, qualquer produtor logado abriria o afiliado de
+  // outra organização pelo id. 404 para não revelar que o recurso existe.
+  const ctx = await requirePanelContext({ redirectTo: `/admin/afiliados/${id}` });
+  if (!(await assertResourceInScope(ctx, 'affiliates', id))) notFound();
 
   // 1) Afiliado + evento
   const { data: aff } = await supabaseAdmin

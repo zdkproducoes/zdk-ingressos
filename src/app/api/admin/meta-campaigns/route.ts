@@ -10,10 +10,16 @@ import { requirePanelApi } from '@/lib/auth/panel';
 
 export const runtime = 'nodejs';
 
+// A conta de anuncios do Meta e UNICA da plataforma: listar as campanhas dela
+// expoe os anuncios de todos os produtores. Vincular campanha a evento e, por
+// isso, operacao de superadmin — nao de admin de organizacao.
+const SO_SUPERADMIN = 'Somente a plataforma pode vincular campanhas do Meta.';
+
 // GET → { eventTitle, campaigns: [{ id, name, effectiveStatus, linked }] }
 export async function GET() {
   const auth = await requirePanelApi({ minOrgRole: 'admin' });
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  if (!auth.ctx.isSuperadmin) return NextResponse.json({ error: SO_SUPERADMIN }, { status: 403 });
 
   // getSelectedEvent(ctx) já garante que o evento está no escopo do usuário
   const selectedEvent = await getSelectedEvent(auth.ctx);
@@ -45,6 +51,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const auth = await requirePanelApi({ minOrgRole: 'admin' });
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  if (!auth.ctx.isSuperadmin) return NextResponse.json({ error: SO_SUPERADMIN }, { status: 403 });
 
   // getSelectedEvent(ctx) já garante que o evento está no escopo do usuário
   const selectedEvent = await getSelectedEvent(auth.ctx);

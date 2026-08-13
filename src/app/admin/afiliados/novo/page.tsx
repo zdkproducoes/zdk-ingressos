@@ -2,17 +2,27 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requirePanelContext } from '@/lib/auth/panel';
+import { getScopedEventIds } from '@/lib/auth/scope';
 import { AfiliadoNovoClient } from '@/components/admin/AfiliadoNovoClient';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Novo afiliado — Painel' };
 
 export default async function AfiliadoNovoPage() {
-  const { data: events } = await supabaseAdmin
+  // Escopo: o select só pode listar eventos das organizações do usuário —
+  // sem o filtro, os títulos dos eventos de outros produtores vazavam aqui
+  // (a API de criação já validava, mas a lista não).
+  const ctx = await requirePanelContext({ redirectTo: '/admin/afiliados/novo' });
+  const scopedIds = await getScopedEventIds(ctx);
+
+  let eventsQuery = supabaseAdmin
     .from('events')
     .select('id, title')
     .eq('status', 'active')
     .order('event_date', { ascending: true });
+  if (scopedIds !== null) eventsQuery = eventsQuery.in('id', scopedIds);
+  const { data: events } = await eventsQuery;
 
   return (
     <div>

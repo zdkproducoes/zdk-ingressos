@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="800" viewBox="0 0 1600 800">
+  <defs>
+    <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0D0E12"/>
+      <stop offset="55%" stop-color="#1D2029"/>
+      <stop offset="100%" stop-color="#0D0E12"/>
+    </linearGradient>
+    <linearGradient id="ouro" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0C25E"/>
+      <stop offset="100%" stop-color="#D9A63F"/>
+    </linearGradient>
+    <radialGradient id="brilho" cx="50%" cy="38%" r="55%">
+      <stop offset="0%" stop-color="#D9A63F" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#D9A63F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="800" fill="url(#fundo)"/>
+  <rect width="1600" height="800" fill="url(#brilho)"/>
+  <g>
+    <rect x="0" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="26" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="52" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="78" y="593.6" width="14" height="166.4" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="104" y="651.2" width="14" height="108.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="130" y="702.4" width="14" height="57.6" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="156" y="664" width="14" height="96" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="182" y="612.8" width="14" height="147.20000000000002" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="208" y="683.2" width="14" height="76.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="234" y="638.4" width="14" height="121.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="260" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="286" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="312" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="338" y="593.6" width="14" height="166.4" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="364" y="651.2" width="14" height="108.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="390" y="702.4" width="14" height="57.6" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="416" y="664" width="14" height="96" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="442" y="612.8" width="14" height="147.20000000000002" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="468" y="683.2" width="14" height="76.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="494" y="638.4" width="14" height="121.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="520" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="546" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="572" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="598" y="593.6" width="14" height="166.4" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="624" y="651.2" width="14" height="108.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="650" y="702.4" width="14" height="57.6" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="676" y="664" width="14" height="96" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="702" y="612.8" width="14" height="147.20000000000002" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="728" y="683.2" width="14" height="76.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="754" y="638.4" width="14" height="121.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="780" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="806" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="832" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="858" y="593.6" width="14" height="166.4" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="884" y="651.2" width="14" height="108.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="910" y="702.4" width="14" height="57.6" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="936" y="664" width="14" height="96" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="962" y="612.8" width="14" height="147.20000000000002" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="988" y="683.2" width="14" height="76.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1014" y="638.4" width="14" height="121.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1040" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1066" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1092" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1118" y="593.6" width="14" height="166.4" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1144" y="651.2" width="14" height="108.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1170" y="702.4" width="14" height="57.6" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1196" y="664" width="14" height="96" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1222" y="612.8" width="14" height="147.20000000000002" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1248" y="683.2" width="14" height="76.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1274" y="638.4" width="14" height="121.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1300" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1326" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1352" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1378" y="593.6" width="14" height="166.4" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1404" y="651.2" width="14" height="108.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1430" y="702.4" width="14" height="57.6" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1456" y="664" width="14" height="96" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1482" y="612.8" width="14" height="147.20000000000002" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1508" y="683.2" width="14" height="76.80000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1534" y="638.4" width="14" height="121.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1560" y="708.8" width="14" height="51.2" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1586" y="670.4" width="14" height="89.60000000000001" rx="7" fill="#D9A63F" opacity="0.10"/>
+    <rect x="1612" y="632" width="14" height="128" rx="7" fill="#D9A63F" opacity="0.10"/>
+  </g>
+  
+    <path fill="none" stroke="#D9A63F" stroke-width="3" opacity="0.55"
+      d="M 60 34
+         H 1540 Q 1566 34 1566 60
+         V 370
+         A 30 30 0 0 0 1566 430
+         V 740 Q 1566 766 1540 766
+         H 60 Q 34 766 34 740
+         V 430
+         A 30 30 0 0 0 34 370
+         V 60 Q 34 34 60 34 Z"/>
+
+  <!-- Chapéu -->
+  <text x="800" y="132" text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="bold"
+        letter-spacing="9" fill="#D9A63F">ZDK INGRESSOS APRESENTA</text>
+
+  <!-- Título -->
+  <text x="800" y="286" text-anchor="middle"
+        font-family="Arial Black, Arial, sans-serif" font-size="146" font-weight="900"
+        letter-spacing="6" fill="url(#ouro)">SAMBOW FEST</text>
+
+  <!-- Subtítulo -->
+  <text x="800" y="340" text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif" font-size="27" font-style="italic"
+        letter-spacing="2" fill="#A6A8AB">um domingo inteiro de pagode</text>
+
+  <!-- Régua -->
+  <rect x="590" y="374" width="420" height="2" fill="#D9A63F" opacity="0.5"/>
+
+  <!-- Data e local -->
+  <text x="800" y="432" text-anchor="middle"
+        font-family="Arial Black, Arial, sans-serif" font-size="42" font-weight="900"
+        letter-spacing="4" fill="#F4F4F2">20 DE SETEMBRO · DOMINGO · 12H</text>
+  <text x="800" y="474" text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="bold"
+        letter-spacing="4" fill="#F0C25E">VILLA JARDIM BAR · SÃO BERNARDO DO CAMPO</text>
+
+  <!-- Atrações principais -->
+  <text x="800" y="562" text-anchor="middle"
+        font-family="Arial Black, Arial, sans-serif" font-size="38" font-weight="900"
+        letter-spacing="3" fill="#F4F4F2">PAGODE DO GORDINHO · PAGODE DO DB · GICA</text>
+
+  <!-- Participações -->
+  <text x="800" y="612" text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif" font-size="22"
+        letter-spacing="2" fill="#A6A8AB">COM ALEX FERNANDES · TIBÉRIO · SING SANTIAGO · CAIO LACERDA · SAMBA NA REDE · AGITAI</text>
+
+  <!-- DJs -->
+  <text x="800" y="652" text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold"
+        letter-spacing="3" fill="#A6A8AB">DJ DHUPAN · DJ DYO · DJ DUH</text>
+
+  <!-- Selo de abertura das vendas -->
+  <rect x="550" y="694" width="500" height="52" rx="26" fill="#D9A63F"/>
+  <text x="800" y="729" text-anchor="middle"
+        font-family="Arial Black, Arial, sans-serif" font-size="26" font-weight="900"
+        letter-spacing="3" fill="#0D0E12">VENDAS ABREM 13/08 ÀS 18H</text>
+</svg>

@@ -1,6 +1,7 @@
 // Página pública do evento — todo o conteúdo (título, textos, lineup, local,
 // SEO, JSON-LD) vem do banco: events.* + events.content + organização dona.
 import { supabase, type Event, type EventContent } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
@@ -16,6 +17,8 @@ import { BrandTheme } from '@/components/theme/BrandTheme'
 import { StickyBuyBar } from '@/components/evento/StickyBuyBar'
 import { orgPublicName, type OrgBrand } from '@/lib/brand'
 import { dataEvento } from '@/lib/datas';
+import { getPanelContext } from '@/lib/auth/panel'
+import { assertEventInScope } from '@/lib/auth/scope'
 
 type Props = { params: { slug: string } }
 
@@ -27,10 +30,27 @@ type EventWithOrg = Event & {
   organizations: OrgRow | OrgRow[] | null
 }
 
-async function fetchEvent(slug: string): Promise<{ event: Event; org: OrgRow | null } | null> {
+type FetchedEvent = { event: Event; org: OrgRow | null; preview: boolean }
+
+const STATUS_PREVIEW_LABEL: Record<string, string> = {
+  draft: 'rascunho',
+  pending: 'aguardando aprovação',
+  finished: 'arquivado',
+}
+
+const EVENT_SELECT = '*, organizations(name, slug, brand)'
+
+function splitOrg(raw: EventWithOrg): { event: Event; org: OrgRow | null } {
+  const org = Array.isArray(raw.organizations) ? raw.organizations[0] ?? null : raw.organizations
+  return { event: raw as Event, org }
+}
+
+// Caminho público: cliente anônimo, com a RLS do banco valendo
+// (events_select_active só devolve status 'active'/'finished').
+async function fetchEventPublico(slug: string): Promise<FetchedEvent | null> {
   const { data, error } = await supabase
     .from('events')
-    .select('*, organizations(name, slug, brand)')
+    .select(EVENT_SELECT)
     .eq('slug', slug)
     .eq('status', 'active')
     .single()
@@ -40,17 +60,48 @@ async function fetchEvent(slug: string): Promise<{ event: Event; org: OrgRow | n
     console.error(`[evento] erro ao buscar evento "${slug}":`, error)
   }
   if (error || !data) return null
+  return { ...splitOrg(data as EventWithOrg), preview: false }
+}
+
+// Caminho de PRÉ-VISUALIZAÇÃO: evento ainda não publicado (draft/pending) só
+// aparece para quem já o enxergaria no painel — superadmin ou membro da
+// organização dona. Para o resto do mundo continua 404, como antes.
+// Comprar é impossível de qualquer jeito: /checkout e /api/checkout/create
+// exigem status 'active'.
+async function fetchEventPreview(slug: string): Promise<FetchedEvent | null> {
+  const ctx = await getPanelContext()
+  if (!ctx) return null
+
+  const { data } = await supabaseAdmin
+    .from('events')
+    .select(EVENT_SELECT)
+    .eq('slug', slug)
+    .maybeSingle()
+  if (!data) return null
+
   const raw = data as EventWithOrg
-  const org = Array.isArray(raw.organizations) ? raw.organizations[0] ?? null : raw.organizations
-  return { event: raw as Event, org }
+  if (!(await assertEventInScope(ctx, raw.id))) return null
+  return { ...splitOrg(raw), preview: true }
+}
+
+async function fetchEvent(slug: string): Promise<FetchedEvent | null> {
+  return (await fetchEventPublico(slug)) ?? (await fetchEventPreview(slug))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const result = await fetchEvent(params.slug)
   if (!result) return { title: `Evento não encontrado | ${platform.name}` }
 
-  const { event, org } = result
+  const { event, org, preview } = result
   const content: EventContent = event.content ?? {}
+
+  // Rascunho nunca pode ser indexado nem gerar preview de link em rede social
+  if (preview) {
+    return {
+      title: `[Rascunho] ${event.title} | ${platform.name}`,
+      robots: { index: false, follow: false },
+    }
+  }
 
   const dateLabel = dataEvento(event.event_date, {
     day: '2-digit',
@@ -107,11 +158,15 @@ export default async function EventPage({ params }: Props) {
   const result = await fetchEvent(params.slug)
   if (!result) notFound()
 
-  const { event, org } = result
+  const { event, org, preview } = result
   const content: EventContent = event.content ?? {}
   const avisoAbertura = content.opening_notice ?? null
 
-  const { data: batches } = await supabase
+  // Em pré-visualização os lotes também estão atrás da RLS (o evento não é
+  // público ainda), então lê com o client de serviço. Quem chegou aqui já
+  // passou pela checagem de escopo em fetchEventPreview.
+  const db = preview ? supabaseAdmin : supabase
+  const { data: batches } = await db
     .from('batch_availability')
     .select('*')
     .eq('event_id', event.id)
@@ -138,6 +193,12 @@ export default async function EventPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <BrandTheme brand={org?.brand} />
+      {preview && (
+        <div className="sticky top-0 z-50 bg-accent-400 text-surface-900 text-center text-sm font-bold px-4 py-2">
+          PRÉ-VISUALIZAÇÃO — evento em {STATUS_PREVIEW_LABEL[event.status] ?? event.status}.
+          Ninguém além da sua equipe vê esta página, e a compra fica bloqueada até publicar.
+        </div>
+      )}
       <main>
         <AffiliateTracker eventId={event.id} />
         <Hero

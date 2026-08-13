@@ -126,7 +126,14 @@ export function dataEvento(
   return new Intl.DateTimeFormat('pt-BR', { ...opts, timeZone: 'UTC' }).format(d);
 }
 
-/** Coluna DATE -> Date estável (meia-noite UTC), para ordenar/comparar. */
+/**
+ * Coluna DATE -> Date estável (meia-noite UTC), para ordenar/comparar.
+ *
+ * ATENÇÃO: o Date que sai daqui é meia-noite UTC. Se precisar do dia/mês/ano
+ * para EXIBIR, use os getters UTC (`getUTCDate`, `getUTCMonth`, ...) ou, de
+ * preferência, `dataEvento()`. Os getters locais (`getDate`, `getMonth`, ...)
+ * voltam um dia em qualquer fuso negativo — em SP, 07/09 vira 06/09.
+ */
 export function dataEventoComoDate(ymd: string): Date {
   return new Date(`${ymd.slice(0, 10)}T00:00:00Z`);
 }

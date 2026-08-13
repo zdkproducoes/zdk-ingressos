@@ -27,6 +27,9 @@ function fmtPrice(v: number) {
 }
 
 export function EventCard({ event }: { event: VitrineEvent }) {
+  // Meia-noite UTC — leia SEMPRE com os getters UTC (getUTCDate/getUTCMonth).
+  // Os getters locais deslocam um dia em qualquer fuso negativo (em SP, 07/09
+  // vira 06/09) e ainda dariam resultados diferentes no servidor e no browser.
   const date = dataEventoComoDate(event.event_date)
   const timeLabel = (event.event_time || '').slice(0, 5)
 
@@ -55,9 +58,9 @@ export function EventCard({ event }: { event: VitrineEvent }) {
         )}
         {/* Badge de data (bloco dia/mês) */}
         <div className="absolute left-4 -bottom-5 bg-accent-400 text-surface-900 rounded-xl px-3 py-1.5 text-center leading-none shadow-lg">
-          <span className="font-display-bold block text-[22px]">{date.getDate()}</span>
+          <span className="font-display-bold block text-[22px]">{date.getUTCDate()}</span>
           <span className="font-display block text-[10px] tracking-[0.12em] mt-0.5">
-            {MONTHS[date.getMonth()]}
+            {MONTHS[date.getUTCMonth()]}
           </span>
         </div>
       </div>
